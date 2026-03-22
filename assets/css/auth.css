@@ -1,0 +1,31 @@
+.auth-container {
+    min-height: 100vh;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 30px;
+}
+
+.auth-title {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.register-link {
+    font-size: 13px;
+    text-align: center;
+    margin-top: 15px;
+}
