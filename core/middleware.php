@@ -1,41 +1,34 @@
 <?php
-session_start();
 
 function checkLogin() {
     if (!isset($_SESSION['user_id'])) {
-        header("Location: ../auth/login.php");
+        header("Location: /platform-karir/views/auth/login.php");
         exit;
     }
 }
 
-function onlyMahasiswa() {
+function checkRole($role) {
     checkLogin();
-    if ($_SESSION['role'] != 'mahasiswa') {
-        header("Location: ../auth/login.php");
+
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== $role) {
+        header("Location: /platform-karir/views/auth/login.php");
         exit;
     }
+}
+
+// Shortcut biar tetap enak dipakai
+function onlyMahasiswa() {
+    checkRole('mahasiswa');
 }
 
 function onlyMitra() {
-    checkLogin();
-    if ($_SESSION['role'] != 'mitra') {
-        header("Location: ../auth/login.php");
-        exit;
-    }
+    checkRole('mitra');
 }
 
 function onlyDPA() {
-    checkLogin();
-    if ($_SESSION['role'] != 'dpa') {
-        header("Location: ../auth/login.php");
-        exit;
-    }
+    checkRole('dpa');
 }
 
 function onlyAdmin() {
-    checkLogin();
-    if ($_SESSION['role'] != 'admin') {
-        header("Location: ../auth/login.php");
-        exit;
-    }
+    checkRole('admin');
 }

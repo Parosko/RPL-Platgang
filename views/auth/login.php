@@ -8,13 +8,9 @@ $error = isset($_GET['error']) ? $_GET['error'] : null;
 <head>
     <title>Login</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- CSS -->
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/auth.css">
 </head>
@@ -28,17 +24,19 @@ $error = isset($_GET['error']) ? $_GET['error'] : null;
         <h4 class="text-center auth-title">Welcome Back</h4>
         <p class="text-center auth-subtitle">Masuk untuk melanjutkan</p>
 
-        <!-- SUCCESS REGISTER -->
         <?php if ($registered): ?>
             <div class="alert alert-success">
-                Akun berhasil dibuat, silakan login.
+                Akun berhasil dibuat. Silakan login.
             </div>
         <?php endif; ?>
 
-        <!-- ERROR LOGIN -->
-        <?php if ($error): ?>
+        <?php if ($error === 'not_verified'): ?>
+            <div class="alert alert-warning">
+                Akun Anda belum diverifikasi oleh admin.
+            </div>
+        <?php elseif ($error): ?>
             <div class="alert alert-danger">
-                <?php echo htmlspecialchars($error); ?>
+                Email atau password salah.
             </div>
         <?php endif; ?>
 
@@ -49,9 +47,15 @@ $error = isset($_GET['error']) ? $_GET['error'] : null;
                 <input type="email" name="email" class="form-control" required>
             </div>
 
-            <div class="mb-2">
+            <div class="mb-3 position-relative">
                 <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" name="password" class="form-control pe-5" id="passwordInput" required>
+
+                <span onclick="togglePassword()" 
+                      id="toggleText"
+                      style="position:absolute; right:12px; top:38px; cursor:pointer; font-size:13px; color:#555;">
+                    Show
+                </span>
             </div>
 
             <button class="btn btn-dark w-100">Login</button>
@@ -65,6 +69,21 @@ $error = isset($_GET['error']) ? $_GET['error'] : null;
     </div>
 
 </div>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById("passwordInput");
+    const toggle = document.getElementById("toggleText");
+
+    if (input.type === "password") {
+        input.type = "text";
+        toggle.innerText = "Hide";
+    } else {
+        input.type = "password";
+        toggle.innerText = "Show";
+    }
+}
+</script>
 
 </body>
 </html>
