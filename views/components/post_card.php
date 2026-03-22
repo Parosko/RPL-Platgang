@@ -1,6 +1,5 @@
 <?php
-// Hitung status otomatis
-$current_date = date('Y-m-d');
+$current_date = date('Y-m-d H:i:s');
 $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 ?>
 
@@ -9,8 +8,10 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 
         <div class="d-flex justify-content-between">
             <div>
-                <h5 class="mb-1"><?php echo htmlspecialchars($post['title']); ?></h5>
-                <small class="text-muted"><?php echo htmlspecialchars($post['company']); ?></small>
+                <h5 class="mb-1"><?php echo htmlspecialchars($post['judul']); ?></h5>
+                <small class="text-muted">
+                    <?php echo htmlspecialchars($post['nama_mitra'] ?? 'Mitra'); ?>
+                </small>
             </div>
 
             <span class="badge <?php echo ($status == 'Open') ? 'bg-success' : 'bg-secondary'; ?>">
@@ -19,17 +20,18 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
         </div>
 
         <p class="mt-2 mb-2">
-            <?php echo htmlspecialchars($post['description']); ?>
+            <?php echo htmlspecialchars($post['deskripsi']); ?>
         </p>
 
         <div class="d-flex gap-3 mb-3">
-            <small>📅 Dibuat: <?php echo $post['created_at']; ?></small>
-            <small>⏳ Deadline: <?php echo $post['deadline']; ?></small>
+            <small>Dibuat: <?php echo $post['created_at']; ?></small>
+            <small>Deadline: <?php echo $post['deadline']; ?></small>
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
 
             <div>
+
                 <?php if ($role == 'mahasiswa' && $status == 'Open'): ?>
                     <button class="btn btn-primary btn-sm">Apply</button>
 
@@ -38,10 +40,18 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 
                 <?php elseif ($role == 'admin'): ?>
                     <button class="btn btn-danger btn-sm">Hapus</button>
+
+                <?php elseif ($role == 'mitra'): ?>
+                    <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" 
+                       class="btn btn-primary btn-sm">
+                        Lihat Pendaftar
+                    </a>
                 <?php endif; ?>
+
             </div>
 
-            <a href="#" class="btn btn-outline-dark btn-sm">
+            <a href="../post/detail.php?id=<?php echo $post['id']; ?>" 
+               class="btn btn-outline-dark btn-sm">
                 Lihat Detail
             </a>
 
