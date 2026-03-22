@@ -1,0 +1,69 @@
+<?php
+session_start();
+include '../core/middleware.php';
+
+checkLogin();
+
+$role = $_SESSION['role'];
+$email = $_SESSION['email'];
+
+// nanti data ini dari database
+$posts = []; // sementara kosong
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/layout.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+
+<body>
+
+<div class="d-flex">
+
+    <?php include 'layouts/sidebar.php'; ?>
+
+    <div class="content">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4>Dashboard</h4>
+                <small>
+                    Login sebagai: 
+                    <?php echo htmlspecialchars($email); ?> 
+                    (<?php echo $role; ?>)
+                </small>
+            </div>
+        </div>
+
+        <hr>
+
+        <h5 class="mb-3">Daftar Peluang</h5>
+
+        <?php if (empty($posts)): ?>
+            <div class="alert alert-info">
+                Belum ada postingan tersedia.
+            </div>
+        <?php else: ?>
+            <?php foreach ($posts as $post): ?>
+                <?php include 'components/post_card.php'; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+    </div>
+
+</div>
+
+</body>
+</html>
