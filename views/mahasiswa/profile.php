@@ -64,6 +64,7 @@ $profile = mysqli_fetch_assoc($result);
                         <strong>NIM:</strong> <?php echo htmlspecialchars($profile['nim'] ?? 'Belum diisi'); ?><br>
                         <strong>Nama:</strong> <?php echo htmlspecialchars($profile['nama'] ?? 'Belum diisi'); ?><br>
                         <strong>Fakultas:</strong> <?php echo htmlspecialchars($profile['fakultas'] ?? 'Belum diisi'); ?><br>
+                        <strong>Email:</strong> <?php echo htmlspecialchars($profile['email'] ?? 'Belum diisi'); ?><br>
                     </div>
                     <div class="col-md-6">
                         <strong>Prodi:</strong> <?php echo htmlspecialchars($profile['prodi'] ?? 'Belum diisi'); ?><br>
@@ -72,7 +73,7 @@ $profile = mysqli_fetch_assoc($result);
                         <strong>IPK:</strong> <?php echo $profile['ipk'] ?? 'Belum diisi'; ?><br>
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Edit Profil</button>
+                <a href="edit_profile.php" class="btn btn-primary mt-3">Edit Profil</a>
             </div>
         </div>
 

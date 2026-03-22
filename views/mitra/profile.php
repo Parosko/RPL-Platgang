@@ -68,7 +68,7 @@ $profile = mysqli_fetch_assoc($result);
                         <?php echo ucfirst($profile['status_verifikasi']); ?>
                     </span>
                 </div>
-                <button class="btn btn-primary">Edit Profil</button>
+                <a href="edit_profile.php" class="btn btn-primary">Edit Profil</a>
             </div>
         </div>
 

@@ -63,7 +63,7 @@ $profile = mysqli_fetch_assoc($result);
                     <strong>Nama:</strong> <?php echo htmlspecialchars($profile['nama'] ?? 'Belum diisi'); ?><br>
                     <strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['email']); ?><br>
                 </div>
-                <button class="btn btn-primary">Edit Profil</button>
+                <a href="edit_profile.php" class="btn btn-primary">Edit Profil</a>
             </div>
         </div>
 

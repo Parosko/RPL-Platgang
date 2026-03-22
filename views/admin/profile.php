@@ -59,7 +59,7 @@ $profile = mysqli_fetch_assoc($result);
                     <strong>Status:</strong> <?php echo htmlspecialchars($profile['status']); ?><br>
                     <strong>Bergabung:</strong> <?php echo $profile['created_at']; ?><br>
                 </div>
-                <button class="btn btn-primary">Edit Profil</button>
+                <a href="edit_profile.php" class="btn btn-primary">Edit Profil</a>
             </div>
         </div>
 
