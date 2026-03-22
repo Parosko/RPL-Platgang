@@ -12,7 +12,7 @@ if (empty($email) || empty($password)) {
     exit;
 }
 
-// Validasi format email
+// Validasi email
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     header("Location: ../../views/auth/login.php?error=1");
     exit;
@@ -25,13 +25,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Cek user & password
+// Validasi user & password
 if (!$user || !password_verify($password, $user['password'])) {
     header("Location: ../../views/auth/login.php?error=1");
     exit;
 }
 
-// Cek status akun (pending / active)
+// Cek status akun
 if ($user['status'] !== 'active') {
     header("Location: ../../views/auth/login.php?error=not_verified");
     exit;
@@ -40,20 +40,11 @@ if ($user['status'] !== 'active') {
 // Amankan session
 session_regenerate_id(true);
 
+// Simpan session
 $_SESSION['user_id'] = $user['id'];
 $_SESSION['role'] = $user['role'];
+$_SESSION['email'] = $user['email'];
 
-// Redirect berdasarkan role
-if ($user['role'] == 'mahasiswa') {
-    header("Location: ../../views/mahasiswa/dashboard.php");
-} elseif ($user['role'] == 'mitra') {
-    header("Location: ../../views/mitra/dashboard.php");
-} elseif ($user['role'] == 'dpa') {
-    header("Location: ../../views/dpa/dashboard.php");
-} elseif ($user['role'] == 'admin') {
-    header("Location: ../../views/admin/dashboard.php");
-} else {
-    header("Location: ../../views/auth/login.php");
-}
-
+// Redirect ke dashboard global
+header("Location: ../../views/dashboard.php");
 exit;
