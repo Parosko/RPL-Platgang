@@ -47,7 +47,7 @@ if ($role == 'mahasiswa') {
     $result = mysqli_stmt_get_result($stmt);
     if (mysqli_num_rows($result) > 0) {
         $mahasiswa = mysqli_fetch_assoc($result);
-        $mahasiswa_id = $mahasiswa['id'];
+        $mahasiswa_id = $mahasiswa['user_id'];
         
         $query = "SELECT id FROM lamaran WHERE mahasiswa_id = ? AND peluang_id = ?";
         $stmt = mysqli_prepare($conn, $query);
@@ -147,7 +147,7 @@ if ($role == 'mahasiswa') {
 
                 <div class="d-flex gap-2">
                     <?php if ($role == 'mahasiswa' && $status == 'Open' && !$already_applied): ?>
-                        <a href="../../controllers/mahasiswa/apply_process.php?id=<?php echo $post['id']; ?>" 
+                        <a href="../mahasiswa/apply.php?id=<?php echo $post['id']; ?>" 
                            class="btn btn-primary"
                            onclick="return confirm('Apakah Anda yakin ingin mendaftar untuk peluang ini?')">
                             Daftar
