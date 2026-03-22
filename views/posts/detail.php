@@ -47,7 +47,7 @@ if ($role == 'mahasiswa') {
     $result = mysqli_stmt_get_result($stmt);
     if (mysqli_num_rows($result) > 0) {
         $mahasiswa = mysqli_fetch_assoc($result);
-        $mahasiswa_id = $mahasiswa['user_id'];
+        $mahasiswa_id = $_SESSION['user_id']; // Use the session user_id directly
         
         $query = "SELECT id FROM lamaran WHERE mahasiswa_id = ? AND peluang_id = ?";
         $stmt = mysqli_prepare($conn, $query);

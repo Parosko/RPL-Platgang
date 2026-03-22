@@ -28,7 +28,7 @@ if (mysqli_num_rows($result) == 0) {
 }
 
 $mahasiswa = mysqli_fetch_assoc($result);
-$mahasiswa_id = $mahasiswa['user_id'];
+$mahasiswa_id = $user_id; // Use the user_id directly since that's what we need for lamaran.mahasiswa_id
 
 // Check if post exists
 $query = "SELECT id FROM peluang WHERE id = ? AND status = 'approved'";
