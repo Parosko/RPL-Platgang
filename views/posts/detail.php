@@ -35,6 +35,28 @@ $post = mysqli_fetch_assoc($result);
 
 $current_date = date('Y-m-d H:i:s');
 $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
+
+// Check if mahasiswa already applied
+$already_applied = false;
+if ($role == 'mahasiswa') {
+    // Get mahasiswa id first
+    $query = "SELECT id FROM mahasiswa WHERE user_id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $_SESSION['user_id']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if (mysqli_num_rows($result) > 0) {
+        $mahasiswa = mysqli_fetch_assoc($result);
+        $mahasiswa_id = $mahasiswa['id'];
+        
+        $query = "SELECT id FROM lamaran WHERE mahasiswa_id = ? AND peluang_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'ii', $mahasiswa_id, $post_id);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $already_applied = mysqli_num_rows($result) > 0;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -70,6 +92,22 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
             </div>
             <a href="../dashboard.php" class="btn btn-secondary">Kembali</a>
         </div>
+
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?php echo htmlspecialchars($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo htmlspecialchars($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
 
         <hr>
 
@@ -108,8 +146,14 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
                 </div>
 
                 <div class="d-flex gap-2">
-                    <?php if ($role == 'mahasiswa' && $status == 'Open'): ?>
-                        <button class="btn btn-primary">Apply</button>
+                    <?php if ($role == 'mahasiswa' && $status == 'Open' && !$already_applied): ?>
+                        <a href="../../controllers/mahasiswa/apply_process.php?id=<?php echo $post['id']; ?>" 
+                           class="btn btn-primary"
+                           onclick="return confirm('Apakah Anda yakin ingin mendaftar untuk peluang ini?')">
+                            Daftar
+                        </a>
+                    <?php elseif ($role == 'mahasiswa' && $already_applied): ?>
+                        <button class="btn btn-success" disabled>Sudah Terdaftar</button>
                     <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
                         <button class="btn btn-warning">Rekomendasikan</button>
                     <?php elseif ($role == 'admin'): ?>

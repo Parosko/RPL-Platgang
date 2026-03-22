@@ -33,7 +33,11 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
             <div>
 
                 <?php if ($role == 'mahasiswa' && $status == 'Open'): ?>
-                    <button class="btn btn-primary btn-sm">Apply</button>
+<a href="<?= BASE_URL ?>/controllers/mahasiswa/apply_process.php?id=<?php echo $post['id']; ?>" 
+                       class="btn btn-primary btn-sm"
+                       onclick="return confirm('Apakah Anda yakin ingin mendaftar untuk peluang ini?')">
+                        Daftar
+                    </a>
 
                 <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
                     <button class="btn btn-warning btn-sm">Rekomendasikan</button>
@@ -50,7 +54,7 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 
             </div>
 
-            <a href="../posts/detail.php?id=<?php echo $post['id']; ?>" 
+            <a href="<?= BASE_URL ?>/views/posts/detail.php?id=<?php echo $post['id']; ?>" 
                class="btn btn-outline-dark btn-sm">
                 Lihat Detail
             </a>
