@@ -50,7 +50,7 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 
             </div>
 
-            <a href="../post/detail.php?id=<?php echo $post['id']; ?>" 
+            <a href="../posts/detail.php?id=<?php echo $post['id']; ?>" 
                class="btn btn-outline-dark btn-sm">
                 Lihat Detail
             </a>
