@@ -1,14 +1,22 @@
 <?php
 session_start();
-include '../core/middleware.php';
+
+include __DIR__ . '/../core/middleware.php';
+include __DIR__ . '/../config/database.php'; 
 
 checkLogin();
 
 $role = $_SESSION['role'];
 $email = $_SESSION['email'];
 
-// nanti data ini dari database
-$posts = []; // sementara kosong
+$query = "SELECT * FROM peluang WHERE status = 'approved' ORDER BY created_at DESC";
+$result = mysqli_query($conn, $query);
+
+$posts = [];
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $posts[] = $row;
+}
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +40,7 @@ $posts = []; // sementara kosong
 
 <div class="d-flex">
 
-    <?php include 'layouts/sidebar.php'; ?>
+    <?php include __DIR__ . '/layouts/sidebar.php'; ?>
 
     <div class="content">
 
@@ -57,7 +65,7 @@ $posts = []; // sementara kosong
             </div>
         <?php else: ?>
             <?php foreach ($posts as $post): ?>
-                <?php include 'components/post_card.php'; ?>
+                <?php include __DIR__ . '/components/post_card.php'; ?>
             <?php endforeach; ?>
         <?php endif; ?>
 

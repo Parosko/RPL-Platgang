@@ -35,7 +35,7 @@ if (!in_array($tipe, ['magang', 'kursus'])) {
 $stmt = $conn->prepare("
     INSERT INTO peluang 
     (mitra_id, judul, deskripsi, tipe, lokasi, kuota, min_ipk, min_semester, fakultas, deadline, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')
 ");
 
 $stmt->bind_param(
