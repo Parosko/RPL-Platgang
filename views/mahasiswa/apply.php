@@ -50,7 +50,7 @@ $profile = mysqli_fetch_assoc($result);
 // Check if already applied
 $query = "SELECT id FROM lamaran WHERE mahasiswa_id = ? AND peluang_id = ?";
 $stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, 'ii', $profile['user_id'], $peluang_id);
+mysqli_stmt_bind_param($stmt, 'ii', $profile['id'], $peluang_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
