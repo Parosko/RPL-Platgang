@@ -2,17 +2,20 @@
 session_start();
 include '../../core/middleware.php';
 include '../../config/database.php';
+include '../../config/config.php';
 
 onlyMitra();
 
 $mitra_id = $_SESSION['user_id'];
 
-// Ambil postingan milik mitra + join user
+// Ambil postingan milik mitra + count applications
 $stmt = $conn->prepare("
-    SELECT peluang.*, users.email AS nama_mitra
+    SELECT peluang.*, users.email AS nama_mitra, COUNT(lamaran.id) as applicant_count
     FROM peluang
+    LEFT JOIN lamaran ON peluang.id = lamaran.peluang_id
     JOIN users ON peluang.mitra_id = users.id
     WHERE peluang.mitra_id = ?
+    GROUP BY peluang.id
     ORDER BY peluang.created_at DESC
 ");
 $stmt->bind_param("i", $mitra_id);

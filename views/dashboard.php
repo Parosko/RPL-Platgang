@@ -2,7 +2,8 @@
 session_start();
 
 include __DIR__ . '/../core/middleware.php';
-include __DIR__ . '/../config/database.php'; 
+include __DIR__ . '/../config/database.php';
+include __DIR__ . '/../config/config.php'; 
 
 checkLogin();
 
@@ -64,6 +65,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 Belum ada postingan tersedia.
             </div>
         <?php else: ?>
+            <?php $hide_applicant_counter = true; ?>
             <?php foreach ($posts as $post): ?>
                 <?php include __DIR__ . '/components/post_card.php'; ?>
             <?php endforeach; ?>

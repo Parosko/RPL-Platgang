@@ -26,6 +26,11 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
         <div class="d-flex gap-3 mb-3">
             <small>Dibuat: <?php echo $post['created_at']; ?></small>
             <small>Deadline: <?php echo $post['deadline']; ?></small>
+            <?php if ($role == 'mitra' && isset($post['applicant_count']) && !isset($hide_applicant_counter)): ?>
+                <small class="badge bg-info">
+                    <?php echo $post['applicant_count']; ?> Pendaftar
+                </small>
+            <?php endif; ?>
         </div>
 
         <div class="d-flex justify-content-between align-items-center">
@@ -46,9 +51,9 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
                     <button class="btn btn-danger btn-sm">Hapus</button>
 
                 <?php elseif ($role == 'mitra'): ?>
-                    <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" 
+                    <a href="<?= BASE_URL ?>/views/mitra/applicants.php?id=<?php echo $post['id']; ?>" 
                        class="btn btn-primary btn-sm">
-                        Lihat Pendaftar
+                        Lihat Pendaftar (<?php echo $post['applicant_count'] ?? 0; ?>)
                     </a>
                 <?php endif; ?>
 
