@@ -20,7 +20,7 @@ $role = $_SESSION['role'];
         <!-- MAHASISWA -->
         <?php if ($role == 'mahasiswa'): ?>
             <li class="nav-item mb-2">
-                <a href="<?= BASE_URL ?>/views/mahasiswa/riwayat.php" class="nav-link text-dark">
+                <a href="<?= BASE_URL ?>/views/mahasiswa/history.php" class="nav-link text-dark">
                     Riwayat Pendaftaran
                 </a>
             </li>

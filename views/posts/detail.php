@@ -57,6 +57,10 @@ if ($role == 'mahasiswa') {
         $already_applied = mysqli_num_rows($result) > 0;
     }
 }
+
+// Determine badge text
+$badge_text = $already_applied ? 'Applied' : $status;
+$badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success' : 'bg-secondary');
 ?>
 
 <!DOCTYPE html>
@@ -120,8 +124,8 @@ if ($role == 'mahasiswa') {
                             Oleh: <?php echo htmlspecialchars($post['nama_organisasi'] ?? $post['mitra_email']); ?>
                         </small>
                     </div>
-                    <span class="badge <?php echo ($status == 'Open') ? 'bg-success' : 'bg-secondary'; ?>">
-                        <?php echo $status; ?>
+                    <span class="badge <?php echo $badge_class; ?>">
+                        <?php echo $badge_text; ?>
                     </span>
                 </div>
 
@@ -153,7 +157,9 @@ if ($role == 'mahasiswa') {
                             Daftar
                         </a>
                     <?php elseif ($role == 'mahasiswa' && $already_applied): ?>
-                        <button class="btn btn-success" disabled>Sudah Terdaftar</button>
+                        <a href="../mahasiswa/already_applied.php?id=<?php echo $post['id']; ?>" class="btn btn-success">
+                            Sudah Terdaftar
+                        </a>
                     <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
                         <button class="btn btn-warning">Rekomendasikan</button>
                     <?php elseif ($role == 'admin'): ?>

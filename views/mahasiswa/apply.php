@@ -55,8 +55,7 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 if (mysqli_num_rows($result) > 0) {
-    $_SESSION['error'] = 'Anda sudah mendaftar untuk peluang ini.';
-    header('Location: ../../views/posts/detail.php?id=' . $peluang_id);
+    header('Location: already_applied.php?id=' . $peluang_id);
     exit;
 }
 
