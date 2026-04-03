@@ -73,7 +73,7 @@ $role = $_SESSION['role'];
         <?php if ($role == 'admin'): ?>
             <li class="nav-item mb-2">
                 <a href="<?= BASE_URL ?>/views/admin/users.php" class="nav-link text-dark">
-                    Manajemen User
+                    Kelola Pengguna
                 </a>
             </li>
 
@@ -85,7 +85,7 @@ $role = $_SESSION['role'];
 
             <li class="nav-item mb-2">
                 <a href="<?= BASE_URL ?>/views/admin/assign.php" class="nav-link text-dark">
-                    Assign Mahasiswa
+                    Kelola DPA
                 </a>
             </li>
         <?php endif; ?>

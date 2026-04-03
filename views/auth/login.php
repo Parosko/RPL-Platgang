@@ -34,6 +34,10 @@ $error = isset($_GET['error']) ? $_GET['error'] : null;
             <div class="alert alert-warning">
                 Akun Anda belum diverifikasi oleh admin.
             </div>
+        <?php elseif ($error === 'deactivated'): ?>
+            <div class="alert alert-danger">
+                Akun Anda telah dinonaktifkan. Hubungi administrator jika ada pertanyaan.
+            </div>
         <?php elseif ($error): ?>
             <div class="alert alert-danger">
                 Email atau password salah.

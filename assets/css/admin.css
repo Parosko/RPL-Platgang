@@ -52,4 +52,36 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* User Row */
+.user-row {
+    background-color: #f8f9fa;
+    border-left: 4px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.user-row.pending {
+    border-left-color: #ffc107;
+    background-color: #fffbf5;
+}
+
+.user-row.active {
+    border-left-color: #28a745;
+    background-color: #f5fff5;
+}
+
+.user-row.deactivated {
+    border-left-color: #6c757d;
+    background-color: #f0f0f0;
+    opacity: 0.85;
+}
+
+.user-row:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
 

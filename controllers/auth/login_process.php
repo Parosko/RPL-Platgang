@@ -32,8 +32,14 @@ if (!$user || !password_verify($password, $user['password'])) {
 }
 
 // Cek status akun
-if ($user['status'] !== 'active') {
+if ($user['status'] === 'pending') {
     header("Location: ../../views/auth/login.php?error=not_verified");
+    exit;
+} elseif ($user['status'] === 'inactive') {
+    header("Location: ../../views/auth/login.php?error=deactivated");
+    exit;
+} elseif ($user['status'] !== 'active') {
+    header("Location: ../../views/auth/login.php?error=1");
     exit;
 }
 
