@@ -3,9 +3,11 @@ session_start();
 
 include __DIR__ . '/../core/middleware.php';
 include __DIR__ . '/../config/database.php';
-include __DIR__ . '/../config/config.php'; 
+include __DIR__ . '/../config/config.php';
+include __DIR__ . '/../core/profile_check.php';
 
 checkLogin();
+redirectIfProfileIncomplete($conn, __FILE__);
 
 $role = $_SESSION['role'];
 $email = $_SESSION['email'];

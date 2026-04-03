@@ -3,8 +3,11 @@ session_start();
 
 include __DIR__ . '/../../core/middleware.php';
 include __DIR__ . '/../../config/database.php';
+include __DIR__ . '/../../config/config.php';
+include __DIR__ . '/../../core/profile_check.php';
 
 onlyMahasiswa();
+redirectIfProfileIncomplete($conn, __FILE__);
 
 $user_id = $_SESSION['user_id'];
 

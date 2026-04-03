@@ -23,7 +23,7 @@ $ipk = trim($_POST['ipk'] ?? '');
 
 if (!$nim || !$nama) {
     $_SESSION['error'] = 'NIM dan Nama wajib diisi.';
-    header('Location: ../../views/mahasiswa/edit_profile.php');
+    header('Location: ../../views/mahasiswa/edit_profile.php?incomplete=1');
     exit;
 }
 
