@@ -51,7 +51,10 @@ $status = $is_post_open ? 'Open' : 'Closed';
                     <button class="btn btn-warning btn-sm">Rekomendasikan</button>
 
                 <?php elseif ($role == 'admin'): ?>
-                    <button class="btn btn-danger btn-sm">Hapus</button>
+                    <button class="btn btn-danger btn-sm" 
+                            onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
+                        Nonaktifkan
+                    </button>
 
                 <?php elseif ($role == 'mitra'): ?>
                     <a href="<?= BASE_URL ?>/views/mitra/applicants.php?id=<?php echo $post['id']; ?>" 

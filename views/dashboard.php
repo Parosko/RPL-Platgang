@@ -75,5 +75,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 </div>
 
+<script>
+// Deactivate post function (for admin)
+function deactivatePost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin menonaktifkan postingan "${postTitle}"?`)) {
+        window.location.href = `<?= BASE_URL ?>/controllers/admin/deactivate_post_process.php?id=${postId}`;
+    }
+}
+</script>
+
 </body>
 </html>

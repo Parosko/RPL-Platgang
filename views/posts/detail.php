@@ -173,7 +173,10 @@ $badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success
                     <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
                         <button class="btn btn-warning">Rekomendasikan</button>
                     <?php elseif ($role == 'admin'): ?>
-                        <button class="btn btn-danger">Hapus</button>
+                        <button class="btn btn-danger" 
+                                onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
+                            Nonaktifkan
+                        </button>
                     <?php elseif ($role == 'mitra' && $post['mitra_id'] == $_SESSION['user_id']): ?>
                         <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" class="btn btn-primary">
                             Lihat Pendaftar
@@ -187,6 +190,15 @@ $badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success
     </div>
 
 </div>
+
+<script>
+// Deactivate post function
+function deactivatePost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin menonaktifkan postingan "${postTitle}"?`)) {
+        window.location.href = `../../controllers/admin/deactivate_post_process.php?id=${postId}`;
+    }
+}
+</script>
 
 </body>
 </html>
