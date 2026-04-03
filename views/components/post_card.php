@@ -48,7 +48,10 @@ $status = $is_post_open ? 'Open' : 'Closed';
                     </a>
 
                 <?php elseif ($role == 'dpa' && $is_post_open): ?>
-                    <button class="btn btn-warning btn-sm">Rekomendasikan</button>
+                    <a href="<?= BASE_URL ?>/views/dpa/recommend_post.php?id=<?php echo $post['id']; ?>" 
+                       class="btn btn-warning btn-sm">
+                        Rekomendasikan
+                    </a>
 
                 <?php elseif ($role == 'admin'): ?>
                     <button class="btn btn-danger btn-sm" 

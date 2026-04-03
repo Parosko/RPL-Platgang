@@ -1,12 +1,23 @@
 <?php
 include_once __DIR__ . '/../../config/config.php';
+include_once __DIR__ . '/../../core/notification_helper.php';
+include_once __DIR__ . '/../../config/database.php';
 
 $role = $_SESSION['role'];
+$unread_count = getUnreadNotificationCount($conn, $_SESSION['user_id']);
 ?>
 
 <div class="sidebar d-flex flex-column p-3">
 
-    <h5 class="mb-4">Platform</h5>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 style="margin: 0;">Platform</h5>
+        <a href="<?= BASE_URL ?>/views/notifications.php" class="notification-bell" title="Notifikasi">
+            🔔
+            <?php if ($unread_count > 0): ?>
+                <span class="notification-badge"><?php echo $unread_count; ?></span>
+            <?php endif; ?>
+        </a>
+    </div>
 
     <ul class="nav nav-pills flex-column mb-auto">
 

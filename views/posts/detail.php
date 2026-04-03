@@ -174,7 +174,10 @@ $badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success
                             Sudah Terdaftar
                         </a>
                     <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
-                        <button class="btn btn-warning">Rekomendasikan</button>
+                        <a href="<?= BASE_URL ?>/views/dpa/recommend_post.php?id=<?php echo $post['id']; ?>" 
+                           class="btn btn-warning">
+                            Rekomendasikan
+                        </a>
                     <?php elseif ($role == 'admin'): ?>
                         <button class="btn btn-danger" 
                                 onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
