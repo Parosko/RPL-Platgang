@@ -29,6 +29,19 @@ if (mysqli_num_rows($result) == 0) {
 
 $post = mysqli_fetch_assoc($result);
 
+// Get post status (including closed_at)
+$query = "SELECT id, judul, deskripsi, tipe, lokasi, kuota, min_ipk, min_semester, fakultas, deadline, closed_at FROM peluang WHERE id = ? AND mitra_id = ?";
+$stmt = mysqli_prepare($conn, $query);
+mysqli_stmt_bind_param($stmt, 'ii', $peluang_id, $user_id);
+mysqli_stmt_execute($stmt);
+$post_full = mysqli_stmt_get_result($stmt);
+$post_data = mysqli_fetch_assoc($post_full);
+
+// Check if post is closed
+$is_post_closed = !empty($post_data['closed_at']);
+$current_date = date('Y-m-d H:i:s');
+$is_deadline_passed = $post_data['deadline'] < $current_date;
+
 // Get post requirements and all applications for this post
 $query = "SELECT l.id, l.tanggal_apply, l.status, l.is_recommended,
                  m.nim, m.nama, m.fakultas, m.ipk, m.semester,
@@ -68,7 +81,25 @@ $applications = mysqli_stmt_get_result($stmt);
                     Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mitra)
                 </small>
             </div>
-            <a href="my_posts.php" class="btn btn-secondary">Kembali</a>
+            <div class="d-flex gap-2">
+                <a href="<?= BASE_URL ?>/views/mitra/edit_post.php?id=<?php echo $peluang_id; ?>" class="btn btn-primary">
+                    Edit Posting
+                </a>
+                
+                <?php if (!$is_post_closed && !$is_deadline_passed): ?>
+                    <button type="button" class="btn btn-warning" 
+                        onclick="closePost(<?php echo $peluang_id; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                        Tutup Posting
+                    </button>
+                <?php elseif ($is_post_closed): ?>
+                    <button type="button" class="btn btn-info" 
+                        onclick="reopenPost(<?php echo $peluang_id; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                        Buka Kembali
+                    </button>
+                <?php endif; ?>
+                
+                <a href="my_posts.php" class="btn btn-secondary">Kembali</a>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -266,6 +297,54 @@ function filterApplications() {
         
         card.style.display = (statusMatch && requirementMatch && ipkMatch && nameMatch) ? '' : 'none';
     });
+}
+
+function closePost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin menutup postingan "${postTitle}"? Semua lamaran yang belum diterima akan ditolak secara otomatis.`)) {
+        fetch('<?= BASE_URL ?>/controllers/mitra/close_post_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'peluang_id=' + postId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
+        });
+    }
+}
+
+function reopenPost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin membuka kembali postingan "${postTitle}"? Applicants dapat mendaftar lagi.`)) {
+        fetch('<?= BASE_URL ?>/controllers/mitra/reopen_post_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'peluang_id=' + postId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
+        });
+    }
 }
 
 function acceptApplication(lamaranId) {
