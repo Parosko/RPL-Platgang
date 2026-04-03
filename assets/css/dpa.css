@@ -1,0 +1,291 @@
+/* DPA Mahasiswa Bimbingan Styles */
+
+/* Table Styles */
+.dpa-table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.dpa-table thead {
+    background: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.dpa-table thead th {
+    padding: 15px 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #495057;
+}
+
+.dpa-table tbody td {
+    padding: 15px 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.dpa-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.detail-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.detail-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+/* Student Info Card */
+.student-info-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.student-info-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-item .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6c757d;
+    letter-spacing: 0.5px;
+}
+
+.info-item .value {
+    font-size: 0.95rem;
+    color: #212529;
+    font-weight: 500;
+}
+
+/* Stats Cards */
+.stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #0d6efd;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.stats-card.success {
+    border-left-color: #198754;
+}
+
+.stats-card.danger {
+    border-left-color: #dc3545;
+}
+
+.stats-card.pending {
+    border-left-color: #ffc107;
+}
+
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 10px 0;
+}
+
+.stats-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Applications List */
+.applications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.application-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.application-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.app-header {
+    padding: 18px 20px;
+    background: #f8f9fa;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.app-title h6 {
+    margin: 0 0 4px 0;
+    color: #212529;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.company-name {
+    color: #6c757d;
+    font-size: 0.85rem;
+}
+
+.app-status {
+    display: flex;
+    gap: 10px;
+}
+
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.status-success {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-danger {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.status-warning {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.app-body {
+    padding: 20px;
+}
+
+.app-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-column .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6c757d;
+    letter-spacing: 0.5px;
+}
+
+.info-column .value {
+    font-size: 0.95rem;
+    color: #212529;
+    font-weight: 500;
+}
+
+.app-description {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-top: 12px;
+}
+
+.app-description strong {
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.app-description small {
+    color: #6c757d;
+    line-height: 1.5;
+    display: block;
+    margin-top: 6px;
+}
+
+/* Back Link */
+.back-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .app-info {
+        grid-template-columns: 1fr;
+    }
+
+    .dpa-table {
+        font-size: 0.9rem;
+    }
+
+    .dpa-table thead th,
+    .dpa-table tbody td {
+        padding: 10px 8px;
+    }
+
+    .stats-number {
+        font-size: 2rem;
+    }
+
+    .student-info-card {
+        margin-bottom: 15px;
+    }
+}
