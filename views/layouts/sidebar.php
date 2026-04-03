@@ -79,13 +79,7 @@ $role = $_SESSION['role'];
 
             <li class="nav-item mb-2">
                 <a href="<?= BASE_URL ?>/views/admin/posts.php" class="nav-link text-dark">
-                    Manajemen Postingan
-                </a>
-            </li>
-
-            <li class="nav-item mb-2">
-                <a href="<?= BASE_URL ?>/views/admin/applications.php" class="nav-link text-dark">
-                    Kelola Semua Lamaran
+                    Kelola Postingan
                 </a>
             </li>
 

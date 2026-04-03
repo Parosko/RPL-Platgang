@@ -16,11 +16,21 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $post_id = (int)$_GET['id'];
 
-$query = "SELECT p.*, u.email as mitra_email, m.nama_organisasi
-          FROM peluang p
-          JOIN users u ON p.mitra_id = u.id
-          LEFT JOIN mitra m ON u.id = m.user_id
-          WHERE p.id = ? AND p.status = 'approved'";
+// Admins can view any post, others can only view approved and non-deactivated posts
+if ($role == 'admin') {
+    $query = "SELECT p.*, u.email as mitra_email, m.nama_organisasi
+              FROM peluang p
+              JOIN users u ON p.mitra_id = u.id
+              LEFT JOIN mitra m ON u.id = m.user_id
+              WHERE p.id = ?";
+} else {
+    $query = "SELECT p.*, u.email as mitra_email, m.nama_organisasi
+              FROM peluang p
+              JOIN users u ON p.mitra_id = u.id
+              LEFT JOIN mitra m ON u.id = m.user_id
+              WHERE p.id = ? AND p.status = 'approved' AND p.closed_at IS NULL";
+}
+
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $post_id);
 mysqli_stmt_execute($stmt);

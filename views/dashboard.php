@@ -10,7 +10,7 @@ checkLogin();
 $role = $_SESSION['role'];
 $email = $_SESSION['email'];
 
-$query = "SELECT * FROM peluang WHERE status = 'approved' ORDER BY created_at DESC";
+$query = "SELECT * FROM peluang WHERE status = 'approved' AND closed_at IS NULL ORDER BY created_at DESC";
 $result = mysqli_query($conn, $query);
 
 $posts = [];

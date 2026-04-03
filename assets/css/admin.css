@@ -1,0 +1,55 @@
+/* Admin Moderation Pages */
+
+.status-badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Filter Controls */
+.form-select, .form-control {
+    font-size: 0.95rem;
+    border-radius: 4px;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Post Row */
+.post-row {
+    background-color: #f8f9fa;
+    border-left: 4px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.post-row.rejected {
+    border-left-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.post-row.approved {
+    border-left-color: #28a745;
+    background-color: #f5fff5;
+}
+
+.post-row.pending {
+    border-left-color: #ffc107;
+    background-color: #fffbf5;
+}
+
+.post-row.deactivated {
+    border-left-color: #6c757d;
+    background-color: #f0f0f0;
+    opacity: 0.85;
+}
+
+.post-row:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+
