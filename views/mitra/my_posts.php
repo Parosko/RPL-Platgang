@@ -23,6 +23,15 @@ $stmt->execute();
 $result = $stmt->get_result();
 $posts = $result->fetch_all(MYSQLI_ASSOC);
 
+// Determine which posts are open/closed
+foreach ($posts as &$post) {
+    $current_date = date('Y-m-d H:i:s');
+    $is_closed_manually = !empty($post['closed_at']);
+    $is_deadline_passed = $post['deadline'] < $current_date;
+    $post['is_closed'] = $is_closed_manually || $is_deadline_passed;
+    $post['close_reason'] = $is_closed_manually ? 'manual' : ($is_deadline_passed ? 'deadline' : '');
+}
+
 $role = $_SESSION['role'];
 $email = $_SESSION['email'];
 ?>
@@ -63,7 +72,8 @@ $email = $_SESSION['email'];
         <?php else: ?>
 
             <?php foreach ($posts as $post): ?>
-                <?php include '../components/post_card.php'; ?>
+                <?php $show_close_button = true; ?>
+                <?php include '../components/mitra_post_card.php'; ?>
             <?php endforeach; ?>
 
         <?php endif; ?>

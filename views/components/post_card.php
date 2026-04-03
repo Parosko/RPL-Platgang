@@ -1,6 +1,9 @@
 <?php
 $current_date = date('Y-m-d H:i:s');
-$status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
+$is_manually_closed = !empty($post['closed_at']);
+$is_deadline_passed = $post['deadline'] < $current_date;
+$is_post_open = !$is_manually_closed && !$is_deadline_passed;
+$status = $is_post_open ? 'Open' : 'Closed';
 ?>
 
 <div class="card mb-3">
@@ -37,14 +40,14 @@ $status = ($post['deadline'] >= $current_date) ? 'Open' : 'Closed';
 
             <div>
 
-                <?php if ($role == 'mahasiswa' && $status == 'Open'): ?>
+                <?php if ($role == 'mahasiswa' && $is_post_open): ?>
 <a href="<?= BASE_URL ?>/views/mahasiswa/apply.php?id=<?php echo $post['id']; ?>" 
                        class="btn btn-primary btn-sm"
                        onclick="return confirm('Apakah Anda yakin ingin mendaftar untuk peluang ini?')">
                         Daftar
                     </a>
 
-                <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
+                <?php elseif ($role == 'dpa' && $is_post_open): ?>
                     <button class="btn btn-warning btn-sm">Rekomendasikan</button>
 
                 <?php elseif ($role == 'admin'): ?>
