@@ -97,6 +97,11 @@ $applications = mysqli_stmt_get_result($stmt);
                         Buka Kembali
                     </button>
                 <?php endif; ?>
+
+                <button type="button" class="btn btn-danger" 
+                    onclick="deletePost(<?php echo $peluang_id; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                    Hapus Posting
+                </button>
                 
                 <a href="my_posts.php" class="btn btn-secondary">Kembali</a>
             </div>
@@ -337,6 +342,30 @@ function reopenPost(postId, postTitle) {
             if (data.success) {
                 alert(data.message);
                 location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
+        });
+    }
+}
+
+function deletePost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin menghapus postingan "${postTitle}" secara permanen? Tindakan ini tidak dapat dibatalkan dan semua data terkait akan dihapus.`)) {
+        fetch('<?= BASE_URL ?>/controllers/mitra/delete_post_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'peluang_id=' + postId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.href = 'my_posts.php';
             } else {
                 alert('Error: ' + data.message);
             }

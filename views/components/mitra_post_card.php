@@ -59,6 +59,12 @@ if ($post['is_closed']) {
                     <?php else: ?>
                         <span class="badge bg-danger ms-2">Postingan Ditutup</span>
                     <?php endif; ?>
+
+                    <!-- Delete Post Button -->
+                    <button type="button" class="btn btn-danger btn-sm ms-2" 
+                        onclick="deletePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                        Hapus Posting
+                    </button>
                 <?php endif; ?>
             </div>
 
@@ -76,6 +82,30 @@ if ($post['is_closed']) {
 function closePost(postId, postTitle) {
     if (confirm(`Apakah Anda yakin ingin menutup postingan "${postTitle}"? Semua lamaran yang belum diterima akan ditolak secara otomatis.`)) {
         fetch('<?= BASE_URL ?>/controllers/mitra/close_post_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'peluang_id=' + postId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
+        });
+    }
+}
+
+function deletePost(postId, postTitle) {
+    if (confirm(`Apakah Anda yakin ingin menghapus postingan "${postTitle}" secara permanen? Tindakan ini tidak dapat dibatalkan dan semua data terkait akan dihapus.`)) {
+        fetch('<?= BASE_URL ?>/controllers/mitra/delete_post_process.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
