@@ -148,7 +148,13 @@ while ($row = mysqli_fetch_assoc($result)) {
                             </div>
 
                             <div class="col-md-5 text-end">
-                                <?php if ($user['status'] == 'inactive'): ?>
+                                <?php if ($user['status'] == 'pending'): ?>
+                                    <button type="button" 
+                                            class="btn btn-success btn-sm"
+                                            onclick="verifyUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
+                                        <i class="bi bi-check-circle"></i> Verifikasi
+                                    </button>
+                                <?php elseif ($user['status'] == 'inactive'): ?>
                                     <button type="button" 
                                             class="btn btn-success btn-sm"
                                             onclick="reactivateUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
@@ -218,6 +224,13 @@ function applyFilters() {
 document.getElementById('searchInput').addEventListener('keyup', applyFilters);
 document.getElementById('roleFilter').addEventListener('change', applyFilters);
 document.getElementById('statusFilter').addEventListener('change', applyFilters);
+
+// Verify user account (change status from pending to active)
+function verifyUser(userId, userEmail) {
+    if (confirm(`Apakah Anda yakin ingin memverifikasi akun user "${userEmail}"?`)) {
+        window.location.href = `<?= BASE_URL ?>/controllers/admin/verify_user_process.php?id=${userId}`;
+    }
+}
 
 // Deactivate user function
 function deactivateUser(userId, userEmail) {
