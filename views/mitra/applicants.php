@@ -43,7 +43,7 @@ $current_date = date('Y-m-d H:i:s');
 $is_deadline_passed = $post_data['deadline'] < $current_date;
 
 // Get post requirements and all applications for this post
-$query = "SELECT l.id, l.tanggal_apply, l.status, l.is_recommended,
+$query = "SELECT l.id, l.tanggal_apply, l.status, l.is_recommended, l.result_published,
                  m.nim, m.nama, m.fakultas, m.ipk, m.semester,
                  u.email,
                  p.min_ipk, p.min_semester, p.fakultas as required_fakultas, p.tipe
@@ -57,6 +57,14 @@ $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $peluang_id);
 mysqli_stmt_execute($stmt);
 $applications = mysqli_stmt_get_result($stmt);
+
+// Check if there are unpublished results
+$unpublished_query = "SELECT COUNT(*) as count FROM lamaran WHERE peluang_id = ? AND status IN ('accepted', 'rejected') AND result_published = 0";
+$unpublished_stmt = mysqli_prepare($conn, $unpublished_query);
+mysqli_stmt_bind_param($unpublished_stmt, 'i', $peluang_id);
+mysqli_stmt_execute($unpublished_stmt);
+$unpublished_result = mysqli_stmt_get_result($unpublished_stmt);
+$unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
 ?>
 
 <!DOCTYPE html>
@@ -103,6 +111,11 @@ $applications = mysqli_stmt_get_result($stmt);
                     Hapus Posting
                 </button>
                 
+                <button type="button" class="btn btn-success" 
+                    onclick="publishResults(<?php echo $peluang_id; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                    Publikasi Hasil
+                </button>
+                
                 <a href="my_posts.php" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
@@ -142,6 +155,14 @@ $applications = mysqli_stmt_get_result($stmt);
                 </small>
             </div>
         </div>
+
+        <?php if ($unpublished_count > 0): ?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Perhatian!</strong> Ada <?php echo $unpublished_count; ?> hasil evaluasi yang belum dipublikasi. 
+                Klik tombol "Publikasi Hasil" untuk mengirim notifikasi ke pelamar.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
         <!-- Filter -->
         <div class="card mb-3">
@@ -199,11 +220,16 @@ $applications = mysqli_stmt_get_result($stmt);
                                             Email: <?php echo htmlspecialchars($app['email']); ?>
                                         </small>
                                     </div>
-                                    <span class="badge 
-                                        <?php echo ($app['status'] == 'accepted') ? 'bg-success' : 
-                                               (($app['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>">
-                                        <?php echo ucfirst($app['status']); ?>
-                                    </span>
+                                    <div class="text-end">
+                                        <?php if ($app['result_published']): ?>
+                                            <span class="badge bg-info">Notifikasi Terkirim</span>
+                                        <?php endif; ?>
+                                        <span class="badge 
+                                            <?php echo ($app['status'] == 'accepted') ? 'bg-success' : 
+                                                   (($app['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>">
+                                            <?php echo ucfirst($app['status']); ?>
+                                        </span>
+                                    </div>
                                 </div>
                                 
                                 <hr class="my-2">
@@ -414,6 +440,30 @@ function rejectApplication(lamaranId) {
             } else {
                 alert('Error: ' + data.message);
             }
+        });
+    }
+}
+
+function publishResults(peluangId, postTitle) {
+    if (confirm('Apakah Anda yakin ingin mempublikasi hasil untuk "' + postTitle + '"? Notifikasi akan dikirim ke semua pelamar dan postingan akan ditutup secara otomatis.')) {
+        fetch('../../controllers/mitra/manage_application_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=release_results&peluang_id=' + peluangId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Terjadi kesalahan: ' + error);
         });
     }
 }

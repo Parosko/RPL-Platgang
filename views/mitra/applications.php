@@ -9,7 +9,7 @@ onlyMitra();
 $user_id = $_SESSION['user_id'];
 
 // Get all applications to mitra's postings
-$query = "SELECT l.id, l.tanggal_apply, l.status, l.is_recommended,
+$query = "SELECT l.id, l.tanggal_apply, l.status, l.is_recommended, COALESCE(l.result_published, 0) as result_published,
                  p.id as peluang_id, p.judul, p.tipe,
                  m.nim, m.nama as mahasiswa_nama, m.fakultas, m.prodi, m.ipk, m.semester,
                  u.email
@@ -23,6 +23,19 @@ $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $user_id);
 mysqli_stmt_execute($stmt);
 $applications = mysqli_stmt_get_result($stmt);
+
+// Get posts with unpublished results for the release button
+$query_unpublished = "SELECT DISTINCT p.id, p.judul, COUNT(l.id) as unpublished_count
+                      FROM peluang p
+                      LEFT JOIN lamaran l ON p.id = l.peluang_id AND l.result_published = 0 AND l.status IN ('accepted', 'rejected')
+                      WHERE p.mitra_id = ? 
+                      GROUP BY p.id, p.judul
+                      HAVING unpublished_count > 0
+                      ORDER BY p.judul";
+$stmt_unpub = mysqli_prepare($conn, $query_unpublished);
+mysqli_stmt_bind_param($stmt_unpub, 'i', $user_id);
+mysqli_stmt_execute($stmt_unpub);
+$unpublished_posts = mysqli_stmt_get_result($stmt_unpub);
 ?>
 
 <!DOCTYPE html>
@@ -115,6 +128,29 @@ $applications = mysqli_stmt_get_result($stmt);
             </div>
         </div>
 
+        <!-- Unreleased Results Alert -->
+        <?php 
+        mysqli_data_seek($unpublished_posts, 0);
+        if (mysqli_num_rows($unpublished_posts) > 0): 
+        ?>
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>Anda memiliki hasil evaluasi yang belum dirilis!</strong>
+                <div class="mt-2">
+                    <?php while ($post = mysqli_fetch_assoc($unpublished_posts)): ?>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span><?php echo htmlspecialchars($post['judul']); ?> 
+                                <strong>(<?php echo $post['unpublished_count']; ?> hasil)</strong></span>
+                            <button type="button" class="btn btn-sm btn-success" 
+                                onclick="releaseResults(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars($post['judul']); ?>')">
+                                Release Result
+                            </button>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
         <!-- Applications Table -->
         <div class="card">
             <div class="table-responsive">
@@ -153,7 +189,13 @@ $applications = mysqli_stmt_get_result($stmt);
                                         <span class="badge 
                                             <?php echo ($app['status'] == 'accepted') ? 'bg-success' : 
                                                    (($app['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>">
-                                            <?php echo ucfirst($app['status']); ?>
+                                            <?php 
+                                            $display_status = ucfirst($app['status']);
+                                            if ($app['status'] != 'pending' && $app['result_published'] == 0) {
+                                                $display_status = 'Draft: ' . $display_status;
+                                            }
+                                            echo $display_status;
+                                            ?>
                                         </span>
                                         <?php if ($app['is_recommended']): ?>
                                             <br><span class="badge badge-recommended">Direkomendasikan DPA</span>
@@ -242,6 +284,27 @@ function rejectApplication(lamaranId) {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: 'action=reject&lamaran_id=' + lamaranId
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+    }
+}
+
+function releaseResults(peluangId, postTitle) {
+    if (confirm('Apakah Anda yakin ingin merilis hasil evaluasi untuk "' + postTitle + '"? Notifikasi akan dikirim ke semua pelamar.')) {
+        fetch('../../controllers/mitra/manage_application_process.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'action=release_results&peluang_id=' + peluangId
         })
         .then(response => response.json())
         .then(data => {

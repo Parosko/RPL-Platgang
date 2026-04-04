@@ -28,7 +28,7 @@ $mahasiswa = mysqli_fetch_assoc($result);
 $mahasiswa_id = $mahasiswa['id'];
 
 // Get applications
-$query = "SELECT l.id as lamaran_id, l.tanggal_apply, l.status, p.id, p.judul, p.deskripsi, p.tipe, p.lokasi, p.deadline, u.email as mitra_email, m.nama_organisasi
+$query = "SELECT l.id as lamaran_id, l.tanggal_apply, l.status, l.result_published, p.id, p.judul, p.deskripsi, p.tipe, p.lokasi, p.deadline, u.email as mitra_email, m.nama_organisasi
           FROM lamaran l
           JOIN peluang p ON l.peluang_id = p.id
           JOIN users u ON p.mitra_id = u.id
@@ -89,8 +89,17 @@ $applications = mysqli_stmt_get_result($stmt);
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h6><?php echo htmlspecialchars($app['judul']); ?></h6>
-                                <span class="badge <?php echo ($app['status'] == 'accepted') ? 'bg-success' : (($app['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>">
-                                    <?php echo ucfirst($app['status']); ?>
+                                <span class="badge <?php 
+                                    // Show pending if results not published, else show actual status
+                                    if ($app['result_published'] == 0) {
+                                        echo 'bg-warning';
+                                        $display_status = 'Pending';
+                                    } else {
+                                        $display_status = ucfirst($app['status']);
+                                        echo ($app['status'] == 'accepted') ? 'bg-success' : 'bg-danger';
+                                    }
+                                ?>">
+                                    <?php echo $display_status; ?>
                                 </span>
                             </div>
                             <small class="text-muted">

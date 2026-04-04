@@ -130,8 +130,17 @@ $documents = mysqli_stmt_get_result($stmt);
                     <strong>Deadline:</strong> <?php echo $application['deadline']; ?><br>
                     <strong>Tanggal Apply:</strong> <?php echo $application['tanggal_apply']; ?><br>
                     <strong>Status:</strong> 
-                    <span class="badge <?php echo ($application['status'] == 'accepted') ? 'bg-success' : (($application['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>">
-                        <?php echo ucfirst($application['status']); ?>
+                    <span class="badge <?php 
+                        // Show pending if results not published, else show actual status
+                        if ($application['result_published'] == 0) {
+                            echo 'bg-warning';
+                            $display_status = 'Pending';
+                        } else {
+                            $display_status = ucfirst($application['status']);
+                            echo ($application['status'] == 'accepted') ? 'bg-success' : 'bg-danger';
+                        }
+                    ?>">
+                        <?php echo $display_status; ?>
                     </span>
                 </div>
 
