@@ -165,19 +165,25 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
 
             <div class="card mb-3">
                 <div class="card-body">
-                    <h6><strong>Pesan untuk Pelamar (Opsional)</strong></h6>
-                    <p class="text-muted small">Tulis pesan khusus yang akan dikirim bersama notifikasi hasil. Kosongkan jika ingin menggunakan pesan standar.</p>
+                    <h6><strong>Pesan untuk Pelamar (Wajib Diisi)</strong></h6>
+                    <p class="text-muted small">Anda wajib mengisi pesan khusus untuk kandidat yang diterima dan ditolak sebelum mempublikasi hasil.</p>
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="pesan_accepted" class="form-label">Pesan untuk Kandidat Diterima</label>
-                            <textarea class="form-control" id="pesan_accepted" rows="3" 
-                                      placeholder="Contoh: Selamat! Kami senang menyambut Anda bergabung dengan tim kami..."></textarea>
+                            <label for="pesan_accepted" class="form-label">
+                                Pesan untuk Kandidat Diterima <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" id="pesan_accepted" rows="3" required
+                                      placeholder="Contoh: Selamat! Kami senang menyambut Anda bergabung dengan tim kami. Silakan persiapkan dokumen yang diperlukan untuk proses selanjutnya..."></textarea>
+                            <small class="text-muted">Minimal 10 karakter</small>
                         </div>
                         <div class="col-md-6">
-                            <label for="pesan_rejected" class="form-label">Pesan untuk Kandidat Ditolak</label>
-                            <textarea class="form-control" id="pesan_rejected" rows="3" 
-                                      placeholder="Contoh: Terima kasih telah melamar. Sayangnya, posisi ini tidak cocok untuk Anda saat ini..."></textarea>
+                            <label for="pesan_rejected" class="form-label">
+                                Pesan untuk Kandidat Ditolak <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" id="pesan_rejected" rows="3" required
+                                      placeholder="Contoh: Terima kasih telah melamar. Setelah pertimbangan seksama, kami harus menyatakan bahwa Anda tidak cocok untuk posisi ini saat ini..."></textarea>
+                            <small class="text-muted">Minimal 10 karakter</small>
                         </div>
                     </div>
                 </div>
@@ -465,12 +471,29 @@ function rejectApplication(lamaranId) {
 }
 
 function publishResults(peluangId, postTitle) {
-    if (confirm('Apakah Anda yakin ingin mempublikasi hasil untuk "' + postTitle + '"? Notifikasi akan dikirim ke semua pelamar dan postingan akan ditutup secara otomatis.')) {
-        
-        // Get custom messages
-        const pesanAccepted = document.getElementById('pesan_accepted').value.trim();
-        const pesanRejected = document.getElementById('pesan_rejected').value.trim();
-        
+    // Get custom messages
+    const pesanAccepted = document.getElementById('pesan_accepted').value.trim();
+    const pesanRejected = document.getElementById('pesan_rejected').value.trim();
+    
+    // Validation
+    if (!pesanAccepted || !pesanRejected) {
+        alert('Anda wajib mengisi kedua pesan (untuk kandidat diterima dan ditolak) sebelum mempublikasi hasil.');
+        return;
+    }
+    
+    if (pesanAccepted.length < 10) {
+        alert('Pesan untuk kandidat diterima minimal 10 karakter.');
+        document.getElementById('pesan_accepted').focus();
+        return;
+    }
+    
+    if (pesanRejected.length < 10) {
+        alert('Pesan untuk kandidat ditolak minimal 10 karakter.');
+        document.getElementById('pesan_rejected').focus();
+        return;
+    }
+    
+    if (confirm('Apakah Anda yakin ingin mempublikasi hasil untuk "' + postTitle + '"? Notifikasi dengan pesan khusus akan dikirim ke semua pelamar dan postingan akan ditutup secara otomatis.')) {
         const formData = new FormData();
         formData.append('action', 'release_results');
         formData.append('peluang_id', peluangId);

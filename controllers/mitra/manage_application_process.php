@@ -73,6 +73,17 @@ if ($action == 'accept' || $action == 'reject') {
 
 // ==================== RELEASE RESULTS LOGIC ====================
 elseif ($action == 'release_results') {
+    // Validate that custom messages are provided
+    if (empty($pesan_accepted) || empty($pesan_rejected)) {
+        echo json_encode(['success' => false, 'message' => 'Anda wajib mengisi pesan untuk kandidat diterima dan ditolak.']);
+        exit;
+    }
+    
+    if (strlen($pesan_accepted) < 10 || strlen($pesan_rejected) < 10) {
+        echo json_encode(['success' => false, 'message' => 'Pesan minimal harus 10 karakter.']);
+        exit;
+    }
+    
     // Verify that this peluang belongs to mitra
     $query = "SELECT p.id, p.closed_at FROM peluang p WHERE p.id = ? AND p.mitra_id = ?";
     $stmt = mysqli_prepare($conn, $query);
@@ -103,7 +114,7 @@ elseif ($action == 'release_results') {
         exit;
     }
 
-    // Auto-close the post if it's not already closed
+    // Auto-close post if it's not already closed
     if (!$was_already_closed) {
         $close_query = "UPDATE peluang SET closed_at = NOW() WHERE id = ?";
         $close_stmt = mysqli_prepare($conn, $close_query);
@@ -120,42 +131,34 @@ elseif ($action == 'release_results') {
         mysqli_stmt_bind_param($stmt2, 'i', $lamaran['id']);
         
         if (mysqli_stmt_execute($stmt2)) {
-            // Store custom message in pesan_hasil table
+            // Store custom message in pesan_hasil table (now mandatory)
             $pesan_custom = ($lamaran['status'] == 'accepted') ? $pesan_accepted : $pesan_rejected;
             
-            if (!empty($pesan_custom)) {
-                $pesan_query = "INSERT INTO pesan_hasil (lamaran_id, tipe_hasil, pesan_mitra) VALUES (?, ?, ?)";
-                $pesan_stmt = mysqli_prepare($conn, $pesan_query);
-                mysqli_stmt_bind_param($pesan_stmt, 'iss', $lamaran['id'], $lamaran['status'], $pesan_custom);
-                mysqli_stmt_execute($pesan_stmt);
-            }
+            // Insert or update custom message
+            $pesan_query = "INSERT INTO pesan_hasil (lamaran_id, tipe_hasil, pesan_mitra) VALUES (?, ?, ?)
+                           ON DUPLICATE KEY UPDATE pesan_mitra = VALUES(pesan_mitra)";
+            $pesan_stmt = mysqli_prepare($conn, $pesan_query);
+            mysqli_stmt_bind_param($pesan_stmt, 'iss', $lamaran['id'], $lamaran['status'], $pesan_custom);
+            mysqli_stmt_execute($pesan_stmt);
             
-            // Create notification for mahasiswa
+            // Create notification for mahasiswa with custom message (now mandatory)
             $notif_message = ($lamaran['status'] == 'accepted') ? 
-                'Lamaran Anda diterima!' : 
-                'Lamaran Anda ditolak.';
+                'Selamat! Lamaran Anda telah diterima.' : 
+                'Mohon maaf, lamaran Anda belum dapat kami terima.';
             
-            if (!empty($pesan_custom)) {
-                // Use enhanced notification with custom message
-                $notif_query = "INSERT INTO notifikasi (user_id, pesan, pesan_custom, tipe_notifikasi, related_id, pengirim_id) 
-                               VALUES (?, ?, ?, 'result', ?, ?)";
-                $notif_stmt = mysqli_prepare($conn, $notif_query);
-                mysqli_stmt_bind_param($notif_stmt, 'issii', $lamaran['user_id'], $notif_message, $pesan_custom, $lamaran['id'], $user_id);
-                mysqli_stmt_execute($notif_stmt);
-            } else {
-                // Use standard notification
-                $query3 = "INSERT INTO notifikasi (user_id, pesan) VALUES (?, ?)";
-                $stmt3 = mysqli_prepare($conn, $query3);
-                mysqli_stmt_bind_param($stmt3, 'is', $lamaran['user_id'], $notif_message);
-                mysqli_stmt_execute($stmt3);
-            }
+            // Use enhanced notification with custom message
+            $notif_query = "INSERT INTO notifikasi (user_id, pesan, pesan_custom, tipe_notifikasi, related_id, pengirim_id) 
+                           VALUES (?, ?, ?, 'result', ?, ?)";
+            $notif_stmt = mysqli_prepare($conn, $notif_query);
+            mysqli_stmt_bind_param($notif_stmt, 'issii', $lamaran['user_id'], $notif_message, $pesan_custom, $lamaran['id'], $user_id);
+            mysqli_stmt_execute($notif_stmt);
             
             $published_count++;
         }
     }
 
     $close_message = $was_already_closed ? '' : ' Postingan telah ditutup secara otomatis.';
-    echo json_encode(['success' => true, 'message' => 'Hasil dirilis! ' . $published_count . ' notifikasi dikirim ke pelamar.' . $close_message]);
+    echo json_encode(['success' => true, 'message' => 'Hasil dirilis! ' . $published_count . ' notifikasi dengan pesan khusus dikirim ke pelamar.' . $close_message]);
 }
 
 else {

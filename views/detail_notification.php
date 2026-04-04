@@ -67,6 +67,21 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $related_info = mysqli_fetch_assoc($result);
+} elseif ($notification['tipe_notifikasi'] === 'result' && $notification['related_id']) {
+    // Get application result details
+    $query = "SELECT l.*, p.judul as peluang_judul, m.nama as mahasiswa_nama, 
+              mit.nama_organisasi, ph.pesan_mitra
+              FROM lamaran l
+              JOIN peluang p ON l.peluang_id = p.id
+              JOIN mahasiswa m ON l.mahasiswa_id = m.id
+              LEFT JOIN mitra mit ON p.mitra_id = mit.user_id
+              LEFT JOIN pesan_hasil ph ON l.id = ph.lamaran_id AND ph.tipe_hasil = l.status
+              WHERE l.id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $notification['related_id']);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    $related_info = mysqli_fetch_assoc($result);
 }
 ?>
 
@@ -160,49 +175,82 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
                             <h6 class="mb-0"><i class="fas fa-link"></i> Informasi Terkait</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p><strong>Peluang:</strong><br>
-                                    <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="text-decoration-none">
-                                        <?php echo htmlspecialchars($related_info['peluang_judul']); ?>
-                                    </a></p>
-                                    
-                                    <p><strong>Organisasi:</strong><br>
-                                    <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><strong>DPA:</strong><br>
-                                    <?php echo htmlspecialchars($related_info['dpa_nama']); ?></p>
-                                    
-                                    <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
-                                        <p><strong>Status Anda:</strong><br>
-                                        <span class="badge bg-<?php echo $related_info['status_lamaran'] === 'accepted' ? 'success' : ($related_info['status_lamaran'] === 'rejected' ? 'danger' : 'warning'); ?>">
-                                            <?php 
-                                            if ($related_info['status_lamaran']) {
-                                                switch($related_info['status_lamaran']) {
-                                                    case 'accepted':
-                                                        echo 'Diterima';
-                                                        break;
-                                                    case 'rejected':
-                                                        echo 'Ditolak';
-                                                        break;
-                                                    default:
-                                                        echo 'Diproses';
+                            <?php if ($notification['tipe_notifikasi'] === 'recommendation'): ?>
+                                <!-- Recommendation Information -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Peluang:</strong><br>
+                                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="text-decoration-none">
+                                            <?php echo htmlspecialchars($related_info['peluang_judul']); ?>
+                                        </a></p>
+                                        
+                                        <p><strong>Organisasi:</strong><br>
+                                        <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>DPA:</strong><br>
+                                        <?php echo htmlspecialchars($related_info['dpa_nama']); ?></p>
+                                        
+                                        <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
+                                            <p><strong>Status Anda:</strong><br>
+                                            <span class="badge bg-<?php echo $related_info['status_lamaran'] === 'accepted' ? 'success' : ($related_info['status_lamaran'] === 'rejected' ? 'danger' : 'warning'); ?>">
+                                                <?php 
+                                                if ($related_info['status_lamaran']) {
+                                                    switch($related_info['status_lamaran']) {
+                                                        case 'accepted':
+                                                            echo 'Diterima';
+                                                            break;
+                                                        case 'rejected':
+                                                            echo 'Ditolak';
+                                                            break;
+                                                        default:
+                                                            echo 'Diproses';
+                                                    }
+                                                } else {
+                                                    echo 'Belum Melamar';
                                                 }
-                                            } else {
-                                                echo 'Belum Melamar';
-                                            }
-                                            ?>
+                                                ?>
+                                            </span></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                
+                                <?php if (!empty($related_info['pesan_dosen'])): ?>
+                                    <div class="mt-3 p-3 bg-light rounded">
+                                        <strong><i class="fas fa-quote-left"></i> Pesan DPA:</strong><br>
+                                        <p class="mb-0 mt-2"><?php echo nl2br(htmlspecialchars($related_info['pesan_dosen'])); ?></p>
+                                    </div>
+                                <?php endif; ?>
+                                
+                            <?php elseif ($notification['tipe_notifikasi'] === 'result'): ?>
+                                <!-- Result Information -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Peluang:</strong><br>
+                                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="text-decoration-none">
+                                            <?php echo htmlspecialchars($related_info['peluang_judul']); ?>
+                                        </a></p>
+                                        
+                                        <p><strong>Organisasi:</strong><br>
+                                        <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Status Lamaran:</strong><br>
+                                        <span class="badge bg-<?php echo $related_info['status'] === 'accepted' ? 'success' : 'danger'; ?>">
+                                            <?php echo $related_info['status'] === 'accepted' ? 'Diterima' : 'Ditolak'; ?>
                                         </span></p>
-                                    <?php endif; ?>
+                                        
+                                        <p><strong>Tanggal Apply:</strong><br>
+                                        <?php echo date('d M Y H:i', strtotime($related_info['tanggal_apply'])); ?></p>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <?php if (!empty($related_info['pesan_dosen'])): ?>
-                                <div class="mt-3 p-3 bg-light rounded">
-                                    <strong><i class="fas fa-quote-left"></i> Pesan DPA:</strong><br>
-                                    <p class="mb-0 mt-2"><?php echo nl2br(htmlspecialchars($related_info['pesan_dosen'])); ?></p>
-                                </div>
+                                
+                                <?php if (!empty($related_info['pesan_mitra'])): ?>
+                                    <div class="mt-3 p-3 bg-light rounded">
+                                        <strong><i class="fas fa-quote-left"></i> Pesan dari <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Organisasi'); ?>:</strong><br>
+                                        <p class="mb-0 mt-2"><?php echo nl2br(htmlspecialchars($related_info['pesan_mitra'])); ?></p>
+                                    </div>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>
