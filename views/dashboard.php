@@ -12,7 +12,13 @@ redirectIfProfileIncomplete($conn, __FILE__);
 $role = $_SESSION['role'];
 $email = $_SESSION['email'];
 
-$query = "SELECT * FROM peluang WHERE status = 'approved' AND closed_at IS NULL ORDER BY created_at DESC";
+$query = "SELECT p.*, 
+                 (SELECT COUNT(*) FROM lamaran l WHERE l.peluang_id = p.id) as applicant_count,
+                 m.nama_organisasi as nama_mitra
+          FROM peluang p 
+          LEFT JOIN mitra m ON p.mitra_id = m.user_id
+          WHERE p.status = 'approved' AND p.closed_at IS NULL 
+          ORDER BY p.created_at DESC";
 $result = mysqli_query($conn, $query);
 
 $posts = [];
@@ -67,7 +73,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                 Belum ada postingan tersedia.
             </div>
         <?php else: ?>
-            <?php $hide_applicant_counter = true; ?>
             <?php foreach ($posts as $post): ?>
                 <?php include __DIR__ . '/components/post_card.php'; ?>
             <?php endforeach; ?>
