@@ -162,6 +162,26 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
                 Klik tombol "Publikasi Hasil" untuk mengirim notifikasi ke pelamar.
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h6><strong>Pesan untuk Pelamar (Opsional)</strong></h6>
+                    <p class="text-muted small">Tulis pesan khusus yang akan dikirim bersama notifikasi hasil. Kosongkan jika ingin menggunakan pesan standar.</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="pesan_accepted" class="form-label">Pesan untuk Kandidat Diterima</label>
+                            <textarea class="form-control" id="pesan_accepted" rows="3" 
+                                      placeholder="Contoh: Selamat! Kami senang menyambut Anda bergabung dengan tim kami..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pesan_rejected" class="form-label">Pesan untuk Kandidat Ditolak</label>
+                            <textarea class="form-control" id="pesan_rejected" rows="3" 
+                                      placeholder="Contoh: Terima kasih telah melamar. Sayangnya, posisi ini tidak cocok untuk Anda saat ini..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <?php endif; ?>
 
         <!-- Filter -->
@@ -446,12 +466,20 @@ function rejectApplication(lamaranId) {
 
 function publishResults(peluangId, postTitle) {
     if (confirm('Apakah Anda yakin ingin mempublikasi hasil untuk "' + postTitle + '"? Notifikasi akan dikirim ke semua pelamar dan postingan akan ditutup secara otomatis.')) {
+        
+        // Get custom messages
+        const pesanAccepted = document.getElementById('pesan_accepted').value.trim();
+        const pesanRejected = document.getElementById('pesan_rejected').value.trim();
+        
+        const formData = new FormData();
+        formData.append('action', 'release_results');
+        formData.append('peluang_id', peluangId);
+        formData.append('pesan_accepted', pesanAccepted);
+        formData.append('pesan_rejected', pesanRejected);
+        
         fetch('../../controllers/mitra/manage_application_process.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=release_results&peluang_id=' + peluangId
+            body: formData
         })
         .then(response => response.json())
         .then(data => {

@@ -13,6 +13,8 @@ $user_id = $_SESSION['user_id'];
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 $lamaran_id = isset($_POST['lamaran_id']) ? (int)$_POST['lamaran_id'] : 0;
 $peluang_id = isset($_POST['peluang_id']) ? (int)$_POST['peluang_id'] : 0;
+$pesan_accepted = isset($_POST['pesan_accepted']) ? trim($_POST['pesan_accepted']) : '';
+$pesan_rejected = isset($_POST['pesan_rejected']) ? trim($_POST['pesan_rejected']) : '';
 
 if (!$action) {
     echo json_encode(['success' => false, 'message' => 'Parameter tidak lengkap.']);
@@ -118,15 +120,35 @@ elseif ($action == 'release_results') {
         mysqli_stmt_bind_param($stmt2, 'i', $lamaran['id']);
         
         if (mysqli_stmt_execute($stmt2)) {
+            // Store custom message in pesan_hasil table
+            $pesan_custom = ($lamaran['status'] == 'accepted') ? $pesan_accepted : $pesan_rejected;
+            
+            if (!empty($pesan_custom)) {
+                $pesan_query = "INSERT INTO pesan_hasil (lamaran_id, tipe_hasil, pesan_mitra) VALUES (?, ?, ?)";
+                $pesan_stmt = mysqli_prepare($conn, $pesan_query);
+                mysqli_stmt_bind_param($pesan_stmt, 'iss', $lamaran['id'], $lamaran['status'], $pesan_custom);
+                mysqli_stmt_execute($pesan_stmt);
+            }
+            
             // Create notification for mahasiswa
             $notif_message = ($lamaran['status'] == 'accepted') ? 
                 'Lamaran Anda diterima!' : 
                 'Lamaran Anda ditolak.';
             
-            $query3 = "INSERT INTO notifikasi (user_id, pesan) VALUES (?, ?)";
-            $stmt3 = mysqli_prepare($conn, $query3);
-            mysqli_stmt_bind_param($stmt3, 'is', $lamaran['user_id'], $notif_message);
-            mysqli_stmt_execute($stmt3);
+            if (!empty($pesan_custom)) {
+                // Use enhanced notification with custom message
+                $notif_query = "INSERT INTO notifikasi (user_id, pesan, pesan_custom, tipe_notifikasi, related_id, pengirim_id) 
+                               VALUES (?, ?, ?, 'result', ?, ?)";
+                $notif_stmt = mysqli_prepare($conn, $notif_query);
+                mysqli_stmt_bind_param($notif_stmt, 'issii', $lamaran['user_id'], $notif_message, $pesan_custom, $lamaran['id'], $user_id);
+                mysqli_stmt_execute($notif_stmt);
+            } else {
+                // Use standard notification
+                $query3 = "INSERT INTO notifikasi (user_id, pesan) VALUES (?, ?)";
+                $stmt3 = mysqli_prepare($conn, $query3);
+                mysqli_stmt_bind_param($stmt3, 'is', $lamaran['user_id'], $notif_message);
+                mysqli_stmt_execute($stmt3);
+            }
             
             $published_count++;
         }

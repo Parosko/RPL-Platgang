@@ -18,6 +18,7 @@ if (!isset($_POST['post_id']) || !isset($_POST['dpa_id']) || !is_numeric($_POST[
 $post_id = (int)$_POST['post_id'];
 $dpa_id = (int)$_POST['dpa_id'];
 $selected_students = isset($_POST['selected_students']) ? $_POST['selected_students'] : [];
+$pesan_dosen = isset($_POST['pesan_dosen']) ? trim($_POST['pesan_dosen']) : '';
 
 // Verify that the DPA matches the current user
 $query = "SELECT id FROM dpa WHERE id = ? AND user_id = ?";
@@ -106,17 +107,29 @@ foreach ($student_ids as $mahasiswa_id) {
         $mahasiswa = mysqli_fetch_assoc($user_result);
         $mahasiswa_user_id = $mahasiswa['user_id'];
 
-        // Insert new recommendation
-        $insert_query = "INSERT INTO rekomendasi (dpa_id, mahasiswa_id, peluang_id) VALUES (?, ?, ?)";
+        // Insert new recommendation with custom message
+        $insert_query = "INSERT INTO rekomendasi (dpa_id, mahasiswa_id, peluang_id, pesan_dosen) VALUES (?, ?, ?, ?)";
         $insert_stmt = mysqli_prepare($conn, $insert_query);
-        mysqli_stmt_bind_param($insert_stmt, 'iii', $dpa_id, $mahasiswa_id, $post_id);
+        mysqli_stmt_bind_param($insert_stmt, 'iiis', $dpa_id, $mahasiswa_id, $post_id, $pesan_dosen);
         
         if (mysqli_stmt_execute($insert_stmt)) {
+            $rekomendasi_id = mysqli_insert_id($conn);
             $success_count++;
             
-            // Create notification for mahasiswa
+            // Create notification for mahasiswa with custom message
             $notification_message = "DPA merekomendasikan peluang \"$post_title\" untuk Anda. Silakan periksa peluang ini.";
-            createNotification($conn, $mahasiswa_user_id, $notification_message);
+            
+            if (!empty($pesan_dosen)) {
+                // Use enhanced notification with custom message
+                $notif_query = "INSERT INTO notifikasi (user_id, pesan, pesan_custom, tipe_notifikasi, related_id, pengirim_id) 
+                               VALUES (?, ?, ?, 'recommendation', ?, ?)";
+                $notif_stmt = mysqli_prepare($conn, $notif_query);
+                mysqli_stmt_bind_param($notif_stmt, 'issii', $mahasiswa_user_id, $notification_message, $pesan_dosen, $rekomendasi_id, $_SESSION['user_id']);
+                mysqli_stmt_execute($notif_stmt);
+            } else {
+                // Use standard notification
+                createNotification($conn, $mahasiswa_user_id, $notification_message);
+            }
             
             // Update is_recommended in lamaran table if student already applied
             $update_query = "UPDATE lamaran SET is_recommended = 1 

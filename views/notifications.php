@@ -9,7 +9,7 @@ checkLogin();
 
 $user_id = $_SESSION['user_id'];
 
-// Get all notifications for current user
+// Get all notifications for current user (working with current database structure)
 $query = "SELECT * FROM notifikasi WHERE user_id = ? ORDER BY created_at DESC";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $user_id);
@@ -69,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     <!-- CSS -->
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
+    <link rel="stylesheet" href="../assets/css/notifications.css">
 </head>
 
 <body>
@@ -105,26 +106,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     <div class="notification-item <?php echo $notif['status_baca'] == 0 ? 'unread' : 'read'; ?>" 
                          data-notif-id="<?php echo $notif['id']; ?>">
                         <div class="notification-content">
-                            <div class="notification-message">
-                                <?php echo htmlspecialchars($notif['pesan']); ?>
-                            </div>
-                            <small class="notification-date">
-                                <?php 
-                                $date = new DateTime($notif['created_at']);
-                                $now = new DateTime();
-                                $diff = $now->diff($date);
+                            <a href="detail_notification.php?id=<?php echo $notif['id']; ?>" class="notification-link">
+                                <div class="notification-message">
+                                    <?php echo htmlspecialchars($notif['pesan']); ?>
+                                </div>
                                 
-                                if ($diff->days > 0) {
-                                    echo $diff->days . ' hari yang lalu';
-                                } elseif ($diff->h > 0) {
-                                    echo $diff->h . ' jam yang lalu';
-                                } elseif ($diff->i > 0) {
-                                    echo $diff->i . ' menit yang lalu';
-                                } else {
-                                    echo 'Baru saja';
-                                }
-                                ?>
-                            </small>
+                                <div class="notification-footer">
+                                    <small class="notification-date">
+                                        <?php 
+                                        $date = new DateTime($notif['created_at']);
+                                        $now = new DateTime();
+                                        $diff = $now->diff($date);
+                                        
+                                        if ($diff->days > 0) {
+                                            echo $diff->days . ' hari yang lalu';
+                                        } elseif ($diff->h > 0) {
+                                            echo $diff->h . ' jam yang lalu';
+                                        } elseif ($diff->i > 0) {
+                                            echo $diff->i . ' menit yang lalu';
+                                        } else {
+                                            echo 'Baru saja';
+                                        }
+                                        ?>
+                                    </small>
+                                </div>
+                            </a>
                         </div>
                         <?php if ($notif['status_baca'] == 0): ?>
                             <button class="btn btn-xs btn-link" onclick="markAsRead(<?php echo $notif['id']; ?>)">
@@ -139,54 +145,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     </div>
 
 </div>
-
-<style>
-.notification-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.notification-item {
-    padding: 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    background: #f8f9fa;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s ease;
-}
-
-.notification-item.unread {
-    background: #e7f3ff;
-    border-color: #0d6efd;
-    border-left: 4px solid #0d6efd;
-}
-
-.notification-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.notification-content {
-    flex: 1;
-}
-
-.notification-message {
-    color: #212529;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
-}
-
-.notification-date {
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-
-.notification-item.read .notification-message {
-    color: #6c757d;
-}
-</style>
 
 <script>
 function markAsRead(notifId) {

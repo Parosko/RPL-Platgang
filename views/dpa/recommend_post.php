@@ -151,8 +151,20 @@ while ($row = mysqli_fetch_assoc($result)) {
                             <?php endforeach; ?>
                         </div>
 
+                        <div class="mt-4">
+                            <label for="pesan_dosen" class="form-label">
+                                <strong>Pesan untuk Mahasiswa (Opsional)</strong>
+                                <small class="text-muted d-block">
+                                    Tulis pesan khusus yang akan dikirim bersama notifikasi rekomendasi.
+                                    Kosongkan jika ingin menggunakan pesan standar.
+                                </small>
+                            </label>
+                            <textarea class="form-control" id="pesan_dosen" name="pesan_dosen" rows="3" 
+                                      placeholder="Contoh: Saya merekomendasikan peluang ini karena sesuai dengan minat dan kemampuan Anda..."></textarea>
+                        </div>
+
                         <div class="d-flex gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary">Rekomendasikan</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Rekomendasikan</button>
                             <a href="../../views/posts/detail.php?id=<?php echo $post_id; ?>" class="btn btn-secondary">Batal</a>
                         </div>
                     </form>
@@ -165,6 +177,75 @@ while ($row = mysqli_fetch_assoc($result)) {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const submitBtn = document.getElementById('submitBtn');
+    const checkboxes = document.querySelectorAll('input[name="selected_students[]"]:not(:disabled)');
+    
+    form.addEventListener('submit', function(e) {
+        const checkedBoxes = document.querySelectorAll('input[name="selected_students[]"]:checked');
+        
+        if (checkedBoxes.length === 0) {
+            e.preventDefault();
+            
+            // Show error message
+            const existingAlert = document.querySelector('.alert-danger');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-danger mt-3';
+            alert.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Pilih minimal satu mahasiswa untuk direkomendasikan.';
+            
+            submitBtn.parentNode.insertBefore(alert, submitBtn);
+            
+            // Scroll to alert
+            alert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+    });
+    
+    // Real-time validation feedback
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const checkedBoxes = document.querySelectorAll('input[name="selected_students[]"]:checked');
+            
+            if (checkedBoxes.length > 0) {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-secondary');
+                submitBtn.classList.add('btn-primary');
+                
+                // Remove any existing error alerts
+                const existingAlert = document.querySelector('.alert-danger');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.classList.remove('btn-primary');
+                submitBtn.classList.add('btn-secondary');
+            }
+        });
+    });
+    
+    // Initial state
+    const initialChecked = document.querySelectorAll('input[name="selected_students[]"]:checked');
+    if (initialChecked.length === 0) {
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-secondary');
+    }
+});
+</script>
 
 </body>
 </html>
