@@ -29,6 +29,11 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <i class="bi bi-grid me-3"></i> Beranda
             </a>
         </li>
+        <li class="nav-item mb-1">
+            <a href="<?= BASE_URL ?>/views/search.php" class="nav-link <?= ($current_page == 'search.php') ? 'active' : '' ?>">
+                <i class="bi bi-search me-3"></i> Pencarian
+            </a>
+        </li>
 
         <?php if ($role == 'mahasiswa'): ?>
             <li class="nav-item mb-1">
