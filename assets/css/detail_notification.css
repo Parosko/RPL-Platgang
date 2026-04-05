@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Detail Notification Page Styles
+   Theme: Crisp Slate & Deep Blue (Enterprise SaaS)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Main Container & Layout
+   -------------------------------------------------------------------------- */
+.detail-card {
+    background-color: var(--color-white, #ffffff);
+    border: 1px solid var(--border-base, #e2e8f0);
+    border-radius: var(--radius-lg, 12px);
+    padding: 32px;
+    box-shadow: var(--shadow-sm, 0 1px 3px rgba(0,0,0,0.05));
+    position: relative;
+    overflow: hidden;
+}
+
+/* Dekorasi pita atas (Top border accent) - Diganti ke warna solid */
+.detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--primary-base, #1e3a8a);
+}
+
+/* --------------------------------------------------------------------------
+   Header & Meta Information
+   -------------------------------------------------------------------------- */
+.detail-header {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-subtle, #f1f5f9);
+}
+
+.icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.bg-primary-subtle { background-color: #eff6ff; color: #1d4ed8; }
+.bg-secondary-subtle { background-color: #f8fafc; color: #475569; }
+
+.badge-enterprise {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+}
+
+.badge-primary { background-color: #e0e7ff; color: #3730a3; }
+.badge-secondary { background-color: #f1f5f9; color: #475569; }
+
+.text-meta {
+    font-size: 13px;
+    color: var(--text-subtle, #64748b);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Typography & Sender Info
+   -------------------------------------------------------------------------- */
+.sender-info {
+    background-color: #f8fafc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle, #f1f5f9);
+}
+
+.info-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted, #94a3b8);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Message Content
+   -------------------------------------------------------------------------- */
+.main-message-section {
+    margin-bottom: 28px;
+}
+
+.message-text {
+    font-size: 20px;
+    line-height: 1.4;
+    color: var(--text-headline, #0f172a);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Related Information Grid
+   -------------------------------------------------------------------------- */
+.related-info-section {
+    background-color: var(--color-white, #ffffff);
+    border: 1px solid var(--border-base, #e2e8f0);
+    border-radius: var(--radius-md, 8px);
+    padding: 24px;
+    margin-bottom: 28px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-headline, #0f172a);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.related-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-value {
+    font-size: 14px;
+    color: var(--text-body, #334155);
+    font-weight: 500;
+}
+
+.info-value-link {
+    font-size: 14px;
+    color: var(--primary-base, #1d4ed8);
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.info-value-link:hover {
+    color: #1e3a8a;
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   Badges Status
+   -------------------------------------------------------------------------- */
+.badge-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.status-danger { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.status-warning { background-color: #fef9c3; color: #854d0e; border: 1px solid #fef08a; }
+
+/* --------------------------------------------------------------------------
+   Quote Box (Untuk komentar mitra/DPA)
+   -------------------------------------------------------------------------- */
+.quote-box {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    border: 1px solid var(--border-subtle, #f1f5f9);
+}
+
+.quote-icon {
+    font-size: 28px;
+    color: #cbd5e1;
+    line-height: 1;
+}
+
+.quote-content p {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    color: var(--text-body, #334155);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* --------------------------------------------------------------------------
+   Footer Actions
+   -------------------------------------------------------------------------- */
+.detail-actions {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-subtle, #f1f5f9);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-action-primary {
+    background-color: var(--primary-base, #1e3a8a);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.btn-action-primary:hover {
+    background-color: #172554;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}

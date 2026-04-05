@@ -86,23 +86,21 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Detail Notifikasi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Notifikasi | Sistem Peluang</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <link rel="stylesheet" href="../assets/css/notifications.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/detail_notification.css"> 
 </head>
 
 <body>
@@ -113,169 +111,173 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
 
     <div class="content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Detail Notifikasi</h4>
-                <small>Informasi lengkap notifikasi</small>
+                <h1 class="page-title">Detail Notifikasi</h1>
+                <p class="page-subtitle mt-1">Rincian informasi dari pemberitahuan sistem.</p>
             </div>
-            <a href="notifications.php" class="btn btn-secondary">Kembali ke Notifikasi</a>
+            <a href="notifications.php" class="btn btn-action-secondary">
+                <i class="bi bi-arrow-left"></i> Kembali ke Daftar
+            </a>
         </div>
 
-        <hr>
-
-        <div class="card">
-            <div class="card-body">
-                <!-- Notification Header -->
-                <div class="d-flex justify-content-between align-items-start mb-3">
+        <div class="detail-card">
+            
+            <div class="detail-header d-flex flex-wrap justify-content-between align-items-start gap-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="icon-wrapper <?php echo $notification['tipe_notifikasi'] === 'recommendation' ? 'bg-primary-subtle text-primary' : 'bg-secondary-subtle text-secondary'; ?>">
+                        <i class="bi <?php echo $notification['tipe_notifikasi'] === 'recommendation' ? 'bi-star-fill' : 'bi-envelope-paper-fill'; ?>"></i>
+                    </div>
                     <div>
-                        <span class="badge bg-<?php echo $notification['tipe_notifikasi'] === 'recommendation' ? 'primary' : 'secondary'; ?>">
+                        <span class="badge-enterprise <?php echo $notification['tipe_notifikasi'] === 'recommendation' ? 'badge-primary' : 'badge-secondary'; ?> mb-1">
                             <?php 
                             switch($notification['tipe_notifikasi']) {
                                 case 'recommendation':
                                     echo 'Rekomendasi';
                                     break;
                                 case 'result':
-                                    echo 'Hasil';
+                                    echo 'Hasil Lamaran';
                                     break;
                                 default:
-                                    echo 'Standar';
+                                    echo 'Pemberitahuan Sistem';
                             }
                             ?>
                         </span>
-                        <small class="text-muted ms-2">
+                        <div class="text-meta">
+                            <i class="bi bi-clock"></i>
                             <?php 
                             $date = new DateTime($notification['created_at']);
-                            echo $date->format('d M Y H:i');
+                            echo $date->format('d M Y, H:i');
                             ?>
-                        </small>
-                    </div>
-                    <?php if ($notification['pengirim_nama']): ?>
-                        <div class="text-end">
-                            <small class="text-muted">Dari:</small><br>
-                            <strong><?php echo htmlspecialchars($notification['pengirim_nama']); ?></strong>
-                            <small class="text-muted d-block"><?php echo htmlspecialchars($notification['pengirim_role']); ?></small>
                         </div>
-                    <?php endif; ?>
+                    </div>
                 </div>
 
-                <!-- Main Message -->
-                <div class="notification-main-message mb-4">
-                    <h5><?php echo htmlspecialchars($notification['pesan']); ?></h5>
-                </div>
-
-                <!-- Custom Message (if exists) -->
-                <?php if (!empty($notification['pesan_custom'])): ?>
-                    <div class="alert alert-info">
-                        <h6><i class="fas fa-comment"></i> Pesan Khusus:</h6>
-                        <p class="mb-0"><?php echo nl2br(htmlspecialchars($notification['pesan_custom'])); ?></p>
+                <?php if ($notification['pengirim_nama']): ?>
+                    <div class="sender-info text-md-end">
+                        <span class="info-label d-block">Dikirim Oleh</span>
+                        <strong class="d-block text-headline"><?php echo htmlspecialchars($notification['pengirim_nama']); ?></strong>
+                        <span class="text-meta"><?php echo ucfirst(htmlspecialchars($notification['pengirim_role'])); ?></span>
                     </div>
                 <?php endif; ?>
-
-                <!-- Related Information -->
-                <?php if ($related_info): ?>
-                    <div class="card border-secondary">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0"><i class="fas fa-link"></i> Informasi Terkait</h6>
-                        </div>
-                        <div class="card-body">
-                            <?php if ($notification['tipe_notifikasi'] === 'recommendation'): ?>
-                                <!-- Recommendation Information -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Peluang:</strong><br>
-                                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="text-decoration-none">
-                                            <?php echo htmlspecialchars($related_info['peluang_judul']); ?>
-                                        </a></p>
-                                        
-                                        <p><strong>Organisasi:</strong><br>
-                                        <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>DPA:</strong><br>
-                                        <?php echo htmlspecialchars($related_info['dpa_nama']); ?></p>
-                                        
-                                        <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
-                                            <p><strong>Status Anda:</strong><br>
-                                            <span class="badge bg-<?php echo $related_info['status_lamaran'] === 'accepted' ? 'success' : ($related_info['status_lamaran'] === 'rejected' ? 'danger' : 'warning'); ?>">
-                                                <?php 
-                                                if ($related_info['status_lamaran']) {
-                                                    switch($related_info['status_lamaran']) {
-                                                        case 'accepted':
-                                                            echo 'Diterima';
-                                                            break;
-                                                        case 'rejected':
-                                                            echo 'Ditolak';
-                                                            break;
-                                                        default:
-                                                            echo 'Diproses';
-                                                    }
-                                                } else {
-                                                    echo 'Belum Melamar';
-                                                }
-                                                ?>
-                                            </span></p>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                
-                                <?php if (!empty($related_info['pesan_dosen'])): ?>
-                                    <div class="mt-3 p-3 bg-light rounded">
-                                        <strong><i class="fas fa-quote-left"></i> Pesan DPA:</strong><br>
-                                        <p class="mb-0 mt-2"><?php echo nl2br(htmlspecialchars($related_info['pesan_dosen'])); ?></p>
-                                    </div>
-                                <?php endif; ?>
-                                
-                            <?php elseif ($notification['tipe_notifikasi'] === 'result'): ?>
-                                <!-- Result Information -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Peluang:</strong><br>
-                                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="text-decoration-none">
-                                            <?php echo htmlspecialchars($related_info['peluang_judul']); ?>
-                                        </a></p>
-                                        
-                                        <p><strong>Organisasi:</strong><br>
-                                        <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Status Lamaran:</strong><br>
-                                        <span class="badge bg-<?php echo $related_info['status'] === 'accepted' ? 'success' : 'danger'; ?>">
-                                            <?php echo $related_info['status'] === 'accepted' ? 'Diterima' : 'Ditolak'; ?>
-                                        </span></p>
-                                        
-                                        <p><strong>Tanggal Apply:</strong><br>
-                                        <?php echo date('d M Y H:i', strtotime($related_info['tanggal_apply'])); ?></p>
-                                    </div>
-                                </div>
-                                
-                                <?php if (!empty($related_info['pesan_mitra'])): ?>
-                                    <div class="mt-3 p-3 bg-light rounded">
-                                        <strong><i class="fas fa-quote-left"></i> Pesan dari <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Organisasi'); ?>:</strong><br>
-                                        <p class="mb-0 mt-2"><?php echo nl2br(htmlspecialchars($related_info['pesan_mitra'])); ?></p>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Action Buttons -->
-                <div class="mt-4 d-flex gap-2">
-                    <?php if ($related_info): ?>
-                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="btn btn-primary">
-                            Lihat Detail Peluang
-                        </a>
-                    <?php endif; ?>
-                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
-                        Kembali
-                    </button>
-                </div>
             </div>
+
+            <div class="main-message-section">
+                <h4 class="message-text"><?php echo htmlspecialchars($notification['pesan']); ?></h4>
+            </div>
+
+            <?php if ($related_info): ?>
+                <div class="related-info-section">
+                    <h6 class="section-title"><i class="bi bi-link-45deg"></i> Informasi Terkait</h6>
+                    
+                    <div class="related-info-grid">
+                        <?php if ($notification['tipe_notifikasi'] === 'recommendation'): ?>
+                            
+                            <div class="info-group">
+                                <span class="info-label">Peluang</span>
+                                <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
+                                    <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="info-group">
+                                <span class="info-label">Dosen Pembimbing (DPA)</span>
+                                <span class="info-value"><?php echo htmlspecialchars($related_info['dpa_nama']); ?></span>
+                            </div>
+
+                            <div class="info-group">
+                                <span class="info-label">Organisasi / Mitra</span>
+                                <span class="info-value"><?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></span>
+                            </div>
+
+                            <?php if ($_SESSION['role'] === 'mahasiswa'): ?>
+                                <div class="info-group">
+                                    <span class="info-label">Status Anda Saat Ini</span>
+                                    <div>
+                                        <span class="badge-status <?php echo $related_info['status_lamaran'] === 'accepted' ? 'status-success' : ($related_info['status_lamaran'] === 'rejected' ? 'status-danger' : 'status-warning'); ?>">
+                                            <?php 
+                                            if ($related_info['status_lamaran']) {
+                                                switch($related_info['status_lamaran']) {
+                                                    case 'accepted': echo '<i class="bi bi-check-circle me-1"></i>Diterima'; break;
+                                                    case 'rejected': echo '<i class="bi bi-x-circle me-1"></i>Ditolak'; break;
+                                                    default: echo '<i class="bi bi-hourglass-split me-1"></i>Diproses';
+                                                }
+                                            } else {
+                                                echo '<i class="bi bi-dash-circle me-1"></i>Belum Melamar';
+                                            }
+                                            ?>
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($related_info['pesan_dosen'])): ?>
+                                <div class="quote-box mt-3" style="grid-column: 1 / -1;">
+                                    <i class="bi bi-quote quote-icon"></i>
+                                    <div class="quote-content">
+                                        <span class="info-label">Catatan Rekomendasi DPA:</span>
+                                        <p><?php echo nl2br(htmlspecialchars($related_info['pesan_dosen'])); ?></p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            
+                        <?php elseif ($notification['tipe_notifikasi'] === 'result'): ?>
+                            
+                            <div class="info-group">
+                                <span class="info-label">Peluang</span>
+                                <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
+                                    <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
+                                </a>
+                            </div>
+
+                            <div class="info-group">
+                                <span class="info-label">Organisasi / Mitra</span>
+                                <span class="info-value"><?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Tidak diketahui'); ?></span>
+                            </div>
+
+                            <div class="info-group">
+                                <span class="info-label">Status Keputusan</span>
+                                <div>
+                                    <span class="badge-status <?php echo $related_info['status'] === 'accepted' ? 'status-success' : 'status-danger'; ?>">
+                                        <?php echo $related_info['status'] === 'accepted' ? '<i class="bi bi-check-circle me-1"></i>Diterima' : '<i class="bi bi-x-circle me-1"></i>Ditolak'; ?>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="info-group">
+                                <span class="info-label">Tanggal Melamar</span>
+                                <span class="info-value"><?php echo date('d M Y, H:i', strtotime($related_info['tanggal_apply'])); ?></span>
+                            </div>
+
+                            <?php if (!empty($related_info['pesan_mitra'])): ?>
+                                <div class="quote-box mt-3" style="grid-column: 1 / -1;">
+                                    <i class="bi bi-quote quote-icon"></i>
+                                    <div class="quote-content">
+                                        <span class="info-label">Catatan dari <?php echo htmlspecialchars($related_info['nama_organisasi'] ?? 'Mitra'); ?>:</span>
+                                        <p><?php echo nl2br(htmlspecialchars($related_info['pesan_mitra'])); ?></p>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="detail-actions">
+                <?php if ($related_info): ?>
+                    <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="btn-action-primary">
+                        Lihat Detail Peluang <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                <?php endif; ?>
+            </div>
+            
         </div>
 
     </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

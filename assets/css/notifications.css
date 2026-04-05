@@ -1,89 +1,131 @@
-/* Notification-specific card overrides */
+/* ==========================================================================
+   Notifications Page Styles
+   Theme: Crisp Slate & Deep Blue (Enterprise SaaS)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Notification Card Base
+   -------------------------------------------------------------------------- */
 .notification-card {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--bg-surface);
+    border: var(--border-width-base) solid var(--border-base);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    transition: var(--transition-base);
+    position: relative;
+    box-shadow: var(--shadow-subtle);
 }
 
-/* Notification List Styles */
-.notification-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.notification-card:hover {
+    box-shadow: var(--shadow-card);
+    border-color: var(--border-normal);
+    transform: translateY(-1px);
 }
 
-.notification-item {
-    padding: 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    background: #f8f9fa;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.2s ease;
+/* --------------------------------------------------------------------------
+   Unread vs Read States
+   -------------------------------------------------------------------------- */
+/* Unread State (Belum dibaca) */
+.notification-card.is-unread {
+    border-left: 4px solid var(--primary-base); /* Aksen garis biru tegas di kiri */
+    background-color: var(--color-white);
 }
 
-.notification-item.unread {
-    background: #e7f3ff;
-    border-color: #0d6efd;
-    border-left: 4px solid #0d6efd;
+.notification-card.is-unread .notification-message {
+    font-weight: 600;
+    color: var(--text-headline);
 }
 
-.notification-item:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.notification-card.is-unread .notification-icon {
+    background-color: rgba(30, 58, 138, 0.1); /* Background biru transparan */
+    color: var(--primary-base);
 }
 
-.notification-content {
-    flex: 1;
+/* Read State (Sudah dibaca) */
+.notification-card.is-read {
+    border-left: 4px solid transparent; /* Menjaga layout agar tidak bergeser */
+    background-color: var(--bg-canvas); /* Warna background sedikit redup */
 }
 
-.notification-message {
-    color: #212529;
-    font-size: 0.95rem;
-    margin-bottom: 5px;
+.notification-card.is-read .notification-message {
+    font-weight: 400;
+    color: var(--text-body);
 }
 
-.notification-footer {
-    margin-top: 8px;
+.notification-card.is-read .notification-icon {
+    background-color: var(--bg-subtle);
+    color: var(--icon-muted);
 }
 
-.notification-date {
-    color: #6c757d;
-    font-size: 0.85rem;
-}
-
-.notification-item.read .notification-message {
-    color: #6c757d;
-}
-
+/* --------------------------------------------------------------------------
+   Typography & Content
+   -------------------------------------------------------------------------- */
 .notification-link {
-    text-decoration: none;
     color: inherit;
     display: block;
-    padding: 0;
-    margin: 0;
-}
-
-.notification-link:hover {
-    text-decoration: none;
-    color: inherit;
+    transition: var(--transition-fast);
 }
 
 .notification-link:hover .notification-message {
-    color: #0d6efd;
+    color: var(--primary-base);
 }
 
-.notification-item.read .notification-link:hover .notification-message {
-    color: #495057;
+.notification-message {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 4px;
+    transition: var(--transition-fast);
 }
 
-/* Notification Detail Styles */
-.notification-main-message {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    border-left: 4px solid #0d6efd;
+.notification-meta {
+    font-size: 12px;
+    color: var(--text-subtle);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-/* Notification-specific badge overrides */
-.notification-badge {
-    font-size: 0.75rem;
+/* --------------------------------------------------------------------------
+   Icons & Actions
+   -------------------------------------------------------------------------- */
+.notification-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: var(--transition-base);
+}
+
+/* Indikator titik biru kecil untuk unread */
+.unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary-base);
+    display: inline-block;
+    box-shadow: 0 0 0 2px var(--color-white);
+}
+
+/* Tombol Ghost (transparan) untuk aksi */
+.btn-icon-ghost {
+    background: transparent;
+    border: none;
+    color: var(--icon-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-icon-ghost:hover {
+    background-color: var(--bg-subtle);
+    color: var(--primary-base);
 }

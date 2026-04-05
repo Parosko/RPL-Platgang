@@ -56,24 +56,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Notifikasi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifikasi | Sistem Peluang</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- CSS -->
+    <link rel="stylesheet" href="../assets/css/design-system.css">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <link rel="stylesheet" href="../assets/css/notifications.css">
-</head>
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css"> <link rel="stylesheet" href="../assets/css/notifications.css"> </head>
 
 <body>
 
@@ -83,71 +82,91 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     <div class="content">
 
-        <div class="page-header">
-            <h1 class="page-title">Notifikasi</h1>
-            <p class="page-subtitle">
-                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (<?php echo $_SESSION['role']; ?>)
-            </p>
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+            <div>
+                <h1 class="page-title">Notifikasi</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-bell me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Pembaruan dan aktivitas terbaru untuk akun Anda.</span>
+                </div>
+            </div>
+            
+            <?php if (!empty(array_filter($notifications, function($n) { return $n['status_baca'] == 0; }))): ?>
+                <button class="btn btn-action-secondary" onclick="markAllAsRead()">
+                    <i class="bi bi-check2-all"></i> Tandai Semua Dibaca
+                </button>
+            <?php endif; ?>
         </div>
 
-        <?php if (!empty(array_filter($notifications, function($n) { return $n['status_baca'] == 0; }))): ?>
-            <button class="btn btn-sm btn-outline-primary" onclick="markAllAsRead()">
-                Tandai Semua Sebagai Sudah Dibaca
-            </button>
-        <?php endif; ?>
-
-        <hr>
-
-        <?php if (empty($notifications)): ?>
-            <div class="alert alert-info">
-                Anda tidak memiliki notifikasi.
-            </div>
-        <?php else: ?>
-            <div class="notification-list">
-                <?php foreach ($notifications as $notif): ?>
-                    <div class="notification-item <?php echo $notif['status_baca'] == 0 ? 'unread' : 'read'; ?>" 
-                         data-notif-id="<?php echo $notif['id']; ?>">
-                        <div class="notification-content">
-                            <a href="detail_notification.php?id=<?php echo $notif['id']; ?>" class="notification-link">
-                                <div class="notification-message">
-                                    <?php echo htmlspecialchars($notif['pesan']); ?>
-                                </div>
-                                
-                                <div class="notification-footer">
-                                    <small class="notification-date">
-                                        <?php 
-                                        $date = new DateTime($notif['created_at']);
-                                        $now = new DateTime();
-                                        $diff = $now->diff($date);
-                                        
-                                        if ($diff->days > 0) {
-                                            echo $diff->days . ' hari yang lalu';
-                                        } elseif ($diff->h > 0) {
-                                            echo $diff->h . ' jam yang lalu';
-                                        } elseif ($diff->i > 0) {
-                                            echo $diff->i . ' menit yang lalu';
-                                        } else {
-                                            echo 'Baru saja';
-                                        }
-                                        ?>
-                                    </small>
-                                </div>
-                            </a>
-                        </div>
-                        <?php if ($notif['status_baca'] == 0): ?>
-                            <button class="btn btn-xs btn-link" onclick="markAsRead(<?php echo $notif['id']; ?>)">
-                                Tandai Dibaca
-                            </button>
-                        <?php endif; ?>
+        <div class="notification-container mt-4">
+            <?php if (empty($notifications)): ?>
+                <div class="alert-empty-state">
+                    <i class="bi bi-bell-slash"></i>
+                    <div>
+                        <strong>Tidak ada notifikasi baru</strong>
+                        <span>Anda sudah membaca semua pemberitahuan saat ini.</span>
                     </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <div class="d-flex flex-column gap-3">
+                    <?php foreach ($notifications as $notif): ?>
+                        <div class="notification-card <?php echo $notif['status_baca'] == 0 ? 'is-unread' : 'is-read'; ?>" 
+                             data-notif-id="<?php echo $notif['id']; ?>">
+                            
+                            <div class="d-flex gap-3 align-items-start">
+                                <div class="notification-icon">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </div>
+
+                                <div class="notification-content flex-grow-1">
+                                    <a href="detail_notification.php?id=<?php echo $notif['id']; ?>" class="notification-link text-decoration-none">
+                                        <div class="notification-message">
+                                            <?php echo htmlspecialchars($notif['pesan']); ?>
+                                        </div>
+                                        <div class="notification-meta mt-1">
+                                            <i class="bi bi-clock"></i>
+                                            <span class="notification-date">
+                                                <?php 
+                                                $date = new DateTime($notif['created_at']);
+                                                $now = new DateTime();
+                                                $diff = $now->diff($date);
+                                                
+                                                if ($diff->days > 0) {
+                                                    echo $diff->days . ' hari yang lalu';
+                                                } elseif ($diff->h > 0) {
+                                                    echo $diff->h . ' jam yang lalu';
+                                                } elseif ($diff->i > 0) {
+                                                    echo $diff->i . ' menit yang lalu';
+                                                } else {
+                                                    echo 'Baru saja';
+                                                }
+                                                ?>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="notification-actions d-flex align-items-center gap-2">
+                                    <?php if ($notif['status_baca'] == 0): ?>
+                                        <button class="btn btn-icon-ghost" onclick="markAsRead(<?php echo $notif['id']; ?>)" title="Tandai sudah dibaca">
+                                            <i class="bi bi-check-circle"></i>
+                                        </button>
+                                        <span class="unread-dot"></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </div>
 
     </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function markAsRead(notifId) {
     fetch('<?= BASE_URL ?>/views/notifications.php', {
@@ -160,8 +179,11 @@ function markAsRead(notifId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            document.querySelector('[data-notif-id="' + notifId + '"]').classList.remove('unread');
-            document.querySelector('[data-notif-id="' + notifId + '"]').classList.add('read');
+            let card = document.querySelector('[data-notif-id="' + notifId + '"]');
+            if (card) {
+                card.classList.remove('is-unread');
+                card.classList.add('is-read');
+            }
             location.reload();
         }
     });
@@ -175,8 +197,8 @@ function markAllAsRead() {
         },
         body: 'action=mark_all_as_read'
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => {
+        // Handle response gracefully
         location.reload();
     });
 }
