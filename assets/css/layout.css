@@ -3,7 +3,7 @@
 /* Container Utama Sidebar */
 .sidebar {
     font-family: 'Poppins', sans-serif;
-    background-color: #FCFCFA; /* Latar soft sand / putih tulang */
+    background-color: #FCFCFA;
     border-right: 1px solid #EAEBE8;
     width: 280px;
     min-height: 100vh;
@@ -11,13 +11,13 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    box-shadow: 2px 0 10px rgba(28, 42, 56, 0.02); /* Bayangan sangat halus */
+    box-shadow: 2px 0 10px rgba(28, 42, 56, 0.02);
     overflow-y: auto;
 }
 
 /* Header & Brand */
 .brand-text {
-    color: #1C2A38; /* Muted Navy gelap (mendekati hitam) */
+    color: #1C2A38;
     letter-spacing: 0.5px;
 }
 
@@ -33,7 +33,7 @@
 }
 
 .notification-bell:hover {
-    color: #5C7285; /* Aksen Muted Navy medium */
+    color: #5C7285;
 }
 
 .notification-badge {
@@ -63,7 +63,7 @@
 
 /* Hover State */
 .sidebar-nav .nav-link:hover {
-    background-color: #F4F5F2; /* Background menu saat hover (abu-abu pasir) */
+    background-color: #F4F5F2;
     color: #1C2A38;
 }
 
@@ -73,7 +73,7 @@
 
 /* Active State */
 .sidebar-nav .nav-link.active {
-    background-color: #EBEFF2; /* Latar menu aktif (abu-abu kebiruan redup) */
+    background-color: #EBEFF2;
     color: #1C2A38;
     font-weight: 600;
 }
@@ -94,7 +94,7 @@
 }
 
 .btn-logout:hover {
-    background-color: #FAF2F2; /* Merah sangat pudar untuk peringatan halus */
+    background-color: #FAF2F2;
     color: #9E5656; 
     border-color: #E8D5D5;
 }

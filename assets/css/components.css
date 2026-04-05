@@ -1,0 +1,163 @@
+/* Card Container */
+.post-card {
+    background-color: #FFFFFF;
+    border: 1px solid #EAEBE8;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(28, 42, 56, 0.03);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(28, 42, 56, 0.06);
+}
+
+.post-card .border-bottom {
+    border-color: #EAEBE8 !important;
+}
+
+/* Typography Card */
+.post-title {
+    color: #1C2A38;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.2px;
+}
+
+.post-subtitle {
+    color: #637381;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.post-subtitle i {
+    color: #A0AEBC;
+}
+
+.post-desc {
+    color: #637381;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Metadata */
+.post-meta-container {
+    margin-top: 1rem;
+}
+
+.post-meta {
+    color: #637381;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.post-meta i {
+    color: #A0AEBC;
+    font-size: 0.95rem;
+}
+
+.post-meta.meta-highlight {
+    background-color: #EBEFF2;
+    color: #5C7285;
+    padding: 0.4em 0.8em;
+    font-weight: 500;
+    border: 1px solid #D5DCE2;
+    border-radius: 6px;
+}
+
+.post-meta.meta-highlight i {
+    color: #5C7285;
+}
+
+/* Status Badges - Aksesibilitas & UX */
+.badge-status {
+    padding: 0.5em 0.9em;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.status-open {
+    background-color: #E2F0E9; 
+    color: #1F5C3B;
+    border: 1px solid #B8D8C7;
+}
+
+.status-closed {
+    background-color: #F8EDED; 
+    color: #8C3A3A;
+    border: 1px solid #E5CACA;
+}
+
+/* Ikon Status & Animasi Elegan */
+.badge-status i {
+    font-size: 0.65rem;
+}
+
+/* Custom Buttons Soft Theme */
+.btn-navy {
+    background-color: #5C7285;
+    color: #FFFFFF;
+    border: none;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-navy:hover {
+    background-color: #4A5C6B;
+    color: #FFFFFF;
+}
+
+.btn-soft-outline {
+    background-color: transparent;
+    color: #1C2A38;
+    border: 1px solid #D5DCE2;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-soft-outline:hover {
+    background-color: #F4F5F2;
+    border-color: #C1CCD6;
+}
+
+.btn-soft-danger {
+    background-color: transparent;
+    color: #9E5656;
+    border: 1px solid #E8D5D5;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-soft-danger:hover {
+    background-color: #FAF2F2;
+    color: #8A4A4A;
+}
+
+.btn-soft-warning {
+    background-color: transparent;
+    color: #8A7322;
+    border: 1px solid #E8DEB5;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-soft-warning:hover {
+    background-color: #FCFAEF;
+    color: #705D1C;
+}
