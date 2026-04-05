@@ -1,0 +1,110 @@
+/* ==========================================================================
+   DESIGN SYSTEM: Refined Coastal Professional (V4)
+   CSS Custom Properties Variables
+   ========================================================================== */
+
+:root {
+    /* Base / Neutrals */
+    --color-white: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #475569;
+    --icon-muted: #64748B;
+    --border-normal: #CBD5E1;
+    --border-light: #E5E7EB;
+    --bg-light: #F1F5F9;
+    --bg-hover-light: #F8FAFC;
+
+    /* Primary Actions */
+    --primary-base: #1E3A8A;
+    --primary-hover: #1E40AF;
+
+    /* Semantic: Success / Open */
+    --success-text: #065F46;
+    --success-bg: #D1FAE5;
+    --success-border: #6EE7B7;
+
+    /* Semantic: Danger / Closed */
+    --danger-text: #991B1B;
+    --danger-base: #DC2626;
+    --danger-hover: #B91C1C;
+    --danger-bg: #FEE2E2;
+    --danger-bg-hover: #FEF2F2;
+    --danger-border: #FCA5A5;
+    --danger-border-hover: #F87171;
+
+    /* Semantic: Warning */
+    --warning-base: #D97706;
+    --warning-hover: #B45309;
+    --warning-bg-hover: #FFFBEB;
+    --warning-border: #FDE68A;
+    --warning-border-hover: #FCD34D;
+
+    /* Design System Aliases */
+    --bg-canvas: var(--bg-light);
+    --bg-surface: var(--color-white);
+    --bg-subtle: var(--bg-hover-light);
+    --border-base: var(--border-light);
+    
+    /* Text Colors */
+    --text-headline: var(--text-primary);
+    --text-body: var(--text-secondary);
+    --text-subtle: var(--text-muted);
+    
+    /* Button Colors */
+    --primary: var(--primary-base);
+    --primary-hover-color: var(--primary-hover);
+    --secondary: var(--border-normal);
+    --secondary-hover: var(--border-light);
+    --secondary-text: var(--text-secondary);
+    
+    /* Semantic Button Colors */
+    --success: var(--success-text);
+    --success-hover: var(--success-text);
+    --success-light: var(--success-bg);
+    
+    --warning: var(--warning-base);
+    --warning-hover: var(--warning-hover);
+    --warning-light: var(--warning-bg-hover);
+    
+    --danger: var(--danger-base);
+    --danger-hover-color: var(--danger-hover);
+    --danger-light: var(--danger-bg);
+    
+    --info: var(--primary-base);
+    --info-hover: var(--primary-hover);
+    --info-light: var(--bg-hover-light);
+    
+    /* Border & Active States */
+    --border-active: var(--primary-base);
+    --border-width-base: 1px;
+    --border-width-active: 1.5px;
+    
+    /* Geometry */
+    --radius-base: 6px;
+    --radius-sm: 4px;
+    --radius-lg: 8px;
+    
+    /* Shadow System */
+    --shadow-subtle: 0 1px 3px rgba(15, 23, 42, 0.02), 0 8px 24px rgba(15, 23, 42, 0.04);
+    --shadow-hover: 0 4px 6px rgba(15, 23, 42, 0.03), 0 12px 32px rgba(15, 23, 42, 0.06);
+    --shadow-card: 0 2px 8px rgba(15, 23, 42, 0.06);
+    
+    /* Typography */
+    --font-primary: 'Poppins', sans-serif;
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.02em;
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+    
+    /* Icon Sizes */
+    --icon-xs: 14px;
+    --icon-sm: 16px;
+    --icon-md: 20px;
+    --icon-lg: 24px;
+    --icon-stroke: 1.5px;
+}

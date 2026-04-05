@@ -1,41 +1,41 @@
 /* Card Container */
 .post-card {
     background-color: #FFFFFF;
-    border: 1px solid #EAEBE8;
+    border: 1px solid #E5E7EB; /* Lebih tajam dari sebelumnya */
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(28, 42, 56, 0.03);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06); /* Shadow sedikit lebih terlihat */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .post-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(28, 42, 56, 0.06);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
 }
 
 .post-card .border-bottom {
-    border-color: #EAEBE8 !important;
+    border-color: #E5E7EB !important;
 }
 
 /* Typography Card */
 .post-title {
-    color: #1C2A38;
+    color: #0F172A; /* Slate 900 - Jauh lebih gelap dan tegas */
     font-weight: 600;
     font-size: 1.1rem;
     letter-spacing: 0.2px;
 }
 
 .post-subtitle {
-    color: #637381;
+    color: #475569; /* Slate 600 - Kontras lebih baik */
     font-weight: 500;
     font-size: 0.85rem;
 }
 
 .post-subtitle i {
-    color: #A0AEBC;
+    color: #64748B; /* Ikon lebih terlihat */
 }
 
 .post-desc {
-    color: #637381;
+    color: #475569; 
     font-size: 0.95rem;
     line-height: 1.6;
     display: -webkit-box;
@@ -51,7 +51,7 @@
 }
 
 .post-meta {
-    color: #637381;
+    color: #475569;
     font-size: 0.85rem;
     display: flex;
     align-items: center;
@@ -59,21 +59,21 @@
 }
 
 .post-meta i {
-    color: #A0AEBC;
+    color: #64748B;
     font-size: 0.95rem;
 }
 
 .post-meta.meta-highlight {
-    background-color: #EBEFF2;
-    color: #5C7285;
+    background-color: #F1F5F9; /* Abu-abu kebiruan yang bersih */
+    color: #334155;
     padding: 0.4em 0.8em;
     font-weight: 500;
-    border: 1px solid #D5DCE2;
+    border: 1px solid #CBD5E1;
     border-radius: 6px;
 }
 
 .post-meta.meta-highlight i {
-    color: #5C7285;
+    color: #334155;
 }
 
 /* Status Badges - Aksesibilitas & UX */
@@ -89,15 +89,15 @@
 }
 
 .status-open {
-    background-color: #E2F0E9; 
-    color: #1F5C3B;
-    border: 1px solid #B8D8C7;
+    background-color: #D1FAE5; /* Emerald 100 - Hijau segar */
+    color: #065F46; /* Emerald 800 */
+    border: 1px solid #6EE7B7;
 }
 
 .status-closed {
-    background-color: #F8EDED; 
-    color: #8C3A3A;
-    border: 1px solid #E5CACA;
+    background-color: #FEE2E2; /* Red 100 - Merah jelas */
+    color: #991B1B; /* Red 800 */
+    border: 1px solid #FCA5A5;
 }
 
 /* Ikon Status & Animasi Elegan */
@@ -105,9 +105,9 @@
     font-size: 0.65rem;
 }
 
-/* Custom Buttons Soft Theme */
+/* Custom Buttons Vibrant Theme */
 .btn-navy {
-    background-color: #5C7285;
+    background-color: #1E3A8A; /* Navy asli yang tegas */
     color: #FFFFFF;
     border: none;
     font-weight: 500;
@@ -116,48 +116,51 @@
 }
 
 .btn-navy:hover {
-    background-color: #4A5C6B;
+    background-color: #1E40AF; /* Biru yang sedikit lebih menyala saat dihover */
     color: #FFFFFF;
 }
 
 .btn-soft-outline {
-    background-color: transparent;
-    color: #1C2A38;
-    border: 1px solid #D5DCE2;
+    background-color: #CBD5E1; /* Solid gray background */
+    color: #0F172A;
+    border: 1px solid #CBD5E1;
     font-weight: 500;
     border-radius: 6px;
     transition: all 0.2s ease;
 }
 
 .btn-soft-outline:hover {
-    background-color: #F4F5F2;
-    border-color: #C1CCD6;
+    background-color: #94A3B8;
+    color: #FFFFFF;
+    border-color: #94A3B8;
 }
 
 .btn-soft-danger {
-    background-color: transparent;
-    color: #9E5656;
-    border: 1px solid #E8D5D5;
+    background-color: #DC2626; /* Solid red background */
+    color: #FFFFFF;
+    border: 1px solid #DC2626;
     font-weight: 500;
     border-radius: 6px;
     transition: all 0.2s ease;
 }
 
 .btn-soft-danger:hover {
-    background-color: #FAF2F2;
-    color: #8A4A4A;
+    background-color: #B91C1C;
+    color: #FFFFFF;
+    border-color: #B91C1C;
 }
 
 .btn-soft-warning {
-    background-color: transparent;
-    color: #8A7322;
-    border: 1px solid #E8DEB5;
+    background-color: #D97706; /* Solid amber background */
+    color: #FFFFFF;
+    border: 1px solid #D97706;
     font-weight: 500;
     border-radius: 6px;
     transition: all 0.2s ease;
 }
 
 .btn-soft-warning:hover {
-    background-color: #FCFAEF;
-    color: #705D1C;
+    background-color: #B45309;
+    color: #FFFFFF;
+    border-color: #B45309;
 }
