@@ -18,7 +18,6 @@ mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
 if (mysqli_num_rows($result) == 0) {
-    // Redirect to complete profile or something
     header('Location: ../../views/dashboard.php');
     exit;
 }
@@ -27,63 +26,132 @@ $profile = mysqli_fetch_assoc($result);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Profil Mahasiswa</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Mahasiswa | Sistem Peluang</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mahasiswa.css">
 </head>
 
 <body>
 
 <div class="d-flex">
-
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
 
-        <div class="page-header">
-            <h1 class="page-title">Profil Mahasiswa</h1>
-            <p class="page-subtitle"><?php echo htmlspecialchars($_SESSION['email']); ?></p>
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <h1 class="page-title">Profil Saya</h1>
+                <p class="page-subtitle mb-0">Kelola informasi pribadi dan data akademik Anda.</p>
+            </div>
+            <a href="edit_profile.php" class="btn btn-navy px-4">
+                <i class="bi bi-pencil-square me-2"></i>Edit Profil
+            </a>
         </div>
 
-        <hr>
-
-        <div class="card">
-            <div class="card-body">
-                <h5>Informasi Pribadi</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <strong>NIM:</strong> <?php echo htmlspecialchars($profile['nim'] ?? 'Belum diisi'); ?><br>
-                        <strong>Nama:</strong> <?php echo htmlspecialchars($profile['nama'] ?? 'Belum diisi'); ?><br>
-                        <strong>Fakultas:</strong> <?php echo htmlspecialchars($profile['fakultas'] ?? 'Belum diisi'); ?><br>
-                        <strong>Email:</strong> <?php echo htmlspecialchars($profile['email'] ?? 'Belum diisi'); ?><br>
-                    </div>
-                    <div class="col-md-6">
-                        <strong>Prodi:</strong> <?php echo htmlspecialchars($profile['prodi'] ?? 'Belum diisi'); ?><br>
-                        <strong>Angkatan:</strong> <?php echo $profile['angkatan'] ?? 'Belum diisi'; ?><br>
-                        <strong>Semester:</strong> <?php echo $profile['semester'] ?? 'Belum diisi'; ?><br>
-                        <strong>IPK:</strong> <?php echo $profile['ipk'] ?? 'Belum diisi'; ?><br>
+        <div class="mhs-profile-card">
+            
+            <div class="mhs-profile-header d-flex flex-wrap align-items-center gap-4">
+                <div class="mhs-avatar">
+                    <?php 
+                    $nama = htmlspecialchars($profile['nama'] ?? 'M');
+                    echo strtoupper(substr($nama, 0, 1)); 
+                    ?>
+                </div>
+                <div class="mhs-header-info">
+                    <span class="mhs-badge mb-2">Mahasiswa</span>
+                    <h2 class="mhs-name mb-1"><?php echo htmlspecialchars($profile['nama'] ?? 'Belum diisi'); ?></h2>
+                    <div class="mhs-email d-flex align-items-center gap-2">
+                        <i class="bi bi-envelope"></i> <?php echo htmlspecialchars($profile['email'] ?? 'Belum diisi'); ?>
                     </div>
                 </div>
-                <a href="edit_profile.php" class="btn btn-primary mt-3">Edit Profil</a>
             </div>
-        </div>
 
+            <div class="mhs-profile-body">
+                <h5 class="section-title mb-4">Informasi Akademik</h5>
+                
+                <div class="mhs-info-grid">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-person-badge"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Nomor Induk Mahasiswa (NIM)</span>
+                            <span class="info-value"><?php echo htmlspecialchars($profile['nim'] ?? 'Belum diisi'); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-building"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Fakultas</span>
+                            <span class="info-value"><?php echo htmlspecialchars($profile['fakultas'] ?? 'Belum diisi'); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-book"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Program Studi</span>
+                            <span class="info-value"><?php echo htmlspecialchars($profile['prodi'] ?? 'Belum diisi'); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-calendar-event"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Tahun Angkatan</span>
+                            <span class="info-value"><?php echo $profile['angkatan'] ?? 'Belum diisi'; ?></span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-layers"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Semester Saat Ini</span>
+                            <span class="info-value"><?php echo $profile['semester'] ?? 'Belum diisi'; ?></span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-icon"><i class="bi bi-graph-up"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Indeks Prestasi Kumulatif (IPK)</span>
+                            <span class="info-value value-highlight"><?php echo $profile['ipk'] ?? 'Belum diisi'; ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+        
     </div>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

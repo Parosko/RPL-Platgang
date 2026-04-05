@@ -1,0 +1,154 @@
+/* Layout Utama */
+.mhs-profile-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+/* Header Profil */
+.mhs-profile-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #F8FAFC;
+}
+
+.mhs-avatar {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 600;
+    background-color: #F1F5F9;
+    color: #1E3A8A; /* Navy */
+    border: 1px solid #CBD5E1;
+}
+
+.mhs-header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.mhs-badge {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    background-color: #F1F5F9; /* Abu-abu kebiruan yang bersih (bg-light) */
+    color: #334155; /* Slate 700 / text-secondary */
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    border: none; /* Menghilangkan border */
+}
+
+.mhs-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0F172A; /* Slate 900 */
+}
+
+.mhs-email {
+    font-size: 0.85rem;
+    color: #475569; /* Slate 600 */
+}
+
+.mhs-email i {
+    color: #64748B;
+}
+
+/* Body & Grid Informasi */
+.mhs-profile-body {
+    padding: 32px;
+}
+
+.mhs-profile-body .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.mhs-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* Item dengan Ikon */
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background-color: #F1F5F9;
+    color: #64748B;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.80rem;
+    color: #475569;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #0F172A;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.value-highlight {
+    color: #1E3A8A;
+    font-weight: 600;
+}
+
+/* Responsivitas Mobile */
+@media (max-width: 768px) {
+    .mhs-profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 20px;
+    }
+    
+    .mhs-profile-header .d-flex {
+        justify-content: center;
+    }
+    
+    .mhs-header-info {
+        align-items: center;
+    }
+    
+    .mhs-profile-body {
+        padding: 24px 20px;
+    }
+    
+    .mhs-info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
