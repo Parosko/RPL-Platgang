@@ -8,6 +8,42 @@ onlyMitra();
 
 $mitra_id = $_SESSION['user_id'];
 
+// Handle sorting
+$sort_by = $_GET['sort'] ?? 'created_at_desc';
+$sort_column = 'created_at';
+$sort_direction = 'DESC';
+
+switch($sort_by) {
+    case 'created_at_asc':
+        $sort_column = 'created_at';
+        $sort_direction = 'ASC';
+        break;
+    case 'deadline_asc':
+        $sort_column = 'deadline';
+        $sort_direction = 'ASC';
+        break;
+    case 'deadline_desc':
+        $sort_column = 'deadline';
+        $sort_direction = 'DESC';
+        break;
+    case 'title_asc':
+        $sort_column = 'judul';
+        $sort_direction = 'ASC';
+        break;
+    case 'title_desc':
+        $sort_column = 'judul';
+        $sort_direction = 'DESC';
+        break;
+    case 'applicants_desc':
+        $sort_column = 'applicant_count';
+        $sort_direction = 'DESC';
+        break;
+    case 'applicants_asc':
+        $sort_column = 'applicant_count';
+        $sort_direction = 'ASC';
+        break;
+}
+
 // Ambil postingan milik mitra + count applications
 $stmt = $conn->prepare("
     SELECT peluang.*, users.email AS nama_mitra, COUNT(lamaran.id) as applicant_count
@@ -16,7 +52,7 @@ $stmt = $conn->prepare("
     JOIN users ON peluang.mitra_id = users.id
     WHERE peluang.mitra_id = ?
     GROUP BY peluang.id
-    ORDER BY peluang.created_at DESC
+    ORDER BY peluang.{$sort_column} {$sort_direction}
 ");
 $stmt->bind_param("i", $mitra_id);
 $stmt->execute();
@@ -68,6 +104,23 @@ $email = $_SESSION['email'];
 
         <hr>
 
+        <!-- Sorting Controls -->
+        <div class="mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <label class="form-label mb-0 fw-semibold">Urutkan:</label>
+                <select class="form-select form-select-sm" style="width: auto;" onchange="sortPosts(this.value)">
+                    <option value="created_at_desc" <?= $sort_by == 'created_at_desc' ? 'selected' : '' ?>>Terbaru</option>
+                    <option value="created_at_asc" <?= $sort_by == 'created_at_asc' ? 'selected' : '' ?>>Terlama</option>
+                    <option value="deadline_asc" <?= $sort_by == 'deadline_asc' ? 'selected' : '' ?>>Deadline Terdekat</option>
+                    <option value="deadline_desc" <?= $sort_by == 'deadline_desc' ? 'selected' : '' ?>>Deadline Terjauh</option>
+                    <option value="title_asc" <?= $sort_by == 'title_asc' ? 'selected' : '' ?>>Judul A-Z</option>
+                    <option value="title_desc" <?= $sort_by == 'title_desc' ? 'selected' : '' ?>>Judul Z-A</option>
+                    <option value="applicants_desc" <?= $sort_by == 'applicants_desc' ? 'selected' : '' ?>>Pendaftar Terbanyak</option>
+                    <option value="applicants_asc" <?= $sort_by == 'applicants_asc' ? 'selected' : '' ?>>Pendaftar Tersedikit</option>
+                </select>
+            </div>
+        </div>
+
         <?php if (empty($posts)): ?>
             <div class="alert alert-info">
                 Kamu belum memiliki postingan.
@@ -84,6 +137,14 @@ $email = $_SESSION['email'];
     </div>
 
 </div>
+
+<script>
+function sortPosts(sortValue) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortValue);
+    window.location.href = url.toString();
+}
+</script>
 
 </body>
 </html>

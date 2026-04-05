@@ -85,10 +85,17 @@ if ($post['is_closed']) {
                 <?php endif; ?>
             </div>
 
-            <a href="<?= BASE_URL ?>/views/posts/detail.php?id=<?php echo $post['id']; ?>" 
-               class="btn btn-soft-outline btn-sm d-flex align-items-center gap-2">
-                Detail <i class="bi bi-arrow-right-short fs-5 lh-1"></i>
-            </a>
+            <?php if ($post['is_closed']): ?>
+                <a href="<?= BASE_URL ?>/views/mitra/applicants.php?id=<?php echo $post['id']; ?>" 
+                   class="btn btn-soft-outline btn-sm d-flex align-items-center gap-2">
+                    Detail <i class="bi bi-arrow-right-short fs-5 lh-1"></i>
+                </a>
+            <?php else: ?>
+                <a href="<?= BASE_URL ?>/views/posts/detail.php?id=<?php echo $post['id']; ?>" 
+                   class="btn btn-soft-outline btn-sm d-flex align-items-center gap-2">
+                    Detail <i class="bi bi-arrow-right-short fs-5 lh-1"></i>
+                </a>
+            <?php endif; ?>
 
         </div>
 
