@@ -12,7 +12,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
 <div class="sidebar d-flex flex-column p-4">
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom sidebar-header">
-        <h5 class="m-0 fw-bold brand-text">Platform</h5>
+        <h5 class="m-0 fw-bold brand-text" style="font-weight: 700 !important;">Platform</h5>
         <a href="<?= BASE_URL ?>/views/notifications.php" class="notification-bell position-relative" title="Notifikasi">
             <i class="bi bi-bell fs-5"></i>
             <?php if ($unread_count > 0): ?>

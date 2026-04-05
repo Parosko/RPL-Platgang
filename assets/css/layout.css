@@ -16,9 +16,11 @@
 }
 
 /* Header & Brand */
+.sidebar .brand-text,
 .brand-text {
     color: #1C2A38;
     letter-spacing: 0.5px;
+    font-weight: 700 !important;
 }
 
 .sidebar-header {

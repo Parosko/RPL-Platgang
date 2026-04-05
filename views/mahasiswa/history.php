@@ -42,17 +42,22 @@ $applications = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Riwayat Lamaran</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Lamaran | Sistem Peluang</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">    
+    
     <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
     <link rel="stylesheet" href="../../assets/css/components.css">
-    <link rel="stylesheet" href="../../assets/css/dashboard.css">    
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mahasiswa.css">
 </head>
 <body>
 
@@ -60,16 +65,17 @@ $applications = mysqli_stmt_get_result($stmt);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="page-header">
-            <h1 class="page-title">Riwayat Lamaran</h1>
-            <p class="page-subtitle">
-                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mahasiswa)
+        
+        <div class="page-header mb-4">
+            <h1 class="page-title fs-3 mb-1">Riwayat Lamaran</h1>
+            <p class="page-subtitle text-muted mb-0">
+                Lacak status pendaftaran peluang yang telah Anda ikuti.
             </p>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?php echo htmlspecialchars($_SESSION['success']); ?>
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['success']); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <?php unset($_SESSION['success']); ?>
@@ -77,53 +83,86 @@ $applications = mysqli_stmt_get_result($stmt);
 
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php echo htmlspecialchars($_SESSION['error']); ?>
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['error']); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <div class="row">
+        <div class="row g-4">
             <?php while ($app = mysqli_fetch_assoc($applications)): ?>
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h6><?php echo htmlspecialchars($app['judul']); ?></h6>
-                                <span class="badge <?php 
-                                    // Show pending if results not published, else show actual status
-                                    if ($app['result_published'] == 0) {
-                                        echo 'bg-warning';
-                                        $display_status = 'Pending';
-                                    } else {
-                                        $display_status = ucfirst($app['status']);
-                                        echo ($app['status'] == 'accepted') ? 'bg-success' : 'bg-danger';
-                                    }
-                                ?>">
-                                    <?php echo $display_status; ?>
-                                </span>
-                            </div>
-                            <small class="text-muted">
-                                Oleh: <?php echo htmlspecialchars($app['nama_organisasi'] ?? $app['mitra_email']); ?><br>
-                                Tipe: <?php echo htmlspecialchars($app['tipe']); ?> | Lokasi: <?php echo htmlspecialchars($app['lokasi'] ?? 'Tidak ditentukan'); ?><br>
-                                Deadline: <?php echo $app['deadline']; ?> | Apply: <?php echo $app['tanggal_apply']; ?>
-                            </small>
-                            <p class="mt-2"><?php echo substr(htmlspecialchars($app['deskripsi']), 0, 100) . '...'; ?></p>
-                            <a href="already_applied.php?id=<?php echo $app['id']; ?>" class="btn btn-primary btn-sm">Lihat Detail</a>
+                <div class="col-md-6 col-lg-6">
+                    <div class="post-card h-100 d-flex flex-column p-4">
+                        
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h6 class="post-title mb-0 pe-2"><?php echo htmlspecialchars($app['judul']); ?></h6>
+                            
+                            <?php 
+                            // Menentukan kelas dan ikon badge berdasarkan status
+                            if ($app['result_published'] == 0) {
+                                $badge_class = 'status-warning';
+                                $status_text = '<i class="bi bi-hourglass-split"></i> Menunggu';
+                            } else {
+                                if ($app['status'] == 'accepted') {
+                                    $badge_class = 'status-success';
+                                    $status_text = '<i class="bi bi-check-circle-fill"></i> Diterima';
+                                } else {
+                                    $badge_class = 'status-danger';
+                                    $status_text = '<i class="bi bi-x-circle-fill"></i> Ditolak';
+                                }
+                            }
+                            ?>
+                            <span class="badge-status <?php echo $badge_class; ?>">
+                                <?php echo $status_text; ?>
+                            </span>
                         </div>
+                        
+                        <div class="post-subtitle d-flex flex-column gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-building"></i> 
+                                <span><?php echo htmlspecialchars($app['nama_organisasi'] ?? $app['mitra_email']); ?></span>
+                            </div>
+                            <div class="d-flex align-items-center flex-wrap gap-3">
+                                <span><i class="bi bi-briefcase me-1"></i> <?php echo htmlspecialchars($app['tipe']); ?></span>
+                                <span><i class="bi bi-geo-alt me-1"></i> <?php echo htmlspecialchars($app['lokasi'] ?? 'Tidak ditentukan'); ?></span>
+                            </div>
+                        </div>
+                        
+                        <p class="post-desc flex-grow-1 mb-4">
+                            <?php echo substr(htmlspecialchars($app['deskripsi']), 0, 120) . '...'; ?>
+                        </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-light">
+                            <div class="post-meta">
+                                <i class="bi bi-calendar2-check"></i> 
+                                Melamar: <?php echo date('d M Y', strtotime($app['tanggal_apply'])); ?>
+                            </div>
+                            <a href="already_applied.php?id=<?php echo $app['id']; ?>" class="btn btn-soft-outline px-3 py-1" style="font-size: 0.85rem;">
+                                Lihat Detail
+                            </a>
+                        </div>
+
                     </div>
                 </div>
             <?php endwhile; ?>
         </div>
 
         <?php if (mysqli_num_rows($applications) == 0): ?>
-            <div class="text-center mt-5">
-                <p>Anda belum mendaftar ke peluang apapun.</p>
-                <a href="../dashboard.php" class="btn btn-primary">Cari Peluang</a>
+            <div class="mhs-empty-state text-center p-5 mt-4">
+                <div class="empty-icon mb-3">
+                    <i class="bi bi-folder2-open"></i>
+                </div>
+                <h5 class="text-dark fw-semibold mb-2">Belum Ada Lamaran</h5>
+                <p class="text-muted mb-4">Anda belum mendaftar ke peluang apapun saat ini. Jelajahi peluang yang tersedia sekarang!</p>
+                <a href="../dashboard.php" class="btn btn-navy px-4">
+                    <i class="bi bi-search me-2"></i>Cari Peluang
+                </a>
             </div>
         <?php endif; ?>
+
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

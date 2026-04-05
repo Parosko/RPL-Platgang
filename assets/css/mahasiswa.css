@@ -237,3 +237,49 @@
         padding: 24px 20px;
     }
 }
+
+/* ==========================================================================
+   Riwayat Lamaran & Status Badges
+   ========================================================================== */
+
+/* Varian Badge Status */
+.status-success {
+    background-color: #D1FAE5; /* Emerald 100 */
+    color: #065F46; /* Emerald 800 */
+    border: 1px solid #6EE7B7;
+}
+
+.status-warning {
+    background-color: #FEF3C7; /* Amber 100 */
+    color: #92400E; /* Amber 800 */
+    border: 1px solid #FCD34D;
+}
+
+.status-danger {
+    background-color: #FEE2E2; /* Red 100 */
+    color: #991B1B; /* Red 800 */
+    border: 1px solid #FCA5A5;
+}
+
+/* Empty State (Saat tidak ada data lamaran) */
+.mhs-empty-state {
+    background-color: #F8FAFC; /* Slate 50 */
+    border: 2px dashed #CBD5E1; /* Slate 300 - Dashed border untuk area kosong */
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.mhs-empty-state:hover {
+    border-color: #94A3B8; /* Slate 400 */
+    background-color: #F1F5F9;
+}
+
+.mhs-empty-state .empty-icon {
+    font-size: 3.5rem;
+    color: #94A3B8; /* Slate 400 */
+    line-height: 1;
+}
+
+.mhs-empty-state h5 {
+    color: #0F172A; /* Slate 900 */
+}
