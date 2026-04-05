@@ -9,7 +9,7 @@ checkLogin();
 
 $search_query = isset($_GET['q']) ? trim($_GET['q']) : '';
 $status_filter = isset($_GET['status']) ? $_GET['status'] : '';
-$mitra_filter = isset($_GET['mitra']) ? $_GET['mitra'] : '';
+$tipe_filter = isset($_GET['tipe']) ? $_GET['tipe'] : '';
 $sort_by = isset($_GET['sort']) ? $_GET['sort'] : 'created_at_desc';
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $limit = 10;
@@ -41,9 +41,9 @@ if (!empty($status_filter)) {
     }
 }
 
-if (!empty($mitra_filter)) {
-    $base_query .= " AND m.nama_organisasi LIKE ?";
-    $params[] = "%" . $mitra_filter . "%";
+if (!empty($tipe_filter)) {
+    $base_query .= " AND p.tipe = ?";
+    $params[] = $tipe_filter;
     $types .= "s";
 }
 
@@ -56,9 +56,6 @@ switch ($sort_by) {
         break;
     case 'deadline_desc':
         $base_query .= " ORDER BY p.deadline DESC";
-        break;
-    case 'applicant_count_desc':
-        $base_query .= " ORDER BY applicant_count DESC";
         break;
     case 'created_at_desc':
     default:
@@ -103,17 +100,6 @@ while ($row = $result->fetch_assoc()) {
     $posts[] = $row;
 }
 
-$mitra_query = "SELECT DISTINCT m.nama_organisasi 
-                FROM mitra m 
-                INNER JOIN peluang p ON m.user_id = p.mitra_id 
-                WHERE p.status = 'approved'
-                ORDER BY m.nama_organisasi";
-$mitra_result = $conn->query($mitra_query);
-$available_mitras = [];
-while ($row = $mitra_result->fetch_assoc()) {
-    $available_mitras[] = $row['nama_organisasi'];
-}
-
 $conn->close();
 
 $_SESSION['search_results'] = [
@@ -123,9 +109,9 @@ $_SESSION['search_results'] = [
     'current_page' => $page,
     'search_query' => $search_query,
     'status_filter' => $status_filter,
-    'mitra_filter' => $mitra_filter,
+    'tipe_filter' => $tipe_filter,
     'sort_by' => $sort_by,
-    'available_mitras' => $available_mitras
+    'available_mitras' => []
 ];
 
 header('Location: ' . BASE_URL . '/views/search.php');

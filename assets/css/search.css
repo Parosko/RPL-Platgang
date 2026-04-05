@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Search Page Styles
+   Theme: Crisp Slate & Deep Blue (Enterprise SaaS)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Filter Section (Form Container)
+   -------------------------------------------------------------------------- */
+.filter-section {
+    background-color: var(--bg-surface);
+    border: var(--border-width-base) solid var(--border-base);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-base);
+}
+
+/* Label Enterprise Style (Kecil, Uppercase, Rapi) */
+.custom-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-subtle);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   Input & Select Fields
+   -------------------------------------------------------------------------- */
+.custom-input-group .input-group-text {
+    background-color: var(--bg-canvas);
+    border: var(--border-width-base) solid var(--border-normal);
+    border-right: none;
+    color: var(--icon-muted);
+    border-radius: var(--radius-base) 0 0 var(--radius-base);
+}
+
+.custom-input-group .form-control {
+    border-left: none;
+    border-radius: 0 var(--radius-base) var(--radius-base) 0;
+}
+
+.custom-input-group .form-control,
+.custom-select {
+    border: var(--border-width-base) solid var(--border-normal);
+    color: var(--text-primary);
+    font-size: 14px;
+    padding: 10px 16px;
+    background-color: var(--bg-surface);
+    transition: var(--transition-fast);
+}
+
+.custom-select {
+    border-radius: var(--radius-base);
+    cursor: pointer;
+}
+
+/* Focus States (Crisp Blue Highlight) */
+.custom-input-group .form-control:focus,
+.custom-select:focus {
+    border-color: var(--primary-base);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1); /* Subtle blue glow */
+    outline: none;
+}
+
+.custom-input-group:focus-within .input-group-text {
+    border-color: var(--primary-base);
+    color: var(--primary-base);
+}
+
+/* --------------------------------------------------------------------------
+   Action Buttons
+   -------------------------------------------------------------------------- */
+.btn-action-primary {
+    background-color: var(--primary-base);
+    color: var(--color-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-base);
+    font-weight: 500;
+    font-size: 14px;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-action-primary:hover {
+    background-color: var(--primary-hover-color);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-action-secondary {
+    background-color: var(--bg-surface);
+    color: var(--text-secondary);
+    border: var(--border-width-base) solid var(--border-normal);
+    padding: 10px 20px;
+    border-radius: var(--radius-base);
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-action-secondary:hover {
+    background-color: var(--bg-subtle);
+    color: var(--text-primary);
+    border-color: var(--text-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Search Summary Alert
+   -------------------------------------------------------------------------- */
+.search-summary-alert {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: var(--bg-surface);
+    border: var(--border-width-base) solid var(--border-base);
+    border-left: 4px solid var(--primary-base); /* Aksen garis tebal di kiri */
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    color: var(--text-body);
+    font-size: 14px;
+    box-shadow: var(--shadow-subtle);
+}
+
+.search-summary-alert i {
+    color: var(--primary-base);
+    font-size: 20px;
+}
+
+.search-summary-alert strong {
+    color: var(--text-headline);
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Enterprise Pagination (Anti-Bootstrap Default)
+   -------------------------------------------------------------------------- */
+.enterprise-pagination .pagination {
+    gap: 4px; /* Memberi jarak antar kotak halaman */
+}
+
+.enterprise-pagination .page-link {
+    color: var(--text-secondary);
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-normal);
+    border-radius: var(--radius-sm) !important; /* Membatalkan rounded Bootstrap */
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: var(--transition-fast);
+}
+
+.enterprise-pagination .page-item.active .page-link {
+    background-color: var(--primary-base);
+    border-color: var(--primary-base);
+    color: var(--color-white);
+    box-shadow: var(--shadow-card);
+}
+
+.enterprise-pagination .page-link:hover:not(.active) {
+    background-color: var(--bg-subtle);
+    border-color: var(--primary-base);
+    color: var(--primary-base);
+}
+
+.enterprise-pagination .page-item.disabled .page-link {
+    color: var(--text-subtle);
+    background-color: var(--bg-canvas);
+    border-color: var(--border-light);
+    cursor: not-allowed;
+}
