@@ -53,11 +53,9 @@ $profile = mysqli_fetch_assoc($result);
 
     <div class="content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Profil Mahasiswa</h4>
-                <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
-            </div>
+        <div class="page-header">
+            <h1 class="page-title">Profil Mahasiswa</h1>
+            <p class="page-subtitle"><?php echo htmlspecialchars($_SESSION['email']); ?></p>
         </div>
 
         <hr>

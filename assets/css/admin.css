@@ -1,17 +1,19 @@
 /* Admin Moderation Pages */
 
-.status-badge {
+.admin-status-badge {
     font-size: 0.85rem;
     font-weight: 500;
 }
 
-/* Filter Controls */
-.form-select, .form-control {
+/* Admin-specific Filter Controls */
+.admin-form-select, 
+.admin-form-control {
     font-size: 0.95rem;
     border-radius: 4px;
 }
 
-.form-select:focus, .form-control:focus {
+.admin-form-select:focus, 
+.admin-form-control:focus {
     border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }

@@ -46,6 +46,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
     <link rel="stylesheet" href="../assets/css/components.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
 </head>
 
 <body>
@@ -56,18 +57,14 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     <div class="content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Dashboard</h4>
-                <small>
-                    Login sebagai: 
-                    <?php echo htmlspecialchars($email); ?> 
-                    (<?php echo $role; ?>)
-                </small>
-            </div>
+        <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">
+                Login sebagai: 
+                <?php echo htmlspecialchars($email); ?> 
+                (<?php echo $role; ?>)
+            </p>
         </div>
-
-        <hr>
 
         <h5 class="mb-3">Daftar Peluang</h5>
 

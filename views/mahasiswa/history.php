@@ -57,14 +57,11 @@ $applications = mysqli_stmt_get_result($stmt);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Riwayat Lamaran</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mahasiswa)
-                </small>
-            </div>
-            <a href="../dashboard.php" class="btn btn-secondary">Kembali</a>
+        <div class="page-header">
+            <h1 class="page-title">Riwayat Lamaran</h1>
+            <p class="page-subtitle">
+                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mahasiswa)
+            </p>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>

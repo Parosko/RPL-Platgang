@@ -1,3 +1,8 @@
+/* Notification-specific card overrides */
+.notification-card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
 /* Notification List Styles */
 .notification-list {
     display: flex;
@@ -78,14 +83,7 @@
     border-left: 4px solid #0d6efd;
 }
 
-.badge {
+/* Notification-specific badge overrides */
+.notification-badge {
     font-size: 0.75rem;
-}
-
-.card {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.alert-info {
-    border-left: 4px solid #0dcaf0;
 }

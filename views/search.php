@@ -64,18 +64,15 @@ unset($_SESSION['search_results']);
 
     <div class="content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Pencarian</h4>
-                <small>
-                    Login sebagai: 
-                    <?php echo htmlspecialchars($_SESSION['email']); ?> 
-                    (<?php echo $role; ?>)
-                </small>
-            </div>
+        <div class="page-header">
+            <h1 class="page-title">Pencarian</h1>
+            <p class="page-subtitle">
+                Hasil pencarian untuk: <strong>"<?php echo htmlspecialchars($search_query); ?>"</strong>
+                <?php if ($total_posts > 0): ?>
+                    (<?php echo $total_posts; ?> hasil ditemukan)
+                <?php endif; ?>
+            </p>
         </div>
-
-        <hr>
 
                     <!-- Search Form -->
                     <div class="row mb-4">

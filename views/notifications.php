@@ -83,19 +83,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     <div class="content">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Notifikasi</h4>
-                <small>
-                    <?php echo count(array_filter($notifications, function($n) { return $n['status_baca'] == 0; })); ?> belum dibaca
-                </small>
-            </div>
-            <?php if (!empty(array_filter($notifications, function($n) { return $n['status_baca'] == 0; }))): ?>
-                <button class="btn btn-sm btn-outline-primary" onclick="markAllAsRead()">
-                    Tandai Semua Sebagai Sudah Dibaca
-                </button>
-            <?php endif; ?>
+        <div class="page-header">
+            <h1 class="page-title">Notifikasi</h1>
+            <p class="page-subtitle">
+                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (<?php echo $_SESSION['role']; ?>)
+            </p>
         </div>
+
+        <?php if (!empty(array_filter($notifications, function($n) { return $n['status_baca'] == 0; }))): ?>
+            <button class="btn btn-sm btn-outline-primary" onclick="markAllAsRead()">
+                Tandai Semua Sebagai Sudah Dibaca
+            </button>
+        <?php endif; ?>
 
         <hr>
 

@@ -30,6 +30,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -81,19 +82,19 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <input 
                         type="text" 
                         id="searchInput" 
-                        class="form-control" 
+                        class="admin-form-control" 
                         placeholder="Cari judul atau mitra..."
                     >
                 </div>
                 <div class="col-md-4">
-                    <select id="typeFilter" class="form-select">
+                    <select id="typeFilter" class="admin-form-select">
                         <option value="">Semua Tipe</option>
                         <option value="magang">Magang</option>
                         <option value="kursus">Kursus</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <select id="statusFilter" class="form-select">
+                    <select id="statusFilter" class="admin-form-select">
                         <option value="">Semua Status</option>
                         <option value="approved">Approved</option>
                         <option value="pending">Pending</option>
@@ -133,13 +134,13 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 </h5>
 
                                 <div class="mb-2">
-                                    <span class="badge <?= $post_type_badge; ?> status-badge me-2">
+                                    <span class="badge <?= $post_type_badge; ?> admin-status-badge me-2">
                                         <?php echo $post_type; ?>
                                     </span>
-                                    <span class="badge <?= $approval_badge; ?> status-badge me-2">
+                                    <span class="badge <?= $approval_badge; ?> admin-status-badge me-2">
                                         <?php echo $approval_status; ?>
                                     </span>
-                                    <span class="badge <?= $status_badge; ?> status-badge">
+                                    <span class="badge <?= $status_badge; ?> admin-status-badge">
                                         <?php echo $status; ?>
                                     </span>
                                 </div>

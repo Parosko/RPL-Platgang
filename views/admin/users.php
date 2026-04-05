@@ -53,14 +53,12 @@ while ($row = mysqli_fetch_assoc($result)) {
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4>Kelola User</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-                </small>
-            </div>
-            <a href="<?= BASE_URL ?>/views/dashboard.php" class="btn btn-secondary">Kembali</a>
+        <div class="page-header">
+            <h1 class="page-title">Kelola User</h1>
+            <p class="page-subtitle">
+                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
+            </p>
+            <a href="<?= BASE_URL ?>/views/dashboard.php" class="btn btn-secondary mt-2">Kembali</a>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -87,12 +85,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                     <input 
                         type="text" 
                         id="searchInput" 
-                        class="form-control" 
+                        class="admin-form-control" 
                         placeholder="Cari email atau nama..."
                     >
                 </div>
                 <div class="col-md-4">
-                    <select id="roleFilter" class="form-select">
+                    <select id="roleFilter" class="admin-form-select">
                         <option value="">Semua Role</option>
                         <option value="mahasiswa">Mahasiswa</option>
                         <option value="mitra">Mitra</option>
@@ -100,7 +98,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <select id="statusFilter" class="form-select">
+                    <select id="statusFilter" class="admin-form-select">
                         <option value="">Semua Status</option>
                         <option value="active">Active</option>
                         <option value="pending">Pending</option>
@@ -134,10 +132,10 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 </h5>
 
                                 <div class="mb-2">
-                                    <span class="badge <?= $role_badge; ?> status-badge me-2">
+                                    <span class="badge <?= $role_badge; ?> admin-status-badge me-2">
                                         <?php echo $role; ?>
                                     </span>
-                                    <span class="badge <?= $status_badge; ?> status-badge">
+                                    <span class="badge <?= $status_badge; ?> admin-status-badge">
                                         <?php echo $status; ?>
                                     </span>
                                 </div>
