@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Apr 04, 2026 at 11:17 AM
+-- Generation Time: Apr 05, 2026 at 01:26 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.26
 
@@ -42,7 +42,9 @@ CREATE TABLE `dokumen` (
 INSERT INTO `dokumen` (`id`, `lamaran_id`, `jenis`, `file_path`, `uploaded_at`) VALUES
 (1, 8, 'Dokumen 1', 'doc_8_69ce82813e2a5.pdf', '2026-04-02 14:51:45'),
 (3, 10, 'Dokumen 1', 'doc_10_69cff3403f492.pdf', '2026-04-03 17:05:04'),
-(4, 11, 'Dokumen 1', 'doc_11_69d0ecd3493c3.pdf', '2026-04-04 10:49:55');
+(4, 11, 'Dokumen 1', 'doc_11_69d0ecd3493c3.pdf', '2026-04-04 10:49:55'),
+(5, 12, 'Dokumen 1', 'doc_12_69d12a22dd0c9.pdf', '2026-04-04 15:11:30'),
+(6, 13, 'Dokumen 1', 'doc_13_69d12ae58a1e1.pdf', '2026-04-04 15:14:45');
 
 -- --------------------------------------------------------
 
@@ -86,7 +88,9 @@ CREATE TABLE `lamaran` (
 INSERT INTO `lamaran` (`id`, `mahasiswa_id`, `peluang_id`, `is_recommended`, `tanggal_apply`, `status`, `result_published`) VALUES
 (8, 3, 3, 1, '2026-04-02 14:51:45', 'accepted', 1),
 (10, 3, 4, 0, '2026-04-03 17:05:04', 'rejected', 1),
-(11, 3, 1, 0, '2026-04-04 10:49:55', 'accepted', 1);
+(11, 3, 1, 0, '2026-04-04 10:49:55', 'accepted', 1),
+(12, 3, 5, 0, '2026-04-04 15:11:30', 'accepted', 1),
+(13, 8, 5, 0, '2026-04-04 15:14:45', 'rejected', 1);
 
 -- --------------------------------------------------------
 
@@ -172,8 +176,11 @@ INSERT INTO `notifikasi` (`id`, `user_id`, `pesan`, `pesan_custom`, `tipe_notifi
 (11, 6, 'Lamaran Anda ditolak.', NULL, 'standard', NULL, NULL, 1, '2026-04-03 16:55:18'),
 (12, 6, 'Lamaran Anda diterima!', NULL, 'standard', NULL, NULL, 1, '2026-04-03 16:55:30'),
 (13, 6, 'Lamaran Anda ditolak.', NULL, 'standard', NULL, NULL, 1, '2026-04-04 06:20:29'),
-(14, 6, 'Lamaran Anda diterima!', NULL, 'standard', NULL, NULL, 0, '2026-04-04 10:51:43'),
-(15, 6, 'DPA merekomendasikan peluang \"dsad\" untuk Anda. Silakan periksa peluang ini.', 'Bababoeey', 'recommendation', 4, 13, 0, '2026-04-04 11:11:32');
+(14, 6, 'Lamaran Anda diterima!', NULL, 'standard', NULL, NULL, 1, '2026-04-04 10:51:43'),
+(15, 6, 'DPA merekomendasikan peluang \"dsad\" untuk Anda. Silakan periksa peluang ini.', 'Bababoeey', 'recommendation', 4, 13, 1, '2026-04-04 11:11:32'),
+(16, 6, 'DPA merekomendasikan peluang \"dsad\" untuk Anda. Silakan periksa peluang ini.', 'Boy', 'recommendation', 5, 13, 1, '2026-04-04 11:21:01'),
+(17, 6, 'Selamat! Lamaran Anda telah diterima.', 'Selamat Bosku', 'result', 12, 9, 1, '2026-04-04 15:15:28'),
+(18, 14, 'Mohon maaf, lamaran Anda belum dapat kami terima.', 'Sorry Boskuuu', 'result', 13, 9, 1, '2026-04-04 15:15:28');
 
 -- --------------------------------------------------------
 
@@ -207,7 +214,7 @@ INSERT INTO `peluang` (`id`, `mitra_id`, `judul`, `deskripsi`, `tipe`, `lokasi`,
 (2, 9, 'Bujas', 'Mantapo', 'magang', 'Medan', 2, 0.00, 2, '', '2028-02-04 10:20:00', 'pending', '2026-03-22 14:37:03', NULL),
 (3, 9, 'dasda', 'dasdad', 'magang', 'dasdad', 1, 2.00, 2, 'dwqqw', '2028-05-01 10:50:00', 'approved', '2026-03-22 15:25:56', NULL),
 (4, 9, '31', 'ewdqeq', 'magang', 'eqwewq', 1, 4.00, 23, 'MIPA', '2026-04-04 00:04:00', 'approved', '2026-04-03 17:04:47', NULL),
-(5, 9, 'dsad', 'dsadas', 'magang', 'wqdqws', 1, 2.00, 3, '', '2030-03-02 12:22:00', 'approved', '2026-04-04 11:11:05', NULL);
+(5, 9, 'dsad', 'dsadas', 'magang', 'wqdqws', 1, 2.00, 3, '', '2030-03-02 12:22:00', 'approved', '2026-04-04 11:11:05', '2026-04-04 15:15:28');
 
 -- --------------------------------------------------------
 
@@ -222,6 +229,14 @@ CREATE TABLE `pesan_hasil` (
   `pesan_mitra` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `pesan_hasil`
+--
+
+INSERT INTO `pesan_hasil` (`id`, `lamaran_id`, `tipe_hasil`, `pesan_mitra`, `created_at`) VALUES
+(1, 12, 'accepted', 'Selamat Bosku', '2026-04-04 15:15:28'),
+(2, 13, 'rejected', 'Sorry Boskuuu', '2026-04-04 15:15:28');
 
 -- --------------------------------------------------------
 
@@ -245,7 +260,7 @@ CREATE TABLE `rekomendasi` (
 INSERT INTO `rekomendasi` (`id`, `dpa_id`, `mahasiswa_id`, `peluang_id`, `pesan_dosen`, `created_at`) VALUES
 (1, 2, 3, 3, NULL, '2026-04-03 16:41:35'),
 (3, 2, 3, 1, NULL, '2026-04-03 16:50:54'),
-(4, 2, 3, 5, 'Bababoeey', '2026-04-04 11:11:32');
+(5, 2, 3, 5, 'Boy', '2026-04-04 11:21:01');
 
 -- --------------------------------------------------------
 
@@ -385,7 +400,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `dokumen`
 --
 ALTER TABLE `dokumen`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `dpa`
@@ -397,7 +412,7 @@ ALTER TABLE `dpa`
 -- AUTO_INCREMENT for table `lamaran`
 --
 ALTER TABLE `lamaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `mahasiswa`
@@ -415,7 +430,7 @@ ALTER TABLE `mitra`
 -- AUTO_INCREMENT for table `notifikasi`
 --
 ALTER TABLE `notifikasi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `peluang`
@@ -427,13 +442,13 @@ ALTER TABLE `peluang`
 -- AUTO_INCREMENT for table `pesan_hasil`
 --
 ALTER TABLE `pesan_hasil`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rekomendasi`
 --
 ALTER TABLE `rekomendasi`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `sertifikat`

@@ -1,165 +1,155 @@
-/* Dashboard-Specific Styles */
+/* ==========================================================================
+   Dashboard Layout & Component Styles
+   Theme: Crisp Slate & Deep Blue (Enterprise SaaS)
+   ========================================================================== */
 
-/* Dashboard Stats Cards */
-.dashboard-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+/* Body & Content Wrapper */
+body {
+    background-color: var(--bg-canvas);
+    font-family: var(--font-primary);
+    color: var(--text-body);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0;
 }
 
-.stat-card {
-    background: white;
-    border-radius: 14px;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #0d6efd;
-    transition: all 0.3s ease;
+.content {
+    padding: 32px 40px; /* Spacing bernapas kelipatan 8 */
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+/* --------------------------------------------------------------------------
+   Page Header
+   -------------------------------------------------------------------------- */
+.page-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: var(--border-width-base) solid var(--border-base);
 }
 
-.stat-card.success {
-    border-left-color: #198754;
-}
-
-.stat-card.warning {
-    border-left-color: #ffc107;
-}
-
-.stat-card.danger {
-    border-left-color: #dc3545;
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1c2a38;
-    margin: 1rem 0;
-}
-
-.stat-label {
-    font-size: 0.875rem;
-    color: #637381;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.page-title {
+    color: var(--text-headline);
     font-weight: 600;
+    letter-spacing: var(--letter-spacing-tight);
+    font-size: 28px;
+    margin-bottom: 8px;
+    margin-top: 0;
 }
 
-/* Dashboard Section Headers */
-.dashboard-section {
-    margin-bottom: 2rem;
-}
-
-.dashboard-section h5 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #1c2a38;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e9ecef;
-}
-
-/* Quick Actions */
-.quick-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-}
-
-.quick-action-btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.quick-action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Recent Activity */
-.recent-activity {
-    background: white;
-    border-radius: 14px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.activity-item {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f1f3f5;
+.page-subtitle {
+    color: var(--text-subtle);
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 8px;
 }
 
-.activity-item:last-child {
-    border-bottom: none;
-}
-
-.activity-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
+/* Badge for User Role in Header */
+/* --------------------------------------------------------------------------
+   Badge Role Styling (Dynamic Colors)
+   -------------------------------------------------------------------------- */
+.badge-role {
+    padding: 4px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
 }
 
-.activity-icon.primary {
-    background: #e7f3ff;
-    color: #0d6efd;
+/* Warna khusus untuk setiap Role */
+.badge-role.role-admin {
+    background-color: #F3E8FF; /* Light Purple */
+    color: #6B21A8; /* Dark Purple */
+    border: 1px solid #D8B4FE;
 }
 
-.activity-icon.success {
-    background: #d1e7dd;
-    color: #198754;
+.badge-role.role-mitra {
+    background-color: #E0E7FF; /* Light Indigo/Blue */
+    color: #3730A3; /* Dark Indigo */
+    border: 1px solid #C7D2FE;
 }
 
-.activity-icon.warning {
-    background: #fff3cd;
-    color: #ffc107;
+.badge-role.role-mahasiswa {
+    background-color: var(--success-bg); /* Mengambil dari design-system */
+    color: var(--success-text);
+    border: 1px solid var(--success-border);
 }
 
-.activity-content {
-    flex: 1;
+.badge-role.role-dpa {
+    background-color: var(--warning-bg-hover); /* Mengambil dari design-system */
+    color: var(--warning-hover);
+    border: 1px solid var(--warning-border);
 }
 
-.activity-title {
+/* Fallback jika role tidak dikenali */
+.badge-role {
+    background-color: var(--bg-subtle);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-base);
+}
+
+/* --------------------------------------------------------------------------
+   Section & Content Areas
+   -------------------------------------------------------------------------- */
+.section-title {
+    color: var(--text-headline);
     font-weight: 600;
-    color: #1c2a38;
-    margin-bottom: 0.25rem;
+    font-size: 18px;
+    margin-bottom: 24px;
+    letter-spacing: var(--letter-spacing-tight);
 }
 
-.activity-time {
-    font-size: 0.875rem;
-    color: #637381;
+.post-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* Jarak antar kartu postingan */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .dashboard-stats {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
-    .quick-actions {
-        flex-direction: column;
-    }
-    
-    .quick-action-btn {
-        width: 100%;
-    }
+/* --------------------------------------------------------------------------
+   Empty State Alert (Anti-Bootstrap Generic)
+   -------------------------------------------------------------------------- */
+.alert-empty-state {
+    background-color: var(--bg-surface);
+    border: var(--border-width-base) dashed var(--border-normal);
+    color: var(--text-subtle);
+    border-radius: var(--radius-base);
+    padding: 32px 24px;
+    text-align: center;
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: var(--transition-base);
+}
+
+.alert-empty-state:hover {
+    border-color: var(--primary-base);
+    background-color: var(--bg-subtle);
+}
+
+.alert-empty-state i {
+    font-size: 32px;
+    color: var(--icon-muted);
+}
+
+.alert-empty-state strong {
+    color: var(--text-headline);
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.alert-empty-state span {
+    font-size: 14px;
+    color: var(--text-subtle);
 }
