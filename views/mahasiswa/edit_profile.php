@@ -28,14 +28,22 @@ $profile_is_complete = !empty($profile['nim']) && !empty($profile['nama']);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Edit Profil Mahasiswa</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profil Mahasiswa | Sistem Peluang</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mahasiswa.css">
 </head>
 <body>
 
@@ -43,98 +51,117 @@ $profile_is_complete = !empty($profile['nim']) && !empty($profile['nama']);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Edit Profil Mahasiswa</h4>
-                <small><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+                <h1 class="page-title">Edit Profil</h1>
+                <p class="page-subtitle mb-0">Perbarui informasi pribadi dan akademik Anda.</p>
             </div>
             <?php if (!$is_incomplete): ?>
-                <a href="../mahasiswa/profile.php" class="btn btn-secondary">Kembali</a>
+                <a href="../mahasiswa/profile.php" class="btn btn-soft-outline px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Kembali
+                </a>
             <?php endif; ?>
         </div>
 
         <?php if ($is_incomplete && !$profile_is_complete): ?>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>⚠️ Perhatian!</strong> Anda harus melengkapi profil terlebih dahulu sebelum dapat mengakses fitur lain. 
-                Minimal isikan <strong>NIM</strong> dan <strong>Nama</strong>.
+                <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Perhatian!</strong> Anda harus melengkapi profil terlebih dahulu sebelum dapat mengakses fitur lain. Minimal isikan <strong>NIM</strong> dan <strong>Nama</strong>.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="closeAlertBtn" style="display: none;"></button>
             </div>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         <?php endif; ?>
+        
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger"><?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         <?php endif; ?>
 
-        <div class="card">
-            <div class="card-body">
+        <div class="mhs-edit-card">
+            <div class="mhs-edit-header">
+                <h5 class="mb-0"><i class="bi bi-person-lines-fill me-2"></i>Data Profil Akun</h5>
+                <small class="text-muted"><?php echo htmlspecialchars($_SESSION['email']); ?></small>
+            </div>
+            
+            <div class="mhs-edit-body">
                 <form method="post" action="../../controllers/mahasiswa/edit_profile_process.php" id="editProfileForm">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Email (tidak bisa diubah)</label>
-                            <input type="email" class="form-control" value="<?php echo htmlspecialchars($profile['email'] ?? ''); ?>" readonly>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label custom-label">Email (Akun Login)</label>
+                            <input type="email" class="form-control custom-input bg-light" value="<?php echo htmlspecialchars($profile['email'] ?? ''); ?>" readonly>
+                            <div class="form-text">Email tidak dapat diubah.</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">NIM <span class="text-danger">*</span></label>
-                            <input type="text" name="nim" id="nimInput" class="form-control" value="<?php echo htmlspecialchars($profile['nim'] ?? ''); ?>" required>
-                            <small class="text-muted">Wajib diisi</small>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Nama <span class="text-danger">*</span></label>
-                            <input type="text" name="nama" id="namaInput" class="form-control" value="<?php echo htmlspecialchars($profile['nama'] ?? ''); ?>" required>
-                            <small class="text-muted">Wajib diisi</small>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Fakultas</label>
-                            <input type="text" name="fakultas" class="form-control" value="<?php echo htmlspecialchars($profile['fakultas'] ?? ''); ?>">
+                            <label class="form-label custom-label">NIM <span class="text-danger">*</span></label>
+                            <input type="text" name="nim" id="nimInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nim'] ?? ''); ?>" required placeholder="Masukkan Nomor Induk Mahasiswa">
+                            <div class="form-text">Wajib diisi sebagai identitas akademik.</div>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label class="form-label custom-label">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" name="nama" id="namaInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nama'] ?? ''); ?>" required placeholder="Masukkan nama lengkap">
+                            <div class="form-text">Sesuaikan dengan kartu identitas mahasiswa.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label custom-label">Fakultas</label>
+                            <input type="text" name="fakultas" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['fakultas'] ?? ''); ?>" placeholder="Contoh: Fakultas Ilmu Komputer">
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label class="form-label custom-label">Program Studi</label>
+                            <input type="text" name="prodi" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['prodi'] ?? ''); ?>" placeholder="Contoh: Sistem Informasi">
+                        </div>
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label class="form-label custom-label">Tahun Angkatan</label>
+                            <input type="text" name="angkatan" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['angkatan'] ?? ''); ?>" placeholder="Contoh: 2021">
+                        </div>
                         <div class="col-md-4">
-                            <label class="form-label">Prodi</label>
-                            <input type="text" name="prodi" class="form-control" value="<?php echo htmlspecialchars($profile['prodi'] ?? ''); ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Angkatan</label>
-                            <input type="text" name="angkatan" class="form-control" value="<?php echo htmlspecialchars($profile['angkatan'] ?? ''); ?>">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Semester</label>
-                            <input type="number" name="semester" class="form-control" value="<?php echo htmlspecialchars($profile['semester'] ?? ''); ?>">
+                            <label class="form-label custom-label">Semester Berjalan</label>
+                            <input type="number" name="semester" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['semester'] ?? ''); ?>" placeholder="Contoh: 5">
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">IPK</label>
-                        <input 
-                            type="number" 
-                            step="0.01" 
-                            min="0" 
-                            max="4" 
-                            name="ipk" 
-                            class="form-control"
-                            value="<?php echo htmlspecialchars($profile['ipk'] ?? ''); ?>"
-                            placeholder="Contoh: 3.50"
-                        >
-                        <small class="text-muted">
-                            Gunakan titik (.) contoh: 3.50 (maksimal 4.00)
-                        </small>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <label class="form-label custom-label">Indeks Prestasi Kumulatif (IPK)</label>
+                            <input 
+                                type="number" 
+                                step="0.01" 
+                                min="0" 
+                                max="4" 
+                                name="ipk" 
+                                class="form-control custom-input"
+                                value="<?php echo htmlspecialchars($profile['ipk'] ?? ''); ?>"
+                                placeholder="Contoh: 3.50"
+                            >
+                            <div class="form-text">Gunakan format titik (contoh: 3.50). Maks: 4.00</div>
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <div class="d-flex justify-content-end pt-3 border-top">
+                        <button type="submit" class="btn btn-navy px-4 py-2">
+                            <i class="bi bi-save me-2"></i>Simpan Perubahan
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
+        
     </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -143,18 +170,15 @@ const profileIsComplete = <?php echo $profile_is_complete ? 'true' : 'false'; ?>
 
 // Prevent navigation away if profile is incomplete
 if (isIncomplete && !profileIsComplete) {
-    // Disable browser back button
     window.history.pushState(null, null, window.location.href);
     window.onpopstate = function() {
         window.history.pushState(null, null, window.location.href);
         alert('Anda harus melengkapi profil terlebih dahulu (NIM dan Nama)');
     };
 
-    // Prevent navigation by clicking links
     document.addEventListener('click', function(e) {
         const target = e.target.closest('a');
         if (target && !target.hasAttribute('onclick')) {
-            // Allow form submission
             if (!target.closest('form')) {
                 e.preventDefault();
                 alert('Anda harus melengkapi profil terlebih dahulu (NIM dan Nama)');
@@ -162,18 +186,12 @@ if (isIncomplete && !profileIsComplete) {
         }
     });
 
-    // Warn before leaving page
     window.onbeforeunload = function() {
         if (!profileIsComplete) {
             return 'Anda belum melengkapi profil (NIM dan Nama). Apakah Anda yakin ingin keluar?';
         }
     };
 }
-
-// After successful save, redirect to profile
-document.getElementById('editProfileForm').addEventListener('submit', function() {
-    // Form will be submitted and redirected by PHP
-});
 </script>
 
 </body>
