@@ -33,7 +33,7 @@ $mahasiswa = mysqli_fetch_assoc($result);
 $mahasiswa_id = $mahasiswa['id'];
 
 // Check if applied
-$query = "SELECT l.*, p.judul, p.deskripsi, p.tipe, p.lokasi, p.kuota, p.min_ipk, p.min_semester, p.fakultas, p.deadline, p.created_at, u.email as mitra_email, m.nama_organisasi
+$query = "SELECT l.*, p.judul, p.deskripsi, p.tipe, p.lokasi, p.kuota, p.min_ipk, p.min_semester, p.fakultas, p.deadline, p.created_at as peluang_created, u.email as mitra_email, m.nama_organisasi
           FROM lamaran l
           JOIN peluang p ON l.peluang_id = p.id
           JOIN users u ON p.mitra_id = u.id
@@ -60,14 +60,22 @@ $documents = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Status Lamaran - <?php echo htmlspecialchars($application['judul']); ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Lamaran - <?php echo htmlspecialchars($application['judul']); ?> | Sistem Peluang</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mahasiswa.css">
 </head>
 <body>
 
@@ -75,86 +83,160 @@ $documents = mysqli_stmt_get_result($stmt);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Status Lamaran</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mahasiswa)
-                </small>
+                <h1 class="page-title fs-3 mb-1">Status Lamaran</h1>
+                <p class="page-subtitle text-muted mb-0">
+                    <i class="bi bi-bookmark-check me-2"></i><?php echo htmlspecialchars($application['judul']); ?>
+                </p>
             </div>
-            <a href="../posts/detail.php?id=<?php echo $peluang_id; ?>" class="btn btn-secondary">Kembali</a>
+            <a href="../posts/detail.php?id=<?php echo $peluang_id; ?>" class="btn btn-soft-outline px-4">
+                <i class="bi bi-arrow-left me-2"></i>Kembali
+            </a>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success" role="alert">
-                <?php echo htmlspecialchars($_SESSION['success']); ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
-
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger" role="alert">
-                <?php echo htmlspecialchars($_SESSION['error']); ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h5><?php echo htmlspecialchars($application['judul']); ?></h5>
-                        <small class="text-muted">
-                            Oleh: <?php echo htmlspecialchars($application['nama_organisasi'] ?? $application['mitra_email']); ?>
-                        </small>
-                    </div>
-                    <span class="badge bg-info">Applied</span>
+        <div class="mhs-edit-card mb-4">
+            <div class="mhs-edit-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h5 class="mb-1 text-navy fw-semibold"><?php echo htmlspecialchars($application['judul']); ?></h5>
+                    <small class="text-muted">
+                        <i class="bi bi-building me-1"></i> Oleh: <?php echo htmlspecialchars($application['nama_organisasi'] ?? $application['mitra_email']); ?>
+                    </small>
                 </div>
-
-                <p class="mb-3"><?php echo nl2br(htmlspecialchars($application['deskripsi'])); ?></p>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <strong>Tipe:</strong> <?php echo htmlspecialchars($application['tipe']); ?><br>
-                        <strong>Lokasi:</strong> <?php echo htmlspecialchars($application['lokasi'] ?? 'Tidak ditentukan'); ?><br>
-                        <strong>Kuota:</strong> <?php echo $application['kuota']; ?><br>
-                    </div>
-                    <div class="col-md-6">
-                        <strong>Min. IPK:</strong> <?php echo $application['min_ipk']; ?><br>
-                        <strong>Min. Semester:</strong> <?php echo $application['min_semester']; ?><br>
-                        <strong>Fakultas:</strong> <?php echo htmlspecialchars($application['fakultas'] ?? 'Semua'); ?><br>
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <strong>Dibuat:</strong> <?php echo $application['created_at']; ?><br>
-                    <strong>Deadline:</strong> <?php echo $application['deadline']; ?><br>
-                    <strong>Tanggal Apply:</strong> <?php echo $application['tanggal_apply']; ?><br>
-                    <strong>Status:</strong> 
-                    <span class="badge <?php 
-                        // Show pending if results not published, else show actual status
-                        if ($application['result_published'] == 0) {
-                            echo 'bg-warning';
-                            $display_status = 'Pending';
+                
+                <?php 
+                    // Menentukan Status Badge
+                    if ($application['result_published'] == 0) {
+                        $status_class = 'status-warning';
+                        $status_icon = 'bi-hourglass-split';
+                        $display_status = 'Pending / Menunggu';
+                    } else {
+                        $display_status = ucfirst($application['status']);
+                        if ($application['status'] == 'accepted') {
+                            $status_class = 'status-success';
+                            $status_icon = 'bi-check-circle-fill';
                         } else {
-                            $display_status = ucfirst($application['status']);
-                            echo ($application['status'] == 'accepted') ? 'bg-success' : 'bg-danger';
+                            $status_class = 'status-danger';
+                            $status_icon = 'bi-x-circle-fill';
                         }
-                    ?>">
-                        <?php echo $display_status; ?>
-                    </span>
+                    }
+                ?>
+                <span class="badge rounded-pill <?php echo $status_class; ?> px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                    <i class="bi <?php echo $status_icon; ?> me-1"></i> <?php echo $display_status; ?>
+                </span>
+            </div>
+
+            <div class="mhs-edit-body p-4">
+                
+                <div class="mb-4">
+                    <h6 class="text-muted fw-semibold mb-2">Deskripsi Peluang</h6>
+                    <p class="text-dark mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                        <?php echo nl2br(htmlspecialchars($application['deskripsi'])); ?>
+                    </p>
                 </div>
 
-                <h6>Dokumen yang Diupload:</h6>
-                <ul>
-                    <?php while ($doc = mysqli_fetch_assoc($documents)): ?>
-                        <li><?php echo htmlspecialchars($doc['jenis']); ?>: <a href="../../uploads/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank">Lihat</a></li>
-                    <?php endwhile; ?>
-                </ul>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted fw-semibold mb-3">Informasi Peluang</h6>
+                        <div class="req-box">
+                            <div class="req-item">
+                                <span class="req-label"><i class="bi bi-tag me-2"></i>Tipe</span>
+                                <span class="req-value fw-medium"><?php echo htmlspecialchars($application['tipe']); ?></span>
+                            </div>
+                            <div class="req-item">
+                                <span class="req-label"><i class="bi bi-geo-alt me-2"></i>Lokasi</span>
+                                <span class="req-value fw-medium"><?php echo htmlspecialchars($application['lokasi'] ?? 'Tidak ditentukan'); ?></span>
+                            </div>
+                            <div class="req-item border-0">
+                                <span class="req-label"><i class="bi bi-people me-2"></i>Kuota</span>
+                                <span class="req-value fw-medium"><?php echo $application['kuota']; ?> Orang</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6 class="text-muted fw-semibold mb-3">Persyaratan Minimum</h6>
+                        <div class="req-box">
+                            <div class="req-item">
+                                <span class="req-label">IPK Minimum</span>
+                                <span class="req-value"><?php echo $application['min_ipk'] ?: '-'; ?></span>
+                            </div>
+                            <div class="req-item">
+                                <span class="req-label">Semester Minimum</span>
+                                <span class="req-value"><?php echo $application['min_semester'] ?: '-'; ?></span>
+                            </div>
+                            <div class="req-item border-0">
+                                <span class="req-label">Fakultas</span>
+                                <span class="req-value"><?php echo htmlspecialchars($application['fakultas'] ?? 'Semua Fakultas'); ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 rounded-3 mb-4 border" style="border-color: #E2E8F0 !important;">
+                    <div class="row text-center text-md-start">
+                        <div class="col-md-4 mb-2 mb-md-0">
+                            <small class="text-muted d-block mb-1">Tanggal Dibuat</small>
+                            <span class="fw-medium text-dark"><i class="bi bi-calendar3 me-1"></i> <?php echo date('d M Y', strtotime($application['peluang_created'])); ?></span>
+                        </div>
+                        <div class="col-md-4 mb-2 mb-md-0 border-md-start border-md-end">
+                            <small class="text-muted d-block mb-1">Batas Akhir (Deadline)</small>
+                            <span class="fw-medium text-dark"><i class="bi bi-calendar-x me-1"></i> <?php echo date('d M Y', strtotime($application['deadline'])); ?></span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block mb-1">Tanggal Anda Melamar</small>
+                            <span class="fw-medium text-primary"><i class="bi bi-calendar-check me-1"></i> <?php echo date('d M Y, H:i', strtotime($application['tanggal_apply'])); ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h6 class="text-muted fw-semibold mb-3"><i class="bi bi-folder2-open me-2"></i>Dokumen yang Diunggah</h6>
+                    
+                    <?php if (mysqli_num_rows($documents) > 0): ?>
+                        <div class="d-flex flex-column gap-2">
+                            <?php while ($doc = mysqli_fetch_assoc($documents)): ?>
+                                <div class="dz-preview-item" style="cursor: default;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="dz-preview-icon"><i class="bi bi-file-earmark-check"></i></div>
+                                        <div class="d-flex flex-column">
+                                            <span class="dz-preview-name"><?php echo htmlspecialchars($doc['jenis']); ?></span>
+                                            <span class="dz-preview-size text-muted">Lampiran Berkas</span>
+                                        </div>
+                                    </div>
+                                    <a href="../../uploads/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn btn-sm btn-soft-outline px-3">
+                                        <i class="bi bi-eye me-1"></i>Lihat File
+                                    </a>
+                                </div>
+                            <?php endwhile; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="custom-notice notice-warning">
+                            <i class="bi bi-info-circle me-2"></i> Tidak ada dokumen yang dilampirkan pada lamaran ini.
+                        </div>
+                    <?php endif; ?>
+                </div>
+
             </div>
         </div>
+
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
