@@ -283,3 +283,146 @@
 .mhs-empty-state h5 {
     color: #0F172A; /* Slate 900 */
 }
+
+/* ==========================================================================
+   Custom Notice / Alert (Desain Bersih & Elegan)
+   ========================================================================== */
+.custom-notice {
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+/* Varian Warning */
+.custom-notice.notice-warning {
+    background-color: #FFFBEB; /* Amber 50 - Sangat soft */
+    border-color: #FDE68A; /* Amber 200 - Garis keliling tipis */
+}
+
+.custom-notice .notice-icon {
+    color: #D97706; /* Amber 600 */
+}
+
+.custom-notice .notice-title {
+    color: #92400E; /* Amber 800 - Kontras untuk judul */
+}
+
+.custom-notice .notice-desc,
+.custom-notice .notice-list,
+.custom-notice .notice-footer {
+    color: #B45309; /* Amber 700 - Nyaman dibaca */
+}
+
+.custom-notice .notice-list li {
+    margin-bottom: 0.25rem;
+}
+
+/* ==========================================================================
+   Drag & Drop Upload Zone
+   ========================================================================== */
+.upload-dropzone {
+    background-color: #F8FAFC; /* Slate 50 */
+    border: 2px dashed #CBD5E1; /* Slate 300 */
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* State saat di-hover atau file ditarik ke dalam area */
+.upload-dropzone:hover,
+.upload-dropzone.dz-dragover {
+    background-color: #F0F9FF; /* Sky 50 */
+    border-color: #BAE6FD; /* Sky 200 */
+}
+
+.upload-dropzone.dz-dragover {
+    border-color: #1E3A8A; /* Navy (Primary) */
+    background-color: #EFF6FF; /* Blue 50 */
+}
+
+.dz-icon {
+    font-size: 2.5rem;
+    color: #94A3B8; /* Slate 400 */
+    margin-bottom: 0.75rem;
+    display: block;
+    transition: color 0.2s ease;
+}
+
+.upload-dropzone:hover .dz-icon,
+.upload-dropzone.dz-dragover .dz-icon {
+    color: #3B82F6; /* Blue 500 */
+}
+
+.dz-title {
+    font-weight: 500;
+    color: #334155; /* Slate 700 */
+    margin-bottom: 0.25rem;
+}
+
+.dz-subtitle {
+    font-size: 0.85rem;
+    color: #64748B; /* Slate 500 */
+    margin-bottom: 1rem;
+}
+
+/* ==========================================================================
+   File Preview Items (Hasil Drag & Drop)
+   ========================================================================== */
+.dz-preview-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB; /* Slate 200 */
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+
+.dz-preview-item:hover {
+    border-color: #CBD5E1; /* Slate 300 */
+}
+
+.dz-preview-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #F1F5F9; /* Slate 100 */
+    color: #1E3A8A; /* Navy */
+    border-radius: 6px;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.dz-preview-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #1E293B; /* Slate 800 */
+    display: block;
+}
+
+.dz-preview-size {
+    font-size: 0.75rem;
+    color: #64748B; /* Slate 500 */
+    display: block;
+}
+
+.dz-remove-btn {
+    background: transparent;
+    border: none;
+    color: #94A3B8; /* Slate 400 */
+    font-size: 1.25rem;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.dz-remove-btn:hover {
+    background-color: #FEE2E2; /* Red 100 */
+    color: #DC2626; /* Red 600 */
+}

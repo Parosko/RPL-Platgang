@@ -12,9 +12,15 @@ $status = $is_post_open ? 'Open' : 'Closed';
         <div class="d-flex justify-content-between align-items-start mb-3">
             <div>
                 <h5 class="post-title mb-1"><?php echo htmlspecialchars($post['judul']); ?></h5>
-                <div class="post-subtitle d-flex align-items-center">
-                    <i class="bi bi-building me-2"></i>
-                    <?php echo htmlspecialchars($post['nama_mitra'] ?? 'Mitra'); ?>
+                <div class="post-subtitle d-flex flex-column gap-2 mt-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-building"></i>
+                        <span><?php echo htmlspecialchars($post['nama_mitra'] ?? 'Mitra'); ?></span>
+                    </div>
+                    <div class="d-flex align-items-center flex-wrap gap-3">
+                        <span><i class="bi bi-briefcase me-1"></i> <?php echo htmlspecialchars($post['tipe'] ?? 'Tidak diketahui'); ?></span>
+                        <span><i class="bi bi-geo-alt me-1"></i> <?php echo htmlspecialchars($post['lokasi'] ?? 'Tidak ditentukan'); ?></span>
+                    </div>
                 </div>
             </div>
             

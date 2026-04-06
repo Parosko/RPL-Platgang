@@ -68,9 +68,10 @@ $applications = mysqli_stmt_get_result($stmt);
         
         <div class="page-header mb-4">
             <h1 class="page-title fs-3 mb-1">Riwayat Lamaran</h1>
-            <p class="page-subtitle text-muted mb-0">
-                Lacak status pendaftaran peluang yang telah Anda ikuti.
-            </p>
+            <div class="page-subtitle mt-2 d-flex align-items-center">
+                <i class="bi bi-clock-history me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                <span class="text-body">Lacak status pendaftaran peluang yang telah Anda ikuti.</span>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>

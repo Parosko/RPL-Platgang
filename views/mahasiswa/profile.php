@@ -68,7 +68,10 @@ $profile = mysqli_fetch_assoc($result);
         <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
                 <h1 class="page-title">Profil Saya</h1>
-                <p class="page-subtitle mb-0">Kelola informasi pribadi dan data akademik Anda.</p>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-person-circle me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Kelola informasi pribadi dan data akademik Anda.</span>
+                </div>
             </div>
             <a href="edit_profile.php" class="btn btn-navy px-4">
                 <i class="bi bi-pencil-square me-2"></i>Edit Profil
