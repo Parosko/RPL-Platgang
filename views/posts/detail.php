@@ -70,29 +70,25 @@ if ($role == 'mahasiswa') {
         $already_applied = mysqli_num_rows($result) > 0;
     }
 }
-
-// Determine badge text
-$badge_text = $already_applied ? 'Applied' : $status;
-$badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success' : 'bg-secondary');
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Detail Peluang - <?php echo htmlspecialchars($post['judul']); ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Peluang - <?php echo htmlspecialchars($post['judul']); ?> | Sistem Peluang</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    
+    <link rel="stylesheet" href="../../assets/css/posts.css">
 </head>
 
 <body>
@@ -102,108 +98,160 @@ $badge_class = $already_applied ? 'bg-info' : (($status == 'Open') ? 'bg-success
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
+        <div class="content-wrapper">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Detail Peluang</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($email); ?> (<?php echo $role; ?>)
-                </small>
+                <h1 class="page-title fs-3 mb-1">Detail Peluang</h1>
+                <p class="page-subtitle text-muted mb-0">
+                    <i class="bi bi-person-badge me-2"></i>Melihat sebagai: <span class="text-capitalize fw-medium"><?php echo $role; ?></span>
+                </p>
             </div>
-            <a href="../dashboard.php" class="btn btn-secondary">Kembali</a>
+            <a href="../dashboard.php" class="btn btn-soft-outline px-4">
+                <i class="bi bi-arrow-left me-2"></i>Kembali
+            </a>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?php echo htmlspecialchars($_SESSION['success']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-success alert-dismissible fade show border-0 bg-success text-white" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['success']); ?>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
             <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?php echo htmlspecialchars($_SESSION['error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-danger alert-dismissible fade show border-0 bg-danger text-white" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['error']); ?>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <div>
-                        <h5><?php echo htmlspecialchars($post['judul']); ?></h5>
-                        <small class="text-muted">
-                            Oleh: <?php echo htmlspecialchars($post['nama_organisasi'] ?? $post['mitra_email']); ?>
-                        </small>
+        <div class="post-detail-card mb-5">
+            <div class="post-header d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3">
+                <div>
+                    <h2 class="post-title h4 mb-2 text-navy"><?php echo htmlspecialchars($post['judul']); ?></h2>
+                    <div class="d-flex align-items-center gap-2 text-muted">
+                        <i class="bi bi-building fs-5"></i>
+                        <span class="fw-medium"><?php echo htmlspecialchars($post['nama_organisasi'] ?? $post['mitra_email']); ?></span>
                     </div>
-                    <span class="badge <?php echo $badge_class; ?>">
-                        <?php echo $badge_text; ?>
-                    </span>
+                </div>
+                <span class="badge badge-status <?php echo ($status == 'Open') ? 'status-open' : 'status-closed'; ?>">
+                    <?php if ($status == 'Open'): ?>
+                        <i class="bi bi-circle-fill status-icon-pulse"></i> <?php echo $status; ?>
+                    <?php else: ?>
+                        <i class="bi bi-lock-fill status-icon"></i> <?php echo $status; ?>
+                    <?php endif; ?>
+                </span>
+            </div>
+
+            <div class="post-body">
+                
+                <div class="mb-5">
+                    <h6 class="text-muted fw-semibold mb-3">Deskripsi Peluang</h6>
+                    <p class="text-dark mb-0 post-description">
+                        <?php echo nl2br(htmlspecialchars($post['deskripsi'])); ?>
+                    </p>
                 </div>
 
-                <p class="mb-3"><?php echo nl2br(htmlspecialchars($post['deskripsi'])); ?></p>
-
-                <div class="row mb-3">
+                <div class="row g-4 mb-5">
                     <div class="col-md-6">
-                        <strong>Tipe:</strong> <?php echo htmlspecialchars($post['tipe']); ?><br>
-                        <strong>Lokasi:</strong> <?php echo htmlspecialchars($post['lokasi'] ?? 'Tidak ditentukan'); ?><br>
-                        <strong>Kuota:</strong> <?php echo $post['kuota']; ?><br>
+                        <h6 class="text-muted fw-semibold mb-3">Informasi Umum</h6>
+                        <div class="detail-box">
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-briefcase me-2"></i>Tipe Posisi</span>
+                                <span class="detail-value"><?php echo htmlspecialchars($post['tipe']); ?></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-geo-alt me-2"></i>Lokasi</span>
+                                <span class="detail-value"><?php echo htmlspecialchars($post['lokasi'] ?? 'Tidak ditentukan'); ?></span>
+                            </div>
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-people me-2"></i>Kuota Tersedia</span>
+                                <span class="detail-value"><?php echo $post['kuota']; ?> Orang</span>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="col-md-6">
-                        <strong>Min. IPK:</strong> <?php echo $post['min_ipk']; ?><br>
-                        <strong>Min. Semester:</strong> <?php echo $post['min_semester']; ?><br>
-                        <strong>Fakultas:</strong> <?php echo htmlspecialchars($post['fakultas'] ?? 'Semua'); ?><br>
+                        <h6 class="text-muted fw-semibold mb-3">Persyaratan Minimum</h6>
+                        <div class="detail-box">
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-mortarboard me-2"></i>IPK Minimum</span>
+                                <span class="detail-value"><?php echo $post['min_ipk'] ?: '-'; ?></span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label"><i class="bi bi-book me-2"></i>Semester Minimum</span>
+                                <span class="detail-value"><?php echo $post['min_semester'] ?: '-'; ?></span>
+                            </div>
+                            <div class="detail-item border-0">
+                                <span class="detail-label"><i class="bi bi-building-fill me-2"></i>Fakultas</span>
+                                <span class="detail-value"><?php echo htmlspecialchars($post['fakultas'] ?? 'Semua Fakultas'); ?></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <strong>Dibuat:</strong> <?php echo $post['created_at']; ?><br>
-                    <strong>Deadline:</strong> <?php echo $post['deadline']; ?>
+                <div class="timeline-panel mb-5">
+                    <div class="row text-center text-md-start g-3">
+                        <div class="col-md-6 border-md-end">
+                            <small class="text-muted d-block mb-1">Tanggal Dipublikasikan</small>
+                            <span class="fw-medium text-dark">
+                                <i class="bi bi-calendar-plus me-2 text-primary"></i>
+                                <?php echo date('d F Y', strtotime($post['created_at'])); ?>
+                            </span>
+                        </div>
+                        <div class="col-md-6 ps-md-4">
+                            <small class="text-muted d-block mb-1">Batas Akhir Pendaftaran</small>
+                            <span class="fw-medium <?php echo ($status == 'Open') ? 'text-dark' : 'text-danger'; ?>">
+                                <i class="bi bi-calendar-x me-2 <?php echo ($status == 'Open') ? 'text-warning' : 'text-danger'; ?>"></i>
+                                <?php echo date('d F Y', strtotime($post['deadline'])); ?>
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="d-flex gap-2">
+                <div class="post-actions d-flex flex-wrap gap-3 pt-4 border-top">
                     <?php if ($role == 'mahasiswa' && $status == 'Open' && !$already_applied): ?>
                         <a href="../mahasiswa/apply.php?id=<?php echo $post['id']; ?>" 
-                           class="btn btn-primary"
+                           class="btn btn-navy px-4 py-2"
                            onclick="return confirm('Apakah Anda yakin ingin mendaftar untuk peluang ini?')">
-                            Daftar
+                            <i class="bi bi-send me-2"></i> Lamar Sekarang
                         </a>
                     <?php elseif ($role == 'mahasiswa' && $already_applied): ?>
-                        <a href="../mahasiswa/already_applied.php?id=<?php echo $post['id']; ?>" class="btn btn-success">
-                            Sudah Terdaftar
+                        <a href="../mahasiswa/already_applied.php?id=<?php echo $post['id']; ?>" class="btn btn-soft-outline px-4 py-2 status-info">
+                            <i class="bi bi-check-circle-fill me-2"></i> Anda Sudah Melamar
                         </a>
                     <?php elseif ($role == 'dpa' && $status == 'Open'): ?>
-                        <a href="<?= BASE_URL ?>/views/dpa/recommend_post.php?id=<?php echo $post['id']; ?>" 
-                           class="btn btn-warning">
-                            Rekomendasikan
+                        <a href="<?= BASE_URL ?>/views/dpa/recommend_post.php?id=<?php echo $post['id']; ?>" class="btn btn-warning px-4 py-2 text-white">
+                            <i class="bi bi-star me-2"></i> Rekomendasikan ke Mahasiswa
                         </a>
                     <?php elseif ($role == 'admin'): ?>
-                        <button class="btn btn-danger" 
-                                onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
-                            Nonaktifkan
+                        <button class="btn btn-danger px-4 py-2" onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
+                            <i class="bi bi-slash-circle me-2"></i> Nonaktifkan Peluang
                         </button>
                     <?php elseif ($role == 'mitra' && $post['mitra_id'] == $_SESSION['user_id']): ?>
-                        <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" class="btn btn-primary">
-                            Lihat Pendaftar
+                        <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" class="btn btn-navy px-4 py-2">
+                            <i class="bi bi-people me-2"></i> Kelola Pendaftar
                         </a>
-                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-soft-outline px-4 py-2">
+                            <i class="bi bi-pencil me-2"></i> Edit Peluang
+                        </button>
                     <?php endif; ?>
                 </div>
+
             </div>
         </div>
 
+        </div>
     </div>
-
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Deactivate post function
 function deactivatePost(postId, postTitle) {
-    if (confirm(`Apakah Anda yakin ingin menonaktifkan postingan "${postTitle}"?`)) {
+    if (confirm(`Peringatan: Apakah Anda yakin ingin menonaktifkan peluang "${postTitle}"? Peluang ini tidak akan bisa dilihat lagi oleh mahasiswa.`)) {
         window.location.href = `../../controllers/admin/deactivate_post_process.php?id=${postId}`;
     }
 }

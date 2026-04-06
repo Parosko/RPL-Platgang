@@ -1,0 +1,78 @@
+/* ==========================================================================
+   LAYOUT UTILITIES - Standardized Spacing & Container Classes
+   Untuk konsistensi spacing di seluruh halaman aplikasi
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Standard Content Spacing
+   -------------------------------------------------------------------------- */
+.content-standard {
+    padding: 32px 40px !important;
+}
+
+.content-standard-mobile {
+    padding: 24px 20px !important;
+}
+
+/* --------------------------------------------------------------------------
+   Container Width Constraints
+   -------------------------------------------------------------------------- */
+.container-narrow {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.container-medium {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.container-wide {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Container Classes
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .content-standard {
+        padding: 24px 20px !important;
+    }
+    
+    .container-narrow,
+    .container-medium,
+    .container-wide,
+    .container-fluid {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Page Layout Templates
+   -------------------------------------------------------------------------- */
+.page-layout-standard {
+    padding: 32px 40px !important;
+}
+
+.page-layout-standard .page-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .page-layout-standard {
+        padding: 24px 20px !important;
+    }
+}

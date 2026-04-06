@@ -1,0 +1,206 @@
+/* ==========================================================================
+   POSTS / PELUANG STYLESHEET
+   Sistem visual untuk halaman detail postingan, sejalan dengan design-system.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Content Layout Standardization
+   -------------------------------------------------------------------------- */
+/* Menggunakan layout utilities untuk konsistensi */
+.content {
+    padding: 32px 40px !important; /* Override layout.css untuk konsistensi */
+}
+
+/* Container untuk membatasi lebar konten utama */
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   2. Post Detail Card (Wadah Utama)
+   -------------------------------------------------------------------------- */
+.post-detail-card {
+    background-color: var(--bg-surface);
+    width: 100%;
+    display: block;
+    justify-content: center;
+    border: var(--border-width-base) solid var(--border-base);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.post-detail-card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+/* --------------------------------------------------------------------------
+   3. Header & Body Section
+   -------------------------------------------------------------------------- */
+.post-header {
+    padding: 1.5rem 2rem;
+    background-color: #F8FAFC; /* Same as mhs-edit-header */
+    border-bottom: var(--border-width-base) solid var(--border-base);
+}
+
+.post-title {
+    color: var(--text-headline);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: 1.3;
+    font-weight: 600; /* Reduced from fw-bold for less bulky appearance */
+}
+
+.post-body {
+    padding: 2rem;
+}
+
+.post-description {
+    color: var(--text-body);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-line; /* Memastikan enter/jarak paragraf terbaca dengan baik */
+}
+
+/* --------------------------------------------------------------------------
+   4. Detail Box & Items (Grid Informasi)
+   -------------------------------------------------------------------------- */
+.detail-box {
+    background-color: var(--bg-surface);
+    border: var(--border-width-base) solid var(--border-base);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-bottom: var(--border-width-base) solid var(--border-base);
+    transition: background-color var(--transition-fast);
+}
+
+/* Hapus border bawah pada item terakhir */
+.detail-item:last-child,
+.detail-item.border-0 {
+    border-bottom: none !important;
+}
+
+/* Efek hover halus pada setiap baris informasi */
+.detail-item:hover {
+    background-color: var(--bg-subtle);
+}
+
+.detail-label {
+    color: var(--text-subtle);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500; /* Reduced from default for less bulky */
+}
+
+.detail-label i {
+    color: var(--icon-muted);
+    font-size: var(--icon-md);
+}
+
+.detail-value {
+    font-weight: 500;
+    color: var(--text-headline);
+    font-size: 0.95rem;
+    text-align: right;
+    max-width: 60%;
+}
+
+/* --------------------------------------------------------------------------
+   5. Timeline Panel
+   -------------------------------------------------------------------------- */
+.timeline-panel {
+    background-color: var(--bg-light);
+    border: var(--border-width-base) solid var(--border-normal);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+}
+
+.timeline-panel small {
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.timeline-panel span {
+    font-size: 1.05rem;
+}
+
+/* --------------------------------------------------------------------------
+   6. Status Badge Animations
+   -------------------------------------------------------------------------- */
+.status-icon-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   7. Action Buttons Khusus (Jika belum ada di components.css)
+   -------------------------------------------------------------------------- */
+.post-actions {
+    border-color: var(--border-light) !important;
+}
+
+.btn-navy {
+    background-color: var(--primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-base);
+    font-weight: 500;
+    transition: all var(--transition-base);
+}
+
+.btn-navy:hover {
+    background-color: var(--primary-hover-color);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .content {
+        padding: 24px 20px !important;
+    }
+    
+    .post-header {
+        padding: 1.25rem 1.5rem;
+        background-color: #F8FAFC; /* Ensure consistency on mobile */
+    }
+    
+    .post-body {
+        padding: 1.5rem;
+    }
+
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .detail-value {
+        text-align: left;
+        max-width: 100%;
+        padding-left: 1.75rem; /* Sejajar dengan teks label (melewati ikon) */
+    }
+}

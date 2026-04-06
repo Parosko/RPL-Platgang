@@ -135,7 +135,7 @@ $documents = mysqli_stmt_get_result($stmt);
                         }
                     }
                 ?>
-                <span class="badge rounded-pill <?php echo $status_class; ?> px-3 py-2" style="font-size: 0.85rem; font-weight: 500;">
+                <span class="badge-status <?php echo $status_class; ?>">
                     <i class="bi <?php echo $status_icon; ?> me-1"></i> <?php echo $display_status; ?>
                 </span>
             </div>
