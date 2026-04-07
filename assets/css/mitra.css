@@ -1,0 +1,308 @@
+/* ==========================================================================
+   Layout Utama Profil Mitra
+   ========================================================================== */
+.mitra-profile-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+/* Header Profil */
+.mitra-profile-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #F8FAFC;
+}
+
+.mitra-avatar {
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 600;
+    background-color: #F1F5F9;
+    color: #1E3A8A; /* Navy */
+    border: 1px solid #CBD5E1;
+}
+
+.mitra-header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.mitra-badge {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+    background-color: #F1F5F9;
+    color: #334155;
+    font-weight: 600;
+    font-size: 0.75rem;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    border: none;
+}
+
+.mitra-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.mitra-email {
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.mitra-email i {
+    color: #64748B;
+}
+
+/* Body & Grid Informasi */
+.mitra-profile-body {
+    padding: 32px;
+}
+
+.mitra-profile-body .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0F172A;
+}
+
+.mitra-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+/* Item dengan Ikon (Shared Components) */
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.info-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    background-color: #F1F5F9;
+    color: #64748B;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.80rem;
+    color: #475569;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #0F172A;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.value-highlight {
+    font-weight: 600;
+}
+
+/* Responsivitas Mobile */
+@media (max-width: 768px) {
+    .mitra-profile-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px 20px;
+    }
+    
+    .mitra-profile-header .d-flex {
+        justify-content: center;
+    }
+    
+    .mitra-header-info {
+        align-items: center;
+    }
+    
+    .mitra-profile-body {
+        padding: 24px 20px;
+    }
+    
+    .mitra-info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* ==========================================================================
+   Edit Profil Mitra (Disiapkan untuk halaman edit_profile.php)
+   ========================================================================== */
+
+.mitra-edit-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.mitra-edit-header {
+    padding: 20px 32px;
+    border-bottom: 1px solid #E5E7EB;
+    background-color: #F8FAFC;
+}
+
+.mitra-edit-header h5 {
+    color: #0F172A;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.mitra-edit-body {
+    padding: 32px;
+}
+
+.custom-label {
+    font-size: 0.85rem;
+    color: #334155;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+}
+
+.custom-input {
+    font-size: 0.95rem;
+    color: #0F172A;
+    border: 1px solid #CBD5E1;
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.custom-input:focus {
+    border-color: #1E3A8A;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    outline: none;
+}
+
+.custom-input::placeholder {
+    color: #94A3B8;
+}
+
+.custom-input[readonly] {
+    background-color: #F1F5F9 !important;
+    color: #475569;
+    cursor: not-allowed;
+    border-color: #E5E7EB;
+}
+
+.mitra-edit-body .form-text {
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-top: 0.4rem;
+}
+
+@media (max-width: 768px) {
+    .mitra-edit-header, 
+    .mitra-edit-body {
+        padding: 24px 20px;
+    }
+}
+
+/* ==========================================================================
+   Empty State & Badges
+   ========================================================================== */
+
+.status-success {
+    background-color: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #6EE7B7;
+}
+
+.status-warning {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FCD34D;
+}
+
+.status-danger {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+}
+
+.mitra-empty-state {
+    background-color: #F8FAFC;
+    border: 2px dashed #CBD5E1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.mitra-empty-state:hover {
+    border-color: #94A3B8;
+    background-color: #F1F5F9;
+}
+
+.mitra-empty-state .empty-icon {
+    font-size: 3.5rem;
+    color: #94A3B8;
+    line-height: 1;
+}
+
+.mitra-empty-state h5 {
+    color: #0F172A;
+}
+
+/* ==========================================================================
+   Custom Notice / Alert
+   ========================================================================== */
+
+.custom-notice {
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.custom-notice.notice-warning {
+    background-color: #FFFBEB;
+    border-color: #FDE68A;
+}
+
+.custom-notice .notice-icon {
+    color: #D97706;
+}
+
+.custom-notice .notice-title {
+    color: #92400E;
+}
+
+.custom-notice .notice-desc,
+.custom-notice .notice-list,
+.custom-notice .notice-footer {
+    color: #B45309;
+}
+
+.custom-notice .notice-list li {
+    margin-bottom: 0.25rem;
+}
