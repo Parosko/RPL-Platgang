@@ -175,9 +175,15 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
                             
                             <div class="info-group">
                                 <span class="info-label">Peluang</span>
-                                <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
-                                    <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
-                                </a>
+                                <?php if ($_SESSION['role'] === 'mahasiswa' && $related_info['status_lamaran']): ?>
+                                    <a href="../views/mahasiswa/already_applied.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
+                                        <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
+                                        <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
+                                    </a>
+                                <?php endif; ?>
                             </div>
                             
                             <div class="info-group">
@@ -225,7 +231,7 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
                             
                             <div class="info-group">
                                 <span class="info-label">Peluang</span>
-                                <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
+                                <a href="../views/mahasiswa/already_applied.php?id=<?php echo $related_info['peluang_id']; ?>" class="info-value-link">
                                     <?php echo htmlspecialchars($related_info['peluang_judul']); ?> <i class="bi bi-box-arrow-up-right ms-1" style="font-size: 0.8em;"></i>
                                 </a>
                             </div>
@@ -266,9 +272,15 @@ if ($notification['tipe_notifikasi'] === 'recommendation' && $notification['rela
 
             <div class="detail-actions">
                 <?php if ($related_info): ?>
-                    <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="btn-action-primary">
-                        Lihat Detail Peluang <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
+                    <?php if ($_SESSION['role'] === 'mahasiswa' && ($notification['tipe_notifikasi'] === 'result' || ($notification['tipe_notifikasi'] === 'recommendation' && $related_info['status_lamaran']))): ?>
+                        <a href="../views/mahasiswa/already_applied.php?id=<?php echo $related_info['peluang_id']; ?>" class="btn-action-primary">
+                            Lihat Detail Peluang <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    <?php else: ?>
+                        <a href="../views/posts/detail.php?id=<?php echo $related_info['peluang_id']; ?>" class="btn-action-primary">
+                            Lihat Detail Peluang <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
             
