@@ -235,9 +235,9 @@ if ($role == 'mahasiswa') {
                         <a href="../mitra/applicants.php?id=<?php echo $post['id']; ?>" class="btn btn-navy px-4 py-2">
                             <i class="bi bi-people me-2"></i> Kelola Pendaftar
                         </a>
-                        <button class="btn btn-soft-outline px-4 py-2">
+                        <a href="../mitra/edit_post.php?id=<?php echo $post['id']; ?>" class="btn btn-soft-outline px-4 py-2">
                             <i class="bi bi-pencil me-2"></i> Edit Peluang
-                        </button>
+                        </a>
                     <?php endif; ?>
                 </div>
 
