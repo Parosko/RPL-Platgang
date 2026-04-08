@@ -328,7 +328,7 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
                                         <div class="info-value"><?php echo $app['ipk']; ?></div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="info-label mb-1">Smstr</div>
+                                        <div class="info-label mb-1">Sem</div>
                                         <div class="info-value"><?php echo $app['semester']; ?></div>
                                     </div>
                                 </div>

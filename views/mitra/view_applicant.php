@@ -43,21 +43,84 @@ $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $lamaran_id);
 mysqli_stmt_execute($stmt);
 $documents = mysqli_stmt_get_result($stmt);
+
+// Format Status untuk Badge
+$status_class = 'status-warning';
+if ($application['status'] == 'accepted') $status_class = 'status-success';
+if ($application['status'] == 'rejected') $status_class = 'status-danger';
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detail Lamaran - <?php echo htmlspecialchars($application['nama']); ?></title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/mitra.css">
+    
+    <style>
+        /* Sticky Layout for Applicant Detail */
+        .applicant-detail-container {
+            display: flex;
+            gap: 1.5rem;
+            position: relative;
+            min-height: calc(100vh - 200px);
+        }
+        
+        .applicant-sidebar {
+            flex: 0 0 380px;
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+        
+        .applicant-sidebar::-webkit-scrollbar {
+            display: none; /* Safari and Chrome */
+        }
+        
+        .applicant-content {
+            flex: 1;
+            min-width: 0; /* Prevent flex item from overflowing */
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            .applicant-sidebar {
+                flex: 0 0 340px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .applicant-detail-container {
+                flex-direction: column;
+            }
+            
+            .applicant-sidebar {
+                flex: 1;
+                position: static;
+                max-height: none;
+                overflow-y: visible;
+            }
+            
+            .applicant-content {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -65,196 +128,279 @@ $documents = mysqli_stmt_get_result($stmt);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Detail Lamaran</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (mitra)
-                </small>
+                <h1 class="page-title">Detail Lamaran</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-person-check me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body"><?php echo htmlspecialchars($application['nama']); ?></span>
+                </div>
             </div>
-            <a href="applications.php" class="btn btn-secondary">Kembali</a>
+            <a href="applicants.php?id=<?php echo $application['peluang_id']; ?>" class="btn btn-soft-outline px-3">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
         </div>
 
-        <div class="row">
-            <!-- Applicant Info -->
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-header">
-                        <h6>Data Mahasiswa</h6>
+        <div class="applicant-detail-container">
+            <div class="applicant-sidebar sticky-sidebar">
+                <div class="mitra-profile-card mb-4">
+                    <div class="mitra-profile-header text-center pt-4">
+                        <div class="mitra-avatar mb-3 mx-auto" style="width: 80px; height: 80px; font-size: 2rem;">
+                            <?php 
+                            $name_parts = explode(' ', trim($application['nama']));
+                            $initials = strtoupper(substr($name_parts[0], 0, 1));
+                            if(isset($name_parts[1])) {
+                                $initials .= strtoupper(substr($name_parts[1], 0, 1));
+                            }
+                            echo $initials; 
+                            ?>
+                        </div>
+                        <h5 class="mitra-name mb-1"><?php echo htmlspecialchars($application['nama']); ?></h5>
+                        <p class="mitra-email mb-3"><?php echo htmlspecialchars($application['prodi']); ?></p>
+                        
+                        <span class="mitra-badge <?php echo $status_class; ?> mb-3">
+                            <?php if($application['status'] == 'accepted') echo '<i class="bi bi-check-circle-fill me-1"></i>'; ?>
+                            <?php if($application['status'] == 'rejected') echo '<i class="bi bi-x-circle-fill me-1"></i>'; ?>
+                            <?php if($application['status'] == 'pending') echo '<i class="bi bi-clock-fill me-1"></i>'; ?>
+                            <?php echo ucfirst($application['status']); ?>
+                        </span>
+                        
+                        <?php if ($application['is_recommended']): ?>
+                            <div class="mb-3">
+                                <span class="mitra-badge border">
+                                    <i class="bi bi-star-fill me-1"></i> Direkomendasikan DPA
+                                </span>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <div class="text-muted small">
+                            <i class="bi bi-clock me-1"></i> Melamar: <?php echo date('d M Y, H:i', strtotime($application['tanggal_apply'])); ?>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <strong><?php echo htmlspecialchars($application['nama']); ?></strong><br>
-                        <small class="text-muted">NIM: <?php echo htmlspecialchars($application['nim']); ?></small><br>
-                        <small class="text-muted">Email: <?php echo htmlspecialchars($application['email']); ?></small>
-                        <hr>
-                        <strong>Fakultas:</strong> <?php echo htmlspecialchars($application['applicant_fakultas']); ?><br>
-                        <strong>Prodi:</strong> <?php echo htmlspecialchars($application['prodi']); ?><br>
-                        <strong>IPK:</strong> <?php echo $application['ipk']; ?><br>
-                        <strong>Semester:</strong> <?php echo $application['semester']; ?>
+                    <div class="mitra-profile-body">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">NIM</span>
+                                <span class="info-value"><?php echo htmlspecialchars($application['nim']); ?></span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Email</span>
+                                <span class="info-value"><?php echo htmlspecialchars($application['email']); ?></span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div class="info-content">
+                                <span class="info-label">Fakultas</span>
+                                <span class="info-value"><?php echo htmlspecialchars($application['applicant_fakultas']); ?></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Status Card -->
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <h6>Status Lamaran</h6>
+                <div class="mitra-edit-card">
+                    <div class="mitra-edit-header">
+                        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Tindakan Evaluasi</h5>
                     </div>
-                    <div class="card-body">
-                        <span class="badge 
-                            <?php echo ($application['status'] == 'accepted') ? 'bg-success' : 
-                                   (($application['status'] == 'rejected') ? 'bg-danger' : 'bg-warning'); ?>"
-                            style="font-size: 16px; padding: 10px;">
-                            <?php echo ucfirst($application['status']); ?>
-                        </span>
-                        <br><br>
-                        <small class="text-muted">
-                            Tanggal Apply: <?php echo date('d-m-Y H:i', strtotime($application['tanggal_apply'])); ?>
-                        </small>
-                        <?php if ($application['is_recommended']): ?>
-                            <br><span class="badge bg-warning text-dark mt-2">Direkomendasikan oleh DPA</span>
-                        <?php endif; ?>
+                    <div class="mitra-edit-body">
+                        <div class="d-grid gap-2">
+                            <?php if ($application['status'] == 'pending'): ?>
+                                <button type="button" class="btn btn-navy" onclick="acceptApplication(<?php echo $lamaran_id; ?>)">
+                                    <i class="bi bi-check-circle me-1"></i> Terima Lamaran
+                                </button>
+                                <button type="button" class="btn btn-soft-danger" onclick="rejectApplication(<?php echo $lamaran_id; ?>)">
+                                    <i class="bi bi-x-circle me-1"></i> Tolak Lamaran
+                                </button>
+                            <?php elseif ($application['status'] == 'accepted'): ?>
+                                <button type="button" class="btn btn-soft-danger" onclick="rejectApplication(<?php echo $lamaran_id; ?>)">
+                                    <i class="bi bi-x-circle me-1"></i> Batalkan Penerimaan
+                                </button>
+                            <?php elseif ($application['status'] == 'rejected'): ?>
+                                <button type="button" class="btn btn-navy" onclick="acceptApplication(<?php echo $lamaran_id; ?>)">
+                                    <i class="bi bi-check-circle me-1"></i> Pertimbangkan Kembali
+                                </button>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Post and Documents -->
-            <div class="col-md-8">
-                <!-- Post Details -->
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6>Detail Postingan</h6>
+            <div class="applicant-content scrollable-content">
+                
+                <div class="mitra-edit-card mb-4">
+                    <div class="mitra-edit-header">
+                        <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Persyaratan vs Data Mahasiswa</h5>
                     </div>
-                    <div class="card-body">
-                        <h6><?php echo htmlspecialchars($application['judul']); ?></h6>
-                        <p><?php echo nl2br(htmlspecialchars($application['deskripsi'])); ?></p>
-                        <div class="row">
+                    <div class="mitra-edit-body bg-light">
+                        <div class="row g-4">
                             <div class="col-md-6">
-                                <strong>Tipe:</strong> <?php echo ucfirst($application['tipe']); ?><br>
-                                <strong>Lokasi:</strong> <?php echo htmlspecialchars($application['lokasi']); ?><br>
-                                <strong>Kuota:</strong> <?php echo $application['kuota']; ?><br>
-                                <strong>Min IPK:</strong> <?php echo $application['min_ipk']; ?><br>
-                                <strong>Min Semester:</strong> <?php echo $application['min_semester']; ?><br>
-                                <strong>Fakultas:</strong> <?php echo !empty($application['required_fakultas']) ? htmlspecialchars($application['required_fakultas']) : 'Semua Fakultas'; ?>
+                                <div class="p-3 bg-white border rounded h-100">
+                                    <h6 class="text-muted small text-uppercase mb-3">Indeks Prestasi Kumulatif (IPK)</h6>
+                                    <div class="mb-2"><strong>Syarat:</strong> ≥ <?php echo $application['min_ipk']; ?></div>
+                                    <div class="d-flex align-items-center">
+                                        <strong class="me-2">Mahasiswa:</strong> 
+                                        <span class="fs-5 fw-bold <?php echo ($application['ipk'] >= $application['min_ipk']) ? 'text-success' : 'text-danger'; ?>">
+                                            <?php echo $application['ipk']; ?>
+                                        </span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <?php if ($application['ipk'] < $application['min_ipk']): ?>
+                                            <span class="mitra-badge status-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i> Tidak memenuhi</span>
+                                        <?php else: ?>
+                                            <span class="mitra-badge status-success"><i class="bi bi-check-circle-fill me-1"></i> Memenuhi</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
+                            
                             <div class="col-md-6">
-                                <strong>Deadline:</strong> <?php echo date('d-m-Y H:i', strtotime($application['deadline'])); ?>
+                                <div class="p-3 bg-white border rounded h-100">
+                                    <h6 class="text-muted small text-uppercase mb-3">Semester Minimal</h6>
+                                    <div class="mb-2"><strong>Syarat:</strong> ≥ <?php echo $application['min_semester']; ?></div>
+                                    <div class="d-flex align-items-center">
+                                        <strong class="me-2">Mahasiswa:</strong> 
+                                        <span class="fs-5 fw-bold <?php echo ($application['semester'] >= $application['min_semester']) ? 'text-success' : 'text-danger'; ?>">
+                                            <?php echo $application['semester']; ?>
+                                        </span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <?php if ($application['semester'] < $application['min_semester']): ?>
+                                            <span class="mitra-badge status-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i> Tidak memenuhi</span>
+                                        <?php else: ?>
+                                            <span class="mitra-badge status-success"><i class="bi bi-check-circle-fill me-1"></i> Memenuhi</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="p-3 bg-white border rounded h-100">
+                                    <h6 class="text-muted small text-uppercase mb-3">Kriteria Fakultas</h6>
+                                    <div class="mb-2"><strong>Syarat:</strong> <?php echo !empty($application['required_fakultas']) ? htmlspecialchars($application['required_fakultas']) : 'Semua Fakultas'; ?></div>
+                                    <div class="d-flex flex-column">
+                                        <strong class="mb-1">Mahasiswa:</strong> 
+                                        <span class="<?php echo (empty($application['required_fakultas']) || $application['required_fakultas'] == $application['applicant_fakultas']) ? 'text-success fw-medium' : 'text-danger fw-medium'; ?>">
+                                            <?php echo htmlspecialchars($application['applicant_fakultas']); ?>
+                                        </span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <?php if (!empty($application['required_fakultas']) && $application['required_fakultas'] != $application['applicant_fakultas']): ?>
+                                            <span class="mitra-badge status-danger"><i class="bi bi-exclamation-triangle-fill me-1"></i> Tidak memenuhi</span>
+                                        <?php else: ?>
+                                            <span class="mitra-badge status-success"><i class="bi bi-check-circle-fill me-1"></i> Memenuhi</span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="p-3 bg-white border rounded h-100">
+                                    <h6 class="text-muted small text-uppercase mb-3">Program Studi</h6>
+                                    <div class="mb-2 text-muted"><em>Tidak ada batasan spesifik prodi</em></div>
+                                    <div class="mt-3">
+                                        <strong>Mahasiswa:</strong><br>
+                                        <span class="text-dark fw-medium"><?php echo htmlspecialchars($application['prodi']); ?></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Documents -->
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6>Dokumen</h6>
+                <div class="mitra-edit-card mb-4">
+                    <div class="mitra-edit-header">
+                        <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>Informasi Peluang Didaftar</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="mitra-edit-body">
+                        <h5 class="mb-3"><?php echo htmlspecialchars($application['judul']); ?> <span class="mitra-badge border ms-2" style="font-size: 0.8rem;"><?php echo ucfirst($application['tipe']); ?></span></h5>
+                        
+                        <div class="p-3 bg-light rounded mb-3">
+                            <p class="mb-0 small text-secondary" style="line-height: 1.6;"><?php echo nl2br(htmlspecialchars($application['deskripsi'])); ?></p>
+                        </div>
+                        
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="bi bi-geo-alt"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <span class="info-label">Lokasi</span>
+                                        <span class="info-value"><?php echo htmlspecialchars($application['lokasi']); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="bi bi-people"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <span class="info-label">Kuota</span>
+                                        <span class="info-value"><?php echo $application['kuota']; ?> Orang</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="info-item">
+                                    <div class="info-icon">
+                                        <i class="bi bi-calendar-event"></i>
+                                    </div>
+                                    <div class="info-content">
+                                        <span class="info-label">Tenggat Waktu</span>
+                                        <span class="info-value"><?php echo date('d F Y', strtotime($application['deadline'])); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mitra-edit-card mb-4">
+                    <div class="mitra-edit-header">
+                        <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Dokumen Pelamar</h5>
+                    </div>
+                    <div class="mitra-edit-body">
                         <?php if (mysqli_num_rows($documents) > 0): ?>
-                            <ul class="list-group">
+                            <div class="row g-3">
                                 <?php while ($doc = mysqli_fetch_assoc($documents)): ?>
-                                    <li class="list-group-item">
-                                        <strong><?php echo htmlspecialchars($doc['jenis']); ?></strong>
-                                        <a href="../../uploads/<?php echo htmlspecialchars($doc['file_path']); ?>" 
-                                           target="_blank" class="btn btn-sm btn-primary float-end">
-                                            Download
-                                        </a>
-                                    </li>
+                                    <div class="col-md-6">
+                                        <div class="p-3 border rounded d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <div class="info-icon me-3">
+                                                    <i class="bi bi-file-earmark-pdf"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($doc['jenis']); ?></h6>
+                                                    <small class="text-muted">Dokumen Upload</small>
+                                                </div>
+                                            </div>
+                                            <a href="../../uploads/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn btn-sm btn-navy">
+                                                <i class="bi bi-download"></i> Unduh
+                                            </a>
+                                        </div>
+                                    </div>
                                 <?php endwhile; ?>
-                            </ul>
+                            </div>
                         <?php else: ?>
-                            <p class="text-muted">Tidak ada dokumen yang diupload.</p>
+                            <div class="mitra-empty-state text-center py-4">
+                                <i class="bi bi-inbox empty-icon mb-2"></i>
+                                <p class="text-muted mb-0">Tidak ada dokumen yang dilampirkan oleh pelamar.</p>
+                            </div>
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- Requirements vs Applicant Comparison -->
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <h6>Persyaratan vs Data Mahasiswa</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>IPK</h6>
-                                <p>
-                                    <strong>Persyaratan:</strong> ≥ <?php echo $application['min_ipk']; ?><br>
-                                    <strong>Mahasiswa:</strong> 
-                                    <span class="<?php echo ($application['ipk'] >= $application['min_ipk']) ? 'text-success' : 'text-danger'; ?>">
-                                        <?php echo $application['ipk']; ?>
-                                        <?php if ($application['ipk'] < $application['min_ipk']): ?>
-                                            <i class="fas fa-exclamation-triangle"></i> Tidak memenuhi
-                                        <?php else: ?>
-                                            <i class="fas fa-check-circle"></i> Memenuhi
-                                        <?php endif; ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Semester</h6>
-                                <p>
-                                    <strong>Persyaratan:</strong> ≥ <?php echo $application['min_semester']; ?><br>
-                                    <strong>Mahasiswa:</strong> 
-                                    <span class="<?php echo ($application['semester'] >= $application['min_semester']) ? 'text-success' : 'text-danger'; ?>">
-                                        <?php echo $application['semester']; ?>
-                                        <?php if ($application['semester'] < $application['min_semester']): ?>
-                                            <i class="fas fa-exclamation-triangle"></i> Tidak memenuhi
-                                        <?php else: ?>
-                                            <i class="fas fa-check-circle"></i> Memenuhi
-                                        <?php endif; ?>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Fakultas</h6>
-                                <p>
-                                    <strong>Persyaratan:</strong> <?php echo !empty($application['required_fakultas']) ? htmlspecialchars($application['required_fakultas']) : 'Semua Fakultas'; ?><br>
-                                    <strong>Mahasiswa:</strong> 
-                                    <span class="<?php echo (empty($application['required_fakultas']) || $application['required_fakultas'] == $application['applicant_fakultas']) ? 'text-success' : 'text-danger'; ?>">
-                                        <?php echo htmlspecialchars($application['applicant_fakultas']); ?>
-                                        <?php if (!empty($application['required_fakultas']) && $application['required_fakultas'] != $application['applicant_fakultas']): ?>
-                                            <i class="fas fa-exclamation-triangle"></i> Tidak memenuhi
-                                        <?php else: ?>
-                                            <i class="fas fa-check-circle"></i> Memenuhi
-                                        <?php endif; ?>
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Prodi</h6>
-                                <p>
-                                    <strong>Persyaratan:</strong> Tidak ada persyaratan spesifik<br>
-                                    <strong>Mahasiswa:</strong> <?php echo htmlspecialchars($application['prodi']); ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <?php if ($application['status'] == 'pending'): ?>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-success" onclick="acceptApplication(<?php echo $lamaran_id; ?>)">
-                            Terima Lamaran
-                        </button>
-                        <button class="btn btn-danger" onclick="rejectApplication(<?php echo $lamaran_id; ?>)">
-                            Tolak Lamaran
-                        </button>
-                    </div>
-                <?php elseif ($application['status'] == 'accepted'): ?>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-warning" onclick="rejectApplication(<?php echo $lamaran_id; ?>)">
-                            Batalkan Penerimaan
-                        </button>
-                    </div>
-                <?php elseif ($application['status'] == 'rejected'): ?>
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-success" onclick="acceptApplication(<?php echo $lamaran_id; ?>)">
-                            Pertimbangkan Kembali
-                        </button>
-                    </div>
-                <?php endif; ?>
             </div>
         </div>
     </div>

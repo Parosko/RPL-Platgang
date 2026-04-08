@@ -306,3 +306,53 @@
 .custom-notice .notice-list li {
     margin-bottom: 0.25rem;
 }
+
+/* Placeholder untuk Avatar Mahasiswa */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f4f8; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* Card hover untuk daftar dokumen */
+.document-card {
+    transition: all 0.2s ease-in-out;
+    background-color: #ffffff;
+}
+.document-card:hover {
+    border-color: #0d6efd !important;
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.1);
+}
+
+/* Box untuk perbandingan kriteria */
+.comparison-box {
+    border: 1px solid #e9ecef;
+    transition: background-color 0.2s;
+}
+.comparison-box:hover {
+    background-color: #f8f9fa !important;
+}
+
+/* Background khusus untuk icon box */
+.bg-light-primary {
+    background-color: #e7f1ff;
+}
+
+/* Penyesuaian shadow bawaan Bootstrap agar lebih modern/halus */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.04) !important;
+}
+
+/* Styling interaksi untuk breadcrumbs */
+.breadcrumb-item a {
+    color: #6c757d;
+    transition: color 0.2s;
+}
+.breadcrumb-item a:hover {
+    color: #0d6efd;
+}
