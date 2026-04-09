@@ -29,16 +29,16 @@ while ($row = mysqli_fetch_assoc($result)) {
 <head>
     <title>Kelola DPA - Admin</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
 
 </head>
@@ -49,14 +49,28 @@ while ($row = mysqli_fetch_assoc($result)) {
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Kelola DPA</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-                </small>
+                <h1 class="page-title">Kelola DPA</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-person-badge-fill me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Kelola semua DPA di sistem.</span>
+                </div>
             </div>
-            <a href="<?= BASE_URL ?>/views/dashboard.php" class="btn btn-secondary">Kembali</a>
+            <div class="d-flex gap-2">
+                <div class="text-center px-3 py-2" style="background: var(--info-light); border-radius: var(--radius-lg); border: 1px solid var(--border-base);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total DPA</div>
+                    <div class="fw-bold" style="color: var(--info); font-size: 1.25rem;"><?php echo count($dpas); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--success-light); border-radius: var(--radius-lg); border: 1px solid var(--success-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Mahasiswa</div>
+                    <div class="fw-bold" style="color: var(--success); font-size: 1.25rem;"><?php echo array_sum(array_column($dpas, 'total_students')); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--warning-light); border-radius: var(--radius-lg); border: 1px solid var(--warning-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Rata-rata</div>
+                    <div class="fw-bold" style="color: var(--warning); font-size: 1.25rem;"><?php echo count($dpas) > 0 ? round(array_sum(array_column($dpas, 'total_students')) / count($dpas), 1) : 0; ?></div>
+                </div>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -75,8 +89,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
+        <!-- Search Section -->
         <div class="mb-4">
             <input 
                 type="text" 
@@ -87,52 +100,58 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
 
         <?php if (empty($dpas)): ?>
-            <div class="alert alert-info">
-                Belum ada DPA di sistem.
+            <div class="admin-empty-state text-center p-5">
+                <i class="bi bi-person-badge empty-icon mb-3"></i>
+                <h5 class="mb-2">Belum Ada DPA</h5>
+                <p class="text-muted mb-0">Saat ini belum ada DPA di sistem.</p>
             </div>
         <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Nama DPA</th>
-                            <th>Email</th>
-                            <th class="text-center">Total Mahasiswa</th>
-                            <th class="text-end">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dpaList">
-                        <?php foreach ($dpas as $dpa): ?>
-                            <tr class="dpa-row" data-search="<?php echo htmlspecialchars(strtolower($dpa['nama'] . ' ' . $dpa['email'])); ?>">
-                                <td>
-                                    <strong><?php echo htmlspecialchars($dpa['nama'] ?? 'N/A'); ?></strong>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($dpa['email']); ?>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary">
-                                        <?php echo $dpa['total_students']; ?> Mahasiswa
-                                    </span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="<?= BASE_URL ?>/views/admin/dpa_detail.php?id=<?php echo $dpa['id']; ?>" 
-                                       class="btn btn-info btn-sm me-2">
-                                        <i class="bi bi-eye"></i> Detail
-                                    </a>
-                                    <a href="<?= BASE_URL ?>/views/admin/assign_mahasiswa.php?dpa_id=<?php echo $dpa['id']; ?>" 
-                                       class="btn btn-primary btn-sm">
-                                        <i class="bi bi-plus-circle"></i> Tugaskan
-                                    </a>
-                                </td>
+            <div class="admin-profile-card">
+                <div class="table-responsive">
+                    <table class="table admin-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th width="30%">Nama DPA</th>
+                                <th width="25%">Email</th>
+                                <th width="15%" class="text-center">Total Mahasiswa</th>
+                                <th width="30%" class="text-center">Aksi</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="dpaList">
+                            <?php foreach ($dpas as $dpa): ?>
+                                <tr class="dpa-row" data-search="<?php echo htmlspecialchars(strtolower($dpa['nama'] . ' ' . $dpa['email'])); ?>">
+                                    <td class="nama fw-semibold" style="color: #0F172A;">
+                                        <?php echo htmlspecialchars($dpa['nama'] ?? 'N/A'); ?>
+                                    </td>
+                                    <td class="email text-muted">
+                                        <?php echo htmlspecialchars($dpa['email']); ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge-status status-info">
+                                            <?php echo $dpa['total_students']; ?> Mahasiswa
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="dpa_detail.php?id=<?php echo $dpa['id']; ?>" 
+                                           class="btn btn-navy btn-sm me-2">
+                                            <i class="bi bi-eye"></i> Detail
+                                        </a>
+                                        <a href="assign_mahasiswa.php?dpa_id=<?php echo $dpa['id']; ?>" 
+                                           class="btn btn-success btn-sm">
+                                            <i class="bi bi-plus-circle"></i> Tugaskan
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div id="noResults" class="alert alert-warning mt-3" style="display: none;">
-                Tidak ada DPA yang sesuai dengan pencarian Anda.
+            <div id="noResults" class="admin-empty-state text-center p-5 mt-3" style="display: none;">
+                <i class="bi bi-search empty-icon mb-3"></i>
+                <h5 class="mb-2">Tidak Ada Hasil</h5>
+                <p class="text-muted mb-0">Tidak ada DPA yang sesuai dengan pencarian Anda.</p>
             </div>
         <?php endif; ?>
 
