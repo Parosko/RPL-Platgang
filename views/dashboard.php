@@ -78,14 +78,22 @@ if ($hour >= 5 && $hour < 12) {
     $greeting = "Selamat malam";
 }
 
+// Get filter parameter
+$type_filter = isset($_GET['type']) ? $_GET['type'] : '';
+
 // Query untuk mengambil daftar peluang aktif
 $query = "SELECT p.*, 
                  (SELECT COUNT(*) FROM lamaran l WHERE l.peluang_id = p.id) as applicant_count,
                  m.nama_organisasi as nama_mitra
           FROM peluang p 
           LEFT JOIN mitra m ON p.mitra_id = m.user_id
-          WHERE p.status = 'approved' AND p.closed_at IS NULL 
-          ORDER BY p.created_at DESC";
+          WHERE p.status = 'approved' AND p.closed_at IS NULL";
+
+if (!empty($type_filter)) {
+    $query .= " AND p.tipe = '" . mysqli_real_escape_string($conn, $type_filter) . "'";
+}
+
+$query .= " ORDER BY p.created_at DESC";
 $result = mysqli_query($conn, $query);
 
 $posts = [];
@@ -133,7 +141,27 @@ while ($row = mysqli_fetch_assoc($result)) {
             </div>
         </div>
 
-        <h5 class="section-title">Daftar Peluang</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="section-title mb-0">Daftar Peluang</h5>
+            <div class="d-flex align-items-center gap-2">
+                <div class="btn-group" role="group">
+                    <a href="?type=" class="btn btn-outline-secondary <?php echo empty($type_filter) ? 'active' : ''; ?>" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+                        <i class="bi bi-grid"></i>
+                    </a>
+                    <a href="?type=magang" class="btn btn-outline-secondary <?php echo $type_filter === 'magang' ? 'active' : ''; ?>" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+                        <i class="bi bi-briefcase"></i>
+                    </a>
+                    <a href="?type=kursus" class="btn btn-outline-secondary <?php echo $type_filter === 'kursus' ? 'active' : ''; ?>" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+                        <i class="bi bi-book"></i>
+                    </a>
+                </div>
+                <?php if (!empty($type_filter)): ?>
+                    <small class="text-muted">
+                        <i class="bi bi-funnel me-1"></i><?php echo htmlspecialchars(ucfirst($type_filter)); ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+        </div>
 
         <div class="post-container">
             <?php if (empty($posts)): ?>
