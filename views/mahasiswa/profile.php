@@ -11,7 +11,11 @@ redirectIfProfileIncomplete($conn, __FILE__);
 
 $user_id = $_SESSION['user_id'];
 
-$query = "SELECT m.*, u.email FROM mahasiswa m JOIN users u ON m.user_id = u.id WHERE m.user_id = ?";
+$query = "SELECT m.*, u.email, d.nama as dpa_nama, d.nip as dpa_nip, d.fakultas as dpa_fakultas, d.prodi as dpa_prodi, d.kontak as dpa_kontak 
+           FROM mahasiswa m 
+           JOIN users u ON m.user_id = u.id 
+           LEFT JOIN dpa d ON m.dpa_id = d.id 
+           WHERE m.user_id = ?";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $user_id);
 mysqli_stmt_execute($stmt);
@@ -90,6 +94,9 @@ $profile = mysqli_fetch_assoc($result);
                 <div class="mhs-header-info">
                     <span class="mhs-badge mb-2">Mahasiswa</span>
                     <h2 class="mhs-name mb-1"><?php echo htmlspecialchars($profile['nama'] ?? 'Belum diisi'); ?></h2>
+                    <div class="mhs-nim d-flex align-items-center gap-1 mb-2">
+                        <i class="bi bi-person-badge"></i> <?php echo htmlspecialchars($profile['nim'] ?? 'Belum diisi'); ?>
+                    </div>
                     <div class="mhs-email d-flex align-items-center gap-2">
                         <i class="bi bi-envelope"></i> <?php echo htmlspecialchars($profile['email'] ?? 'Belum diisi'); ?>
                     </div>
@@ -101,10 +108,18 @@ $profile = mysqli_fetch_assoc($result);
                 
                 <div class="mhs-info-grid">
                     <div class="info-item">
-                        <div class="info-icon"><i class="bi bi-person-badge"></i></div>
+                        <div class="info-icon"><i class="bi bi-person-workspace"></i></div>
                         <div class="info-content">
-                            <span class="info-label">Nomor Induk Mahasiswa (NIM)</span>
-                            <span class="info-value"><?php echo htmlspecialchars($profile['nim'] ?? 'Belum diisi'); ?></span>
+                            <span class="info-label">Dosen Pembimbing Akademik (DPA)</span>
+                            <span class="info-value">
+                                <?php 
+                                if (!empty($profile['dpa_nama'])) {
+                                    echo htmlspecialchars($profile['dpa_nama']);
+                                } else {
+                                    echo 'Belum ditetapkan';
+                                }
+                                ?>
+                            </span>
                         </div>
                     </div>
 

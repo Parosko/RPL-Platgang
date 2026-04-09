@@ -10,7 +10,11 @@ onlyMahasiswa();
 $user_id = $_SESSION['user_id'];
 $is_incomplete = isset($_GET['incomplete']) && $_GET['incomplete'] === '1';
 
-$query = "SELECT m.*, u.email FROM mahasiswa m JOIN users u ON m.user_id = u.id WHERE m.user_id = ?";
+$query = "SELECT m.*, u.email, d.nama as dpa_nama, d.nip as dpa_nip, d.fakultas as dpa_fakultas, d.prodi as dpa_prodi, d.kontak as dpa_kontak 
+           FROM mahasiswa m 
+           JOIN users u ON m.user_id = u.id 
+           LEFT JOIN dpa d ON m.dpa_id = d.id 
+           WHERE m.user_id = ?";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, 'i', $user_id);
 mysqli_stmt_execute($stmt);
@@ -103,40 +107,51 @@ $profile_is_complete = !empty($profile['nim']) && !empty($profile['nama']);
                             <div class="form-text">Email tidak dapat diubah.</div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label custom-label">NIM <span class="text-danger">*</span></label>
-                            <input type="text" name="nim" id="nimInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nim'] ?? ''); ?>" required placeholder="Masukkan Nomor Induk Mahasiswa">
-                            <div class="form-text">Wajib diisi sebagai identitas akademik.</div>
+                            <label class="form-label custom-label">Dosen Pembimbing Akademik (DPA)</label>
+                            <input 
+                                type="text" 
+                                class="form-control custom-input bg-light" 
+                                value="<?php 
+                                if (!empty($profile['dpa_nama'])) {
+                                    echo htmlspecialchars($profile['dpa_nama']);
+                                } else {
+                                    echo 'Belum ditetapkan';
+                                }
+                                ?>" 
+                                readonly
+                            >
+                            <div class="form-text">Informasi DPA ditetapkan oleh pihak kampus dan tidak dapat diubah.</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label custom-label">Nama Lengkap <span class="text-danger">*</span></label>
+                            <input type="text" name="nama" id="namaInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nama'] ?? ''); ?>" required placeholder="Masukkan nama lengkap">
+                            <div class="form-text">Sesuaikan dengan kartu identitas mahasiswa.</div>
                         </div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-md-6 mb-3 mb-md-0">
-                            <label class="form-label custom-label">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="nama" id="namaInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nama'] ?? ''); ?>" required placeholder="Masukkan nama lengkap">
-                            <div class="form-text">Sesuaikan dengan kartu identitas mahasiswa.</div>
-                        </div>
-                        <div class="col-md-6">
                             <label class="form-label custom-label">Fakultas</label>
                             <input type="text" name="fakultas" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['fakultas'] ?? ''); ?>" placeholder="Contoh: Fakultas Ilmu Komputer">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label custom-label">Program Studi</label>
+                            <input type="text" name="prodi" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['prodi'] ?? ''); ?>" placeholder="Contoh: Sistem Informasi">
                         </div>
                     </div>
 
                     <div class="row mb-4">
                         <div class="col-md-4 mb-3 mb-md-0">
-                            <label class="form-label custom-label">Program Studi</label>
-                            <input type="text" name="prodi" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['prodi'] ?? ''); ?>" placeholder="Contoh: Sistem Informasi">
-                        </div>
-                        <div class="col-md-4 mb-3 mb-md-0">
                             <label class="form-label custom-label">Tahun Angkatan</label>
                             <input type="text" name="angkatan" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['angkatan'] ?? ''); ?>" placeholder="Contoh: 2021">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 mb-3 mb-md-0">
                             <label class="form-label custom-label">Semester Berjalan</label>
                             <input type="number" name="semester" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['semester'] ?? ''); ?>" placeholder="Contoh: 5">
                         </div>
-                    </div>
-
-                    <div class="row mb-5">
                         <div class="col-md-4">
                             <label class="form-label custom-label">Indeks Prestasi Kumulatif (IPK)</label>
                             <input 
@@ -150,6 +165,14 @@ $profile_is_complete = !empty($profile['nim']) && !empty($profile['nama']);
                                 placeholder="Contoh: 3.50"
                             >
                             <div class="form-text">Gunakan format titik (contoh: 3.50). Maks: 4.00</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <label class="form-label custom-label">NIM <span class="text-danger">*</span></label>
+                            <input type="text" name="nim" id="nimInput" class="form-control custom-input" value="<?php echo htmlspecialchars($profile['nim'] ?? ''); ?>" required placeholder="Masukkan Nomor Induk Mahasiswa">
+                            <div class="form-text">Wajib diisi sebagai identitas akademik.</div>
                         </div>
                     </div>
 
