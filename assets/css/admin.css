@@ -1,5 +1,77 @@
 /* Admin Moderation Pages */
 
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Admin Profile Card Styles */
+.admin-profile-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.admin-table {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+}
+
+.admin-table thead {
+    background: #F8FAFC;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.admin-table thead th {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #475569;
+}
+
+.admin-table tbody td {
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #F1F5F9;
+    color: #0F172A;
+    font-size: 0.95rem;
+    transition: none;
+}
+
+.admin-table tbody tr:hover td {
+    background-color: #F8FAFC;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Admin Empty State */
+.admin-empty-state {
+    background-color: #F8FAFC;
+    border: 2px dashed #CBD5E1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.admin-empty-state:hover {
+    border-color: #94A3B8;
+    background-color: #F1F5F9;
+}
+
+.admin-empty-state .empty-icon {
+    font-size: 3.5rem;
+    color: #94A3B8;
+    line-height: 1;
+}
+
+.admin-empty-state h5 {
+    color: #0F172A;
+}
+
 .admin-status-badge {
     font-size: 0.85rem;
     font-weight: 500;

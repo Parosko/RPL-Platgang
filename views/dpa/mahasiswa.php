@@ -128,56 +128,58 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <p class="text-muted mb-0">Saat ini belum ada mahasiswa yang dialokasikan ke Anda.</p>
             </div>
         <?php else: ?>
-            <div class="table-responsive">
-                <table class="table dpa-table align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th width="15%">NIM</th>
-                            <th width="25%">Nama</th>
-                            <th width="20%">Program Studi</th>
-                            <th width="10%">IPK</th>
-                            <th width="10%" class="text-center">Lamaran</th>
-                            <th width="10%" class="text-center">Diterima</th>
-                            <th width="10%" class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($students as $student): ?>
+            <div class="dpa-profile-card">
+                <div class="table-responsive">
+                    <table class="table dpa-table align-middle mb-0">
+                        <thead>
                             <tr>
-                                <td class="nim text-muted fw-medium"><?php echo htmlspecialchars($student['nim'] ?? '-'); ?></td>
-                                <td class="nama fw-semibold" style="color: #0F172A;">
-                                    <?php echo htmlspecialchars($student['nama'] ?? '-'); ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($student['prodi'] ?? '-'); ?></td>
-                                <td>
-                                    <span class="badge-status status-open">
-                                        <i class="bi bi-star-fill me-1" style="font-size: 0.7rem;"></i> 
-                                        <?php echo htmlspecialchars($student['ipk'] ?? '-'); ?>
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark border px-2 py-1">
-                                        <?php echo $student['total_applications']; ?>
-                                    </span>
-                                </td>
-                                <td class="text-center">
-                                    <?php if ($student['accepted_count'] > 0): ?>
-                                        <span class="badge-status status-success px-2 py-1">
-                                            <?php echo $student['accepted_count']; ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="text-muted">-</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-center">
-                                    <a href="mahasiswa_detail.php?id=<?php echo $student['id']; ?>" class="btn btn-soft-outline detail-btn text-nowrap">
-                                        <i class="bi bi-eye me-1"></i> Detail
-                                    </a>
-                                </td>
+                                <th width="15%">NIM</th>
+                                <th width="25%">Nama</th>
+                                <th width="20%">Program Studi</th>
+                                <th width="10%">IPK</th>
+                                <th width="10%" class="text-center">Lamaran</th>
+                                <th width="10%" class="text-center">Diterima</th>
+                                <th width="10%" class="text-center">Aksi</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($students as $student): ?>
+                                <tr>
+                                    <td class="nim text-muted fw-medium"><?php echo htmlspecialchars($student['nim'] ?? '-'); ?></td>
+                                    <td class="nama fw-semibold" style="color: #0F172A;">
+                                        <?php echo htmlspecialchars($student['nama'] ?? '-'); ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($student['prodi'] ?? '-'); ?></td>
+                                    <td>
+                                        <span class="badge-status status-open">
+                                            <i class="bi bi-star-fill me-1" style="font-size: 0.7rem;"></i> 
+                                            <?php echo htmlspecialchars($student['ipk'] ?? '-'); ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-light text-dark border px-2 py-1">
+                                            <?php echo $student['total_applications']; ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($student['accepted_count'] > 0): ?>
+                                            <span class="badge-status status-success px-2 py-1">
+                                                <?php echo $student['accepted_count']; ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="text-muted">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="mahasiswa_detail.php?id=<?php echo $student['id']; ?>" class="btn btn-soft-outline detail-btn text-nowrap">
+                                            <i class="bi bi-eye me-1"></i> Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <?php endif; ?>
 

@@ -31,18 +31,16 @@ while ($row = mysqli_fetch_assoc($result)) {
 <head>
     <title>Kelola User - Admin</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Bootstrap Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
 
 </head>
@@ -53,12 +51,28 @@ while ($row = mysqli_fetch_assoc($result)) {
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="page-header">
-            <h1 class="page-title">Kelola User</h1>
-            <p class="page-subtitle">
-                Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-            </p>
-            <a href="<?= BASE_URL ?>/views/dashboard.php" class="btn btn-secondary mt-2">Kembali</a>
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <h1 class="page-title">Kelola User</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-people-fill me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Kelola semua pengguna di sistem.</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <div class="text-center px-3 py-2" style="background: var(--info-light); border-radius: var(--radius-lg); border: 1px solid var(--border-base);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total User</div>
+                    <div class="fw-bold" style="color: var(--info); font-size: 1.25rem;"><?php echo count($users); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--success-light); border-radius: var(--radius-lg); border: 1px solid var(--success-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Active</div>
+                    <div class="fw-bold" style="color: var(--success); font-size: 1.25rem;"><?php echo count(array_filter($users, fn($u) => $u['status'] == 'active')); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--warning-light); border-radius: var(--radius-lg); border: 1px solid var(--warning-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pending</div>
+                    <div class="fw-bold" style="color: var(--warning); font-size: 1.25rem;"><?php echo count(array_filter($users, fn($u) => $u['status'] == 'pending')); ?></div>
+                </div>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -77,20 +91,19 @@ while ($row = mysqli_fetch_assoc($result)) {
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
+        <!-- Filters Section -->
         <div class="mb-4">
             <div class="row g-3">
                 <div class="col-md-4">
                     <input 
                         type="text" 
                         id="searchInput" 
-                        class="admin-form-control" 
+                        class="form-control" 
                         placeholder="Cari email atau nama..."
                     >
                 </div>
                 <div class="col-md-4">
-                    <select id="roleFilter" class="admin-form-select">
+                    <select id="roleFilter" class="form-select">
                         <option value="">Semua Role</option>
                         <option value="mahasiswa">Mahasiswa</option>
                         <option value="mitra">Mitra</option>
@@ -98,7 +111,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <select id="statusFilter" class="admin-form-select">
+                    <select id="statusFilter" class="form-select">
                         <option value="">Semua Status</option>
                         <option value="active">Active</option>
                         <option value="pending">Pending</option>
@@ -109,73 +122,90 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
 
         <?php if (empty($users)): ?>
-            <div class="alert alert-info">
-                Belum ada user di sistem.
+            <div class="admin-empty-state text-center p-5">
+                <i class="bi bi-people empty-icon mb-3"></i>
+                <h5 class="mb-2">Belum Ada User</h5>
+                <p class="text-muted mb-0">Saat ini belum ada pengguna di sistem.</p>
             </div>
         <?php else: ?>
-            <div id="usersList">
-                <?php foreach ($users as $user): ?>
-                    <?php
-                    $role = ucfirst($user['role']);
-                    $role_badge = $user['role'] == 'mahasiswa' ? 'bg-primary' : ($user['role'] == 'mitra' ? 'bg-warning' : 'bg-info');
-                    $status = ucfirst($user['status']);
-                    $status_badge = $user['status'] == 'active' ? 'bg-success' : ($user['status'] == 'pending' ? 'bg-warning' : 'bg-danger');
-                    
-                    // Determine row class based on user status
-                    $row_class = $user['status'] == 'inactive' ? 'deactivated' : $user['status'];
-                    ?>
-                    <div class="user-row <?= $row_class; ?>" data-role="<?= $user['role']; ?>" data-status="<?= $user['status']; ?>">
-                        <div class="row align-items-center">
-                            <div class="col-md-7">
-                                <h5 class="mb-2">
-                                    <?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?>
-                                </h5>
-
-                                <div class="mb-2">
-                                    <span class="badge <?= $role_badge; ?> admin-status-badge me-2">
-                                        <?php echo $role; ?>
-                                    </span>
-                                    <span class="badge <?= $status_badge; ?> admin-status-badge">
-                                        <?php echo $status; ?>
-                                    </span>
-                                </div>
-
-                                <small class="text-muted d-block">
-                                    <strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?>
-                                </small>
-                                <small class="text-muted d-block">
-                                    <strong>Terdaftar:</strong> <?php echo $user['created_at']; ?>
-                                </small>
-                            </div>
-
-                            <div class="col-md-5 text-end">
-                                <?php if ($user['status'] == 'pending'): ?>
-                                    <button type="button" 
-                                            class="btn btn-success btn-sm"
-                                            onclick="verifyUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
-                                        <i class="bi bi-check-circle"></i> Verifikasi
-                                    </button>
-                                <?php elseif ($user['status'] == 'inactive'): ?>
-                                    <button type="button" 
-                                            class="btn btn-success btn-sm"
-                                            onclick="reactivateUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
-                                        <i class="bi bi-arrow-clockwise"></i> Aktifkan Kembali
-                                    </button>
-                                <?php else: ?>
-                                    <button type="button" 
-                                            class="btn btn-danger btn-sm"
-                                            onclick="deactivateUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
-                                        <i class="bi bi-trash"></i> Nonaktifkan
-                                    </button>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+            <div class="admin-profile-card">
+                <div class="table-responsive">
+                    <table class="table admin-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th width="25%">Nama</th>
+                                <th width="20%">Email</th>
+                                <th width="10%">Role</th>
+                                <th width="10%">Status</th>
+                                <th width="15%">Terdaftar</th>
+                                <th width="20%" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($users as $user): ?>
+                                <?php
+                                $role = ucfirst($user['role']);
+                                $status = ucfirst($user['status']);
+                                
+                                // Determine badge classes
+                                $role_class = $user['role'] == 'mahasiswa' ? 'status-info' : ($user['role'] == 'mitra' ? 'status-warning' : 'status-success');
+                                $status_class = $user['status'] == 'active' ? 'status-success' : ($user['status'] == 'pending' ? 'status-warning' : 'status-danger');
+                                
+                                // Determine row class based on user status
+                                $row_class = $user['status'] == 'inactive' ? 'deactivated' : $user['status'];
+                                ?>
+                                <tr class="user-row <?= $row_class; ?>" data-role="<?= $user['role']; ?>" data-status="<?= $user['status']; ?>">
+                                    <td class="nama fw-semibold" style="color: #0F172A;">
+                                        <?php echo htmlspecialchars($user['full_name'] ?? 'N/A'); ?>
+                                    </td>
+                                    <td class="email text-muted">
+                                        <?php echo htmlspecialchars($user['email']); ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status <?= $role_class; ?>">
+                                            <?php echo $role; ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status <?= $status_class; ?>">
+                                            <?php echo $status; ?>
+                                        </span>
+                                    </td>
+                                    <td class="tanggal text-muted">
+                                        <?php echo date('d M Y', strtotime($user['created_at'])); ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($user['status'] == 'pending'): ?>
+                                            <button type="button" 
+                                                    class="btn btn-success btn-sm"
+                                                    onclick="verifyUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
+                                                <i class="bi bi-check-circle"></i> Verifikasi
+                                            </button>
+                                        <?php elseif ($user['status'] == 'inactive'): ?>
+                                            <button type="button" 
+                                                    class="btn btn-success btn-sm"
+                                                    onclick="reactivateUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
+                                                <i class="bi bi-arrow-clockwise"></i> Aktifkan Kembali
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" 
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="deactivateUser(<?php echo $user['id']; ?>, '<?php echo htmlspecialchars(addslashes($user['email'])); ?>')">
+                                                <i class="bi bi-trash"></i> Nonaktifkan
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div id="noResults" class="alert alert-warning mt-3" style="display: none;">
-                Tidak ada user yang sesuai dengan pencarian Anda.
+            <div id="noResults" class="admin-empty-state text-center p-5 mt-3" style="display: none;">
+                <i class="bi bi-search empty-icon mb-3"></i>
+                <h5 class="mb-2">Tidak Ada Hasil</h5>
+                <p class="text-muted mb-0">Tidak ada user yang sesuai dengan pencarian Anda.</p>
             </div>
         <?php endif; ?>
 
