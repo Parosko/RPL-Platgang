@@ -19,8 +19,8 @@ body {
 }
 
 .admin-table thead {
-    background: #F8FAFC;
-    border-bottom: 1px solid #E5E7EB;
+    background: #E2E8F0;
+    border-bottom: 1px solid #CBD5E1;
 }
 
 .admin-table thead th {
@@ -29,7 +29,7 @@ body {
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #475569;
+    color: #1E293B;
 }
 
 .admin-table tbody td {

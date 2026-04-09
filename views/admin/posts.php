@@ -28,16 +28,16 @@ while ($row = mysqli_fetch_assoc($result)) {
 <head>
     <title>Kelola Postingan - Admin</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
 
 </head>
@@ -48,14 +48,28 @@ while ($row = mysqli_fetch_assoc($result)) {
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Kelola Postingan</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-                </small>
+                <h1 class="page-title">Kelola Postingan</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-file-text-fill me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Kelola semua postingan di sistem.</span>
+                </div>
             </div>
-            <a href="<?= BASE_URL ?>/views/dashboard.php" class="btn btn-secondary">Kembali</a>
+            <div class="d-flex gap-2">
+                <div class="text-center px-3 py-2" style="background: var(--info-light); border-radius: var(--radius-lg); border: 1px solid var(--border-base);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Post</div>
+                    <div class="fw-bold" style="color: var(--info); font-size: 1.25rem;"><?php echo count($posts); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--success-light); border-radius: var(--radius-lg); border: 1px solid var(--success-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Approved</div>
+                    <div class="fw-bold" style="color: var(--success); font-size: 1.25rem;"><?php echo count(array_filter($posts, fn($p) => $p['status'] == 'approved')); ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--warning-light); border-radius: var(--radius-lg); border: 1px solid var(--warning-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Pending</div>
+                    <div class="fw-bold" style="color: var(--warning); font-size: 1.25rem;"><?php echo count(array_filter($posts, fn($p) => $p['status'] == 'pending')); ?></div>
+                </div>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -74,27 +88,26 @@ while ($row = mysqli_fetch_assoc($result)) {
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
+        <!-- Filters Section -->
         <div class="mb-4">
             <div class="row g-3">
                 <div class="col-md-4">
                     <input 
                         type="text" 
                         id="searchInput" 
-                        class="admin-form-control" 
+                        class="form-control" 
                         placeholder="Cari judul atau mitra..."
                     >
                 </div>
                 <div class="col-md-4">
-                    <select id="typeFilter" class="admin-form-select">
+                    <select id="typeFilter" class="form-select">
                         <option value="">Semua Tipe</option>
                         <option value="magang">Magang</option>
                         <option value="kursus">Kursus</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <select id="statusFilter" class="admin-form-select">
+                    <select id="statusFilter" class="form-select">
                         <option value="">Semua Status</option>
                         <option value="approved">Approved</option>
                         <option value="pending">Pending</option>
@@ -105,89 +118,110 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
 
         <?php if (empty($posts)): ?>
-            <div class="alert alert-info">
-                Belum ada postingan di sistem.
+            <div class="admin-empty-state text-center p-5">
+                <i class="bi bi-file-text empty-icon mb-3"></i>
+                <h5 class="mb-2">Belum Ada Postingan</h5>
+                <p class="text-muted mb-0">Saat ini belum ada postingan di sistem.</p>
             </div>
         <?php else: ?>
-            <div id="postsList">
-                <?php foreach ($posts as $post): ?>
-                    <?php
-                    $current_date = date('Y-m-d H:i:s');
-                    $is_manually_closed = !empty($post['closed_at']);
-                    $is_deadline_passed = $post['deadline'] < $current_date;
-                    $is_post_open = !$is_manually_closed && !$is_deadline_passed;
-                    $status = $is_post_open ? 'Terbuka' : 'Ditutup';
-                    $status_badge = $is_post_open ? 'bg-success' : 'bg-secondary';
-                    $approval_status = ucfirst($post['status']);
-                    $approval_badge = $post['status'] == 'approved' ? 'bg-success' : ($post['status'] == 'pending' ? 'bg-warning' : 'bg-danger');
-                    
-                    // Determine row class based on deactivation status or approval status
-                    $row_class = $is_manually_closed ? 'deactivated' : $post['status'];
-                    $post_type = ucfirst(htmlspecialchars($post['tipe']));
-                    $post_type_badge = $post['tipe'] == 'magang' ? 'bg-primary' : 'bg-info';
-                    ?>
-                    <div class="post-row <?= $row_class; ?>" data-type="<?= $post['tipe']; ?>" data-status="<?= $post['status']; ?>">
-                        <div class="row align-items-center">
-                            <div class="col-md-7">
-                                <h5 class="mb-2">
-                                    <?php echo htmlspecialchars($post['judul']); ?>
-                                </h5>
+            <div class="admin-profile-card">
+                <div class="table-responsive">
+                    <table class="table admin-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th width="25%">Judul</th>
+                                <th width="15%">Mitra</th>
+                                <th width="10%">Tipe</th>
+                                <th width="10%">Status</th>
+                                <th width="15%">Deadline</th>
+                                <th width="25%" class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($posts as $post): ?>
+                                <?php
+                                $current_date = date('Y-m-d H:i:s');
+                                $is_manually_closed = !empty($post['closed_at']);
+                                $is_deadline_passed = $post['deadline'] < $current_date;
+                                $is_post_open = !$is_manually_closed && !$is_deadline_passed;
+                                $status = $is_post_open ? 'Terbuka' : 'Ditutup';
+                                $approval_status = ucfirst($post['status']);
+                                
+                                // Determine badge classes
+                                $type_class = $post['tipe'] == 'magang' ? 'status-info' : 'status-warning';
+                                $approval_class = $post['status'] == 'approved' ? 'status-success' : ($post['status'] == 'pending' ? 'status-warning' : 'status-danger');
+                                $status_class = $is_post_open ? 'status-success' : 'status-secondary';
+                                
+                                // Determine row class based on deactivation status or approval status
+                                $row_class = $is_manually_closed ? 'deactivated' : $post['status'];
+                                ?>
+                                <tr class="post-row <?= $row_class; ?>" data-type="<?= $post['tipe']; ?>" data-status="<?= $post['status']; ?>">
+                                    <td class="judul fw-semibold" style="color: #0F172A;">
+                                        <div>
+                                            <?php echo htmlspecialchars($post['judul']); ?>
+                                        </div>
+                                        <small class="text-muted d-block mt-1">
+                                            <?php echo htmlspecialchars(substr($post['deskripsi'], 0, 60)); ?>...
+                                        </small>
+                                    </td>
+                                    <td class="mitra text-muted">
+                                        <div>
+                                            <strong><?php echo htmlspecialchars($post['nama_organisasi'] ?? 'Unknown'); ?></strong>
+                                        </div>
+                                        <small class="text-muted d-block">
+                                            <?php echo htmlspecialchars($post['mitra_email']); ?>
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status <?= $type_class; ?>">
+                                            <?php echo ucfirst(htmlspecialchars($post['tipe'])); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status <?= $approval_class; ?>">
+                                            <?php echo $approval_status; ?>
+                                        </span>
+                                        <div class="mt-1">
+                                            <span class="badge-status <?= $status_class; ?>">
+                                                <?php echo $status; ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="deadline text-muted">
+                                        <?php echo date('d M Y', strtotime($post['deadline'])); ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="../posts/detail.php?id=<?php echo $post['id']; ?>&back=admin_posts" 
+                                           class="btn btn-navy btn-sm me-2"
+                                           target="_blank">
+                                            <i class="bi bi-eye"></i> Detail
+                                        </a>
 
-                                <div class="mb-2">
-                                    <span class="badge <?= $post_type_badge; ?> admin-status-badge me-2">
-                                        <?php echo $post_type; ?>
-                                    </span>
-                                    <span class="badge <?= $approval_badge; ?> admin-status-badge me-2">
-                                        <?php echo $approval_status; ?>
-                                    </span>
-                                    <span class="badge <?= $status_badge; ?> admin-status-badge">
-                                        <?php echo $status; ?>
-                                    </span>
-                                </div>
-
-                                <small class="text-muted d-block">
-                                    <strong>Mitra:</strong> <?php echo htmlspecialchars($post['nama_organisasi'] ?? 'Unknown'); ?>
-                                </small>
-                                <small class="text-muted d-block">
-                                    <strong>Email:</strong> <?php echo htmlspecialchars($post['mitra_email']); ?>
-                                </small>
-                                <small class="text-muted d-block">
-                                    <strong>Deskripsi:</strong> <?php echo htmlspecialchars(substr($post['deskripsi'], 0, 100)); ?>...
-                                </small>
-                                <small class="text-muted d-block">
-                                    <strong>Dibuat:</strong> <?php echo $post['created_at']; ?> | 
-                                    <strong>Deadline:</strong> <?php echo $post['deadline']; ?>
-                                </small>
-                            </div>
-
-                            <div class="col-md-5 text-end">
-                                <a href="<?= BASE_URL ?>/views/posts/detail.php?id=<?php echo $post['id']; ?>" 
-                                   class="btn btn-info btn-sm me-2"
-                                   target="_blank">
-                                    <i class="bi bi-eye"></i> Lihat Detail
-                                </a>
-
-                                <?php if ($is_manually_closed): ?>
-                                    <button type="button" 
-                                            class="btn btn-success btn-sm"
-                                            onclick="reactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
-                                        <i class="bi bi-arrow-clockwise"></i> Aktifkan Kembali
-                                    </button>
-                                <?php else: ?>
-                                    <button type="button" 
-                                            class="btn btn-danger btn-sm"
-                                            onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
-                                        <i class="bi bi-trash"></i> Nonaktifkan
-                                    </button>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+                                        <?php if ($is_manually_closed): ?>
+                                            <button type="button" 
+                                                    class="btn btn-success btn-sm"
+                                                    onclick="reactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
+                                                <i class="bi bi-arrow-clockwise"></i> Aktifkan
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" 
+                                                    class="btn btn-danger btn-sm"
+                                                    onclick="deactivatePost(<?php echo $post['id']; ?>, '<?php echo htmlspecialchars(addslashes($post['judul'])); ?>')">
+                                                <i class="bi bi-trash"></i> Nonaktifkan
+                                            </button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
-            <div id="noResults" class="alert alert-warning mt-3" style="display: none;">
-                Tidak ada postingan yang sesuai dengan pencarian Anda.
+            <div id="noResults" class="admin-empty-state text-center p-5 mt-3" style="display: none;">
+                <i class="bi bi-search empty-icon mb-3"></i>
+                <h5 class="mb-2">Tidak Ada Hasil</h5>
+                <p class="text-muted mb-0">Tidak ada postingan yang sesuai dengan pencarian Anda.</p>
             </div>
         <?php endif; ?>
 

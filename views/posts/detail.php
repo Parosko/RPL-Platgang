@@ -107,7 +107,13 @@ if ($role == 'mahasiswa') {
                     <i class="bi bi-person-badge me-2"></i>Melihat sebagai: <span class="text-capitalize fw-medium"><?php echo $role; ?></span>
                 </p>
             </div>
-            <a href="../dashboard.php" class="btn btn-soft-outline px-4">
+            <?php 
+            $back_url = "../dashboard.php";
+            if (isset($_GET['back']) && $_GET['back'] == 'admin_posts') {
+                $back_url = "../admin/posts.php";
+            }
+            ?>
+            <a href="<?php echo $back_url; ?>" class="btn btn-soft-outline px-4">
                 <i class="bi bi-arrow-left me-2"></i>Kembali
             </a>
         </div>
