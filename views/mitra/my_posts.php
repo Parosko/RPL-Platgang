@@ -156,7 +156,7 @@ $email = $_SESSION['email'];
                 </a>
             </div>
         <?php else: ?>
-            <div class="d-flex flex-column gap-3">
+            <div class="d-flex flex-column gap-2">
                 <?php foreach ($posts as $post): ?>
                     <?php $show_close_button = true; ?>
                     <?php include __DIR__ . '/../components/mitra_post_card.php'; ?>

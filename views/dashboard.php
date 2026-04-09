@@ -173,7 +173,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                     </div>
                 </div>
             <?php else: ?>
-                <div class="row g-4">
+                <div class="row g-3">
                     <?php foreach ($posts as $post): ?>
                         <div class="col-12">
                             <?php include __DIR__ . '/components/post_card.php'; ?>
