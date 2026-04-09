@@ -56,16 +56,16 @@ $total_mahasiswa = count($mahasiswa_list);
 <head>
     <title>Detail DPA - <?php echo htmlspecialchars($dpa['nama']); ?></title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
 
 </head>
@@ -76,14 +76,23 @@ $total_mahasiswa = count($mahasiswa_list);
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Detail DPA</h4>
-                <small>
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-                </small>
+                <h1 class="page-title">Detail DPA</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-person-badge-fill me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">Melihat detail DPA: <?php echo htmlspecialchars($dpa['nama']); ?></span>
+                </div>
             </div>
-            <a href="<?= BASE_URL ?>/views/admin/assign.php" class="btn btn-secondary">Kembali</a>
+            <div class="d-flex gap-2">
+                <div class="text-center px-3 py-2" style="background: var(--info-light); border-radius: var(--radius-lg); border: 1px solid var(--border-base);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Mahasiswa</div>
+                    <div class="fw-bold" style="color: var(--info); font-size: 1.25rem;"><?php echo $total_mahasiswa; ?></div>
+                </div>
+                <a href="assign.php" class="btn btn-soft-outline">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                </a>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -102,107 +111,119 @@ $total_mahasiswa = count($mahasiswa_list);
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
-        <!-- DPA Information -->
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Informasi DPA</h5>
+        <!-- DPA Profile Card -->
+        <div class="admin-profile-card mb-4">
+            <div class="dpa-profile-header p-4">
+                <div class="d-flex align-items-center">
+                    <div class="dpa-avatar me-3">
+                        <?php echo strtoupper(substr($dpa['nama'] ?? 'D', 0, 1)); ?>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="mb-2">
-                                    <strong>Nama:</strong><br>
-                                    <?php echo htmlspecialchars($dpa['nama'] ?? 'N/A'); ?>
-                                </p>
-                                <p class="mb-2">
-                                    <strong>Email:</strong><br>
-                                    <?php echo htmlspecialchars($dpa['email']); ?>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2">
-                                    <strong>Total Mahasiswa:</strong><br>
-                                    <span class="badge bg-primary fs-6"><?php echo $total_mahasiswa; ?> Mahasiswa</span>
-                                </p>
-                                <p class="mb-2">
-                                    <strong>Terdaftar Sejak:</strong><br>
-                                    <?php echo $dpa['user_created_at']; ?>
-                                </p>
-                            </div>
-                        </div>
+                    <div>
+                        <h3 class="mb-1" style="color: #0F172A; font-weight: 600;">
+                            <?php echo htmlspecialchars($dpa['nama'] ?? 'N/A'); ?>
+                        </h3>
+                        <span class="dpa-badge">Dosen Pembimbing Akademik</span>
+                    </div>
+                    <div class="ms-auto">
+                        <a href="assign_mahasiswa.php?dpa_id=<?php echo $dpa['id']; ?>" 
+                           class="btn btn-navy">
+                            <i class="bi bi-plus-circle me-1"></i> Tugaskan Mahasiswa
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0">Aksi</h5>
+            <div class="p-4">
+                <div class="dpa-info-grid">
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Email</div>
+                            <div class="info-value"><?php echo htmlspecialchars($dpa['email']); ?></div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <a href="<?= BASE_URL ?>/views/admin/assign_mahasiswa.php?dpa_id=<?php echo $dpa['id']; ?>" 
-                           class="btn btn-primary w-100 mb-2">
-                            <i class="bi bi-plus-circle"></i> Tugaskan Mahasiswa
-                        </a>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Total Mahasiswa</div>
+                            <div class="info-value">
+                                <span class="badge-status status-info">
+                                    <?php echo $total_mahasiswa; ?> Mahasiswa
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="bi bi-calendar"></i>
+                        </div>
+                        <div class="info-content">
+                            <div class="info-label">Terdaftar Sejak</div>
+                            <div class="info-value"><?php echo date('d M Y', strtotime($dpa['user_created_at'])); ?></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Mahasiswa List -->
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Daftar Mahasiswa (<?php echo $total_mahasiswa; ?>)</h5>
+        <div class="admin-profile-card">
+            <div class="p-4 border-bottom">
+                <h5 class="mb-0" style="color: #0F172A; font-weight: 600;">Daftar Mahasiswa (<?php echo $total_mahasiswa; ?>)</h5>
             </div>
-            <div class="card-body">
+            <div class="p-4">
                 <?php if (empty($mahasiswa_list)): ?>
-                    <div class="alert alert-info mb-0">
-                        Belum ada mahasiswa yang ditugaskan ke DPA ini.
+                    <div class="admin-empty-state text-center p-5">
+                        <i class="bi bi-people empty-icon mb-3"></i>
+                        <h5 class="mb-2">Belum Ada Mahasiswa</h5>
+                        <p class="text-muted mb-0">Belum ada mahasiswa yang ditugaskan ke DPA ini.</p>
                     </div>
                 <?php else: ?>
                     <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
+                        <table class="table admin-table align-middle mb-0">
+                            <thead>
                                 <tr>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Fakultas</th>
-                                    <th>Prodi</th>
-                                    <th>IPK</th>
-                                    <th>Semester</th>
-                                    <th class="text-end">Aksi</th>
+                                    <th width="12%">NIM</th>
+                                    <th width="20%">Nama</th>
+                                    <th width="15%">Fakultas</th>
+                                    <th width="15%">Prodi</th>
+                                    <th width="8%">IPK</th>
+                                    <th width="10%">Semester</th>
+                                    <th width="20%" class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($mahasiswa_list as $mahasiswa): ?>
                                     <tr>
-                                        <td>
-                                            <strong><?php echo htmlspecialchars($mahasiswa['nim'] ?? 'N/A'); ?></strong>
+                                        <td class="nim text-muted fw-medium">
+                                            <?php echo htmlspecialchars($mahasiswa['nim'] ?? 'N/A'); ?>
                                         </td>
-                                        <td>
+                                        <td class="nama fw-semibold" style="color: #0F172A;">
                                             <?php echo htmlspecialchars($mahasiswa['nama']); ?>
                                         </td>
-                                        <td>
+                                        <td class="text-muted">
                                             <?php echo htmlspecialchars($mahasiswa['fakultas'] ?? 'N/A'); ?>
                                         </td>
-                                        <td>
+                                        <td class="text-muted">
                                             <?php echo htmlspecialchars($mahasiswa['prodi'] ?? 'N/A'); ?>
                                         </td>
                                         <td>
-                                            <?php echo htmlspecialchars($mahasiswa['ipk'] ?? 'N/A'); ?>
+                                            <span class="badge-status status-open">
+                                                <i class="bi bi-star-fill me-1" style="font-size: 0.7rem;"></i> 
+                                                <?php echo htmlspecialchars($mahasiswa['ipk'] ?? 'N/A'); ?>
+                                            </span>
                                         </td>
-                                        <td>
+                                        <td class="text-muted">
                                             <?php echo $mahasiswa['semester'] ?? 'N/A'; ?>
                                         </td>
-                                        <td class="text-end">
+                                        <td class="text-center">
                                             <button type="button" 
                                                     class="btn btn-danger btn-sm"
                                                     onclick="unassignMahasiswa(<?php echo $mahasiswa['id']; ?>, '<?php echo htmlspecialchars(addslashes($mahasiswa['nama'])); ?>', '<?php echo htmlspecialchars(addslashes($dpa['nama'])); ?>')">
-                                                <i class="bi bi-x-circle"></i> Lepas
+                                                <i class="bi bi-person-dash"></i> Lepas
                                             </button>
                                         </td>
                                     </tr>
