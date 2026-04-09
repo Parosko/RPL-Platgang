@@ -84,16 +84,16 @@ while ($row = mysqli_fetch_assoc($mahasiswa_result)) {
 <head>
     <title>Tugaskan Mahasiswa ke DPA - <?php echo htmlspecialchars($dpa['nama']); ?></title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
+    <link rel="stylesheet" href="../../assets/css/design-system.css">
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/layout.css">
+    <link rel="stylesheet" href="../../assets/css/components.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
 
 </head>
@@ -104,15 +104,36 @@ while ($row = mysqli_fetch_assoc($mahasiswa_result)) {
     <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
 
     <div class="content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-                <h4>Tugaskan Mahasiswa ke DPA</h4>
-                <small>
-                    DPA: <strong><?php echo htmlspecialchars($dpa['nama']); ?></strong> | 
-                    Login sebagai: <?php echo htmlspecialchars($_SESSION['email']); ?> (admin)
-                </small>
+                <h1 class="page-title">Tugaskan Mahasiswa ke DPA</h1>
+                <div class="page-subtitle mt-2 d-flex align-items-center">
+                    <i class="bi bi-person-plus-fill me-2" style="color: var(--icon-muted); font-size: 1.1rem;"></i>
+                    <span class="text-body">DPA: <?php echo htmlspecialchars($dpa['nama']); ?></span>
+                </div>
             </div>
-            <a href="<?= BASE_URL ?>/views/admin/dpa_detail.php?id=<?php echo $dpa_id; ?>" class="btn btn-secondary">Kembali</a>
+            <div class="d-flex gap-2">
+                <?php
+                $total_mahasiswa = count($mahasiswa_list);
+                $assigned_count = count(array_filter($mahasiswa_list, fn($m) => $m['dpa_id'] !== null));
+                $not_assigned_count = $total_mahasiswa - $assigned_count;
+                ?>
+                <div class="text-center px-3 py-2" style="background: var(--info-light); border-radius: var(--radius-lg); border: 1px solid var(--border-base);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total</div>
+                    <div class="fw-bold" style="color: var(--info); font-size: 1.25rem;"><?php echo $total_mahasiswa; ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--success-light); border-radius: var(--radius-lg); border: 1px solid var(--success-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Ditugaskan</div>
+                    <div class="fw-bold" style="color: var(--success); font-size: 1.25rem;"><?php echo $assigned_count; ?></div>
+                </div>
+                <div class="text-center px-3 py-2" style="background: var(--warning-light); border-radius: var(--radius-lg); border: 1px solid var(--warning-border);">
+                    <div class="text-muted" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Belum</div>
+                    <div class="fw-bold" style="color: var(--warning); font-size: 1.25rem;"><?php echo $not_assigned_count; ?></div>
+                </div>
+                <a href="dpa_detail.php?id=<?php echo $dpa_id; ?>" class="btn btn-soft-outline">
+                    <i class="bi bi-arrow-left me-1"></i> Kembali
+                </a>
+            </div>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
@@ -131,108 +152,119 @@ while ($row = mysqli_fetch_assoc($mahasiswa_result)) {
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <hr>
-
         <!-- Search and Filter Section -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    class="form-control" 
-                    placeholder="Cari berdasarkan NIM atau Nama Mahasiswa..."
-                    value="<?php echo htmlspecialchars($search); ?>"
-                >
-            </div>
-            <div class="col-md-6">
-                <div class="btn-group w-100" role="group">
-                    <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === '' ? 'active' : ''; ?>" onclick="filterMahasiswa('')">
-                        Semua
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === 'not_assigned' ? 'active' : ''; ?>" onclick="filterMahasiswa('not_assigned')">
-                        Belum Ditugaskan
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === 'assigned' ? 'active' : ''; ?>" onclick="filterMahasiswa('assigned')">
-                        Sudah Ditugaskan
-                    </button>
+        <div class="mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="form-control" 
+                        placeholder="Cari berdasarkan NIM atau Nama Mahasiswa..."
+                        value="<?php echo htmlspecialchars($search); ?>"
+                    >
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === '' ? 'active' : ''; ?>" onclick="filterMahasiswa('')">
+                            <i class="bi bi-grid me-1"></i>Semua
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === 'not_assigned' ? 'active' : ''; ?>" onclick="filterMahasiswa('not_assigned')">
+                            <i class="bi bi-person-x me-1"></i>Belum Ditugaskan
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary filter-btn <?php echo $filter === 'assigned' ? 'active' : ''; ?>" onclick="filterMahasiswa('assigned')">
+                            <i class="bi bi-person-check me-1"></i>Sudah Ditugaskan
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <?php if (empty($mahasiswa_list)): ?>
-            <div class="alert alert-info">
-                Tidak ada mahasiswa yang sesuai dengan kriteria pencarian dan filter Anda.
+            <div class="admin-empty-state text-center p-5">
+                <i class="bi bi-people empty-icon mb-3"></i>
+                <h5 class="mb-2">Tidak Ada Mahasiswa</h5>
+                <p class="text-muted mb-0">Tidak ada mahasiswa yang sesuai dengan kriteria pencarian dan filter Anda.</p>
             </div>
         <?php else: ?>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th style="width: 15%">NIM</th>
-                            <th style="width: 20%">Nama Mahasiswa</th>
-                            <th style="width: 15%">Fakultas</th>
-                            <th style="width: 15%">Prodi</th>
-                            <th style="width: 10%">Semester</th>
-                            <th style="width: 10%">IPK</th>
-                            <th style="width: 15%">Status Penugasan</th>
-                            <th class="text-end" style="width: 15%">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="mahasiswaList">
-                        <?php foreach ($mahasiswa_list as $mahasiswa): ?>
-                            <tr class="mahasiswa-row" 
-                                data-search="<?php echo htmlspecialchars(strtolower($mahasiswa['nim'] . ' ' . $mahasiswa['nama'])); ?>"
-                                data-status="<?php echo $mahasiswa['dpa_id'] ? 'assigned' : 'not_assigned'; ?>">
-                                <td>
-                                    <strong><?php echo htmlspecialchars($mahasiswa['nim']); ?></strong>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($mahasiswa['nama']); ?>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($mahasiswa['fakultas'] ?? 'N/A'); ?>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars($mahasiswa['prodi'] ?? 'N/A'); ?>
-                                </td>
-                                <td>
-                                    <span class="badge bg-light text-dark"><?php echo htmlspecialchars($mahasiswa['semester'] ?? 'N/A'); ?></span>
-                                </td>
-                                <td>
-                                    <?php echo htmlspecialchars((string)($mahasiswa['ipk'] ?? 'N/A')); ?>
-                                </td>
-                                <td>
-                                    <?php if ($mahasiswa['dpa_id']): ?>
-                                        <span class="badge bg-success">
-                                            Ditugaskan ke: <?php echo htmlspecialchars($mahasiswa['assigned_dpa_name'] ?? 'N/A'); ?>
-                                        </span>
-                                    <?php else: ?>
-                                        <span class="badge bg-warning text-dark">
-                                            Belum Ditugaskan
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="text-end">
-                                    <?php if ($mahasiswa['dpa_id'] !== $dpa_id): ?>
-                                        <button type="button" 
-                                                class="btn btn-primary btn-sm"
-                                                onclick="assignMahasiswa(<?php echo $mahasiswa['id']; ?>, <?php echo $dpa_id; ?>, '<?php echo htmlspecialchars(addslashes($mahasiswa['nama'])); ?>')">
-                                            <i class="bi bi-check-circle"></i> Tugaskan
-                                        </button>
-                                    <?php else: ?>
-                                        <span class="badge bg-primary">Sudah Ditugaskan ke DPA ini</span>
-                                    <?php endif; ?>
-                                </td>
+            <div class="admin-profile-card">
+                <div class="table-responsive">
+                    <table class="table admin-table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th width="12%">NIM</th>
+                                <th width="18%">Nama</th>
+                                <th width="12%">Fakultas</th>
+                                <th width="12%">Prodi</th>
+                                <th width="8%">Semester</th>
+                                <th width="8%">IPK</th>
+                                <th width="18%">Status</th>
+                                <th width="12%" class="text-center">Aksi</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-
-            <div id="noResults" class="alert alert-warning mt-3" style="display: none;">
-                Tidak ada mahasiswa yang sesuai dengan pencarian Anda.
+                        </thead>
+                        <tbody id="mahasiswaList">
+                            <?php foreach ($mahasiswa_list as $mahasiswa): ?>
+                                <tr class="mahasiswa-row" 
+                                    data-search="<?php echo htmlspecialchars(strtolower($mahasiswa['nim'] . ' ' . $mahasiswa['nama'])); ?>"
+                                    data-status="<?php echo $mahasiswa['dpa_id'] ? 'assigned' : 'not_assigned'; ?>">
+                                    <td class="nim text-muted fw-medium">
+                                        <?php echo htmlspecialchars($mahasiswa['nim']); ?>
+                                    </td>
+                                    <td class="nama fw-semibold" style="color: #0F172A;">
+                                        <?php echo htmlspecialchars($mahasiswa['nama']); ?>
+                                    </td>
+                                    <td class="text-muted">
+                                        <?php echo htmlspecialchars($mahasiswa['fakultas'] ?? 'N/A'); ?>
+                                    </td>
+                                    <td class="text-muted">
+                                        <?php echo htmlspecialchars($mahasiswa['prodi'] ?? 'N/A'); ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status status-info">
+                                            <?php echo htmlspecialchars($mahasiswa['semester'] ?? 'N/A'); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge-status status-open">
+                                            <i class="bi bi-star-fill me-1" style="font-size: 0.7rem;"></i> 
+                                            <?php echo htmlspecialchars((string)($mahasiswa['ipk'] ?? 'N/A')); ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <?php if ($mahasiswa['dpa_id']): ?>
+                                            <span class="badge-status status-success">
+                                                <i class="bi bi-person-check me-1" style="font-size: 0.7rem;"></i>
+                                                Ditugaskan ke: <?php echo htmlspecialchars($mahasiswa['assigned_dpa_name'] ?? 'N/A'); ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge-status status-warning">
+                                                <i class="bi bi-person-x me-1" style="font-size: 0.7rem;"></i>
+                                                Belum Ditugaskan
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php if ($mahasiswa['dpa_id'] !== $dpa_id): ?>
+                                            <button type="button" 
+                                                    class="btn btn-navy btn-sm"
+                                                    onclick="assignMahasiswa(<?php echo $mahasiswa['id']; ?>, <?php echo $dpa_id; ?>, '<?php echo htmlspecialchars(addslashes($mahasiswa['nama'])); ?>')">
+                                                <i class="bi bi-check-circle me-1"></i>Tugaskan
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="badge-status status-info">Sudah Ditugaskan</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         <?php endif; ?>
+
+        <div id="noResults" class="alert alert-warning mt-3" style="display: none;">
+            Tidak ada mahasiswa yang sesuai dengan pencarian Anda.
+        </div>
 
     </div>
 
