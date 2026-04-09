@@ -495,3 +495,79 @@
         gap: 1rem;
     }
 }
+
+/* =========================================
+   KOMPONEN HALAMAN REKOMENDASI PELUANG
+   ========================================= */
+
+/* Badge untuk informasi ringkas peluang */
+.dpa-badge {
+    background-color: #F1F5F9;
+    color: #475569;
+    padding: 0.35rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #E2E8F0;
+}
+
+/* Container untuk daftar mahasiswa bimbingan */
+.student-selection-list {
+    max-height: 400px; /* Batasi tinggi agar bisa di-scroll jika data banyak */
+    overflow-y: auto;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    background-color: #F8FAFC;
+    margin-bottom: 1.5rem;
+}
+
+/* Item mahasiswa di dalam daftar */
+.student-selection-item {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #E2E8F0;
+    background-color: #FFFFFF;
+    transition: background-color 0.2s ease;
+}
+
+.student-selection-item:last-child {
+    border-bottom: none;
+}
+
+/* Efek hover agar interaktif */
+.student-selection-item:hover {
+    background-color: #F1F5F9;
+}
+
+/* Menyesuaikan ukuran checkbox agar lebih proporsional */
+.student-selection-item .form-check-input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.2rem;
+    cursor: pointer;
+}
+
+/* Memastikan label bisa di-klik di seluruh area text */
+.student-selection-item .form-check-label {
+    cursor: pointer;
+}
+
+/* Custom Scrollbar untuk list mahasiswa */
+.student-selection-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.student-selection-list::-webkit-scrollbar-track {
+    background: #F8FAFC;
+    border-radius: 0 8px 8px 0;
+}
+
+.student-selection-list::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+
+.student-selection-list::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
