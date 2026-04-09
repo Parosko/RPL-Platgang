@@ -13,6 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $user_id = $_SESSION['user_id'];
 $nama = trim($_POST['nama'] ?? '');
+$nip = trim($_POST['nip'] ?? '');
+$fakultas = trim($_POST['fakultas'] ?? '');
+$prodi = trim($_POST['prodi'] ?? '');
+$kontak = trim($_POST['kontak'] ?? '');
 
 if (!$nama) {
     $_SESSION['error'] = 'Nama wajib diisi.';
@@ -20,9 +24,9 @@ if (!$nama) {
     exit;
 }
 
-$query = "UPDATE dpa SET nama = ? WHERE user_id = ?";
+$query = "UPDATE dpa SET nama = ?, nip = ?, fakultas = ?, prodi = ?, kontak = ? WHERE user_id = ?";
 $stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, 'si', $nama, $user_id);
+mysqli_stmt_bind_param($stmt, 'sssssi', $nama, $nip, $fakultas, $prodi, $kontak, $user_id);
 
 if (mysqli_stmt_execute($stmt)) {
     $_SESSION['success'] = 'Profil berhasil diperbarui.';

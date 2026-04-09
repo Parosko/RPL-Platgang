@@ -1,125 +1,360 @@
-/* DPA Mahasiswa Bimbingan Styles */
+/* DPA Profile Card Styles */
+.dpa-profile-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
 
-/* Table Styles */
+.dpa-profile-header {
+    padding: 2rem;
+    background-color: #F8FAFC;
+    border-bottom: 1px solid #E5E7EB;
+    color: var(--text-primary);
+}
+
+.dpa-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1E3A8A;
+    border: 1px solid #CBD5E1;
+}
+
+.dpa-header-info {
+    flex: 1;
+}
+
+.dpa-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: #F1F5F9;
+    color: #334155;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid #CBD5E1;
+}
+
+.dpa-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #0F172A;
+}
+
+.dpa-email {
+    font-size: 0.9rem;
+    color: #475569;
+    margin-top: 4px;
+}
+
+.dpa-email i {
+    color: #64748B;
+}
+
+.dpa-profile-body {
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-headline);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-base);
+}
+
+/* --- PERBAIKAN GRID & INFO ITEM --- */
+.dpa-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.dpa-info-grid .info-item {
+    display: flex;
+    flex-direction: row; /* Mengunci agar susunan menyamping */
+    align-items: center; /* Vertikal center antara icon dan teks */
+    justify-content: flex-start; /* Kunci agar menempel ke kiri */
+    gap: 1rem;
+    text-align: left; /* Mencegah teks menjadi rata tengah */
+}
+
+.dpa-info-grid .info-icon {
+    width: 44px; /* Sedikit diperbesar agar proporsional */
+    height: 44px;
+    border-radius: 8px;
+    background-color: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.dpa-info-grid .info-content {
+    display: flex;
+    flex-direction: column; /* Label di atas, Value di bawah */
+    align-items: flex-start; /* Teks wajib rata kiri */
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.dpa-info-grid .info-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748B;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.dpa-info-grid .info-value {
+    display: block;
+    font-size: 0.95rem;
+    color: #0F172A;
+    font-weight: 500;
+    word-break: break-word;
+}
+
+.dpa-info-grid .info-value.value-highlight {
+    color: #1E3A8A;
+    font-weight: 600;
+}
+/* --------------------------------- */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dpa-profile-header {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .dpa-avatar {
+        margin: 0 auto 1rem;
+    }
+    
+    .dpa-profile-body {
+        padding: 1.5rem;
+    }
+    
+    .dpa-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+}
+
+/* =========================================
+   DPA Edit Card Styles 
+   ========================================= */
+.dpa-edit-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.dpa-edit-header {
+    padding: 1.5rem 2rem;
+    background-color: #F8FAFC;
+    border-bottom: 1px solid #E5E7EB;
+    color: var(--text-primary);
+}
+
+.dpa-edit-header h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #0F172A;
+}
+
+.dpa-edit-body {
+    padding: 2rem;
+}
+
+.dpa-edit-body .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.dpa-edit-body .custom-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-headline);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dpa-edit-body .custom-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #0F172A;
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+}
+
+.dpa-edit-body .custom-input:focus {
+    outline: none;
+    border-color: #1E3A8A;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.dpa-edit-body .custom-input:read-only {
+    background: #F1F5F9;
+    color: #64748B;
+    cursor: not-allowed;
+    border-color: #E2E8F0;
+}
+
+.dpa-edit-body .custom-input::placeholder {
+    color: #94A3B8;
+}
+
+.dpa-edit-body .form-text {
+    font-size: 0.8rem;
+    color: #64748B;
+    margin-top: 0.35rem;
+    font-style: normal;
+}
+
+.dpa-edit-body .btn-navy {
+    background-color: #1E3A8A;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.dpa-edit-body .btn-navy:hover {
+    background-color: #1E40AF;
+}
+
+.dpa-edit-body .btn-soft-outline {
+    border: 1px solid #CBD5E1;
+    color: #334155;
+    background: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.dpa-edit-body .btn-soft-outline:hover {
+    background: #F8FAFC;
+    border-color: #94A3B8;
+    color: #0F172A;
+}
+
+@media (max-width: 768px) {
+    .dpa-edit-header {
+        padding: 1.25rem;
+    }
+    .dpa-edit-body {
+        padding: 1.5rem;
+    }
+    .dpa-edit-body .btn-navy,
+    .dpa-edit-body .btn-soft-outline {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* =========================================
+   DPA Mahasiswa Bimbingan Styles 
+   ========================================= */
 .dpa-table {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .dpa-table thead {
-    background: #f8f9fa;
-    border-bottom: 2px solid #e9ecef;
+    background: #F8FAFC;
+    border-bottom: 1px solid #E5E7EB;
 }
 
 .dpa-table thead th {
-    padding: 15px 10px;
+    padding: 1rem 1.25rem;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: #495057;
+    color: #475569;
 }
 
 .dpa-table tbody td {
-    padding: 15px 10px;
+    padding: 1rem 1.25rem;
     vertical-align: middle;
-    border-bottom: 1px solid #f1f3f5;
+    border-bottom: 1px solid #F1F5F9;
+    color: #0F172A;
+    font-size: 0.95rem;
 }
 
 .dpa-table tbody tr:hover {
-    background: #f8f9fa;
+    background: #F8FAFC;
 }
 
 .detail-btn {
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-size: 0.85rem;
     border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.detail-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-}
-
-/* Student Info Card */
-.student-info-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-}
-
-.student-info-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-.student-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.info-item .label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: #6c757d;
-    letter-spacing: 0.5px;
-}
-
-.info-item .value {
-    font-size: 0.95rem;
-    color: #212529;
     font-weight: 500;
+    transition: all 0.2s ease;
 }
 
 /* Stats Cards */
 .stats-card {
     background: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 1.5rem;
     text-align: center;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #0d6efd;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #1E3A8A;
     transition: all 0.3s ease;
 }
 
 .stats-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }
 
-.stats-card.success {
-    border-left-color: #198754;
-}
-
-.stats-card.danger {
-    border-left-color: #dc3545;
-}
-
-.stats-card.pending {
-    border-left-color: #ffc107;
-}
+.stats-card.success { border-left-color: #10B981; }
+.stats-card.danger { border-left-color: #EF4444; }
+.stats-card.pending { border-left-color: #F59E0B; }
 
 .stats-number {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 700;
-    color: #212529;
-    margin: 10px 0;
+    color: #0F172A;
+    margin: 0.5rem 0;
 }
 
 .stats-label {
-    font-size: 0.85rem;
-    color: #6c757d;
+    font-size: 0.8rem;
+    color: #64748B;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 600;
@@ -129,81 +364,67 @@
 .applications-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 1rem;
 }
 
 .application-card {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #E2E8F0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     overflow: hidden;
     transition: all 0.3s ease;
 }
 
 .application-card:hover {
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
+    border-color: #CBD5E1;
 }
 
 .app-header {
-    padding: 18px 20px;
-    background: #f8f9fa;
+    padding: 1.25rem 1.5rem;
+    background: #F8FAFC;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid #E2E8F0;
 }
 
 .app-title h6 {
     margin: 0 0 4px 0;
-    color: #212529;
+    color: #0F172A;
     font-weight: 600;
     font-size: 1rem;
 }
 
 .company-name {
-    color: #6c757d;
+    color: #475569;
     font-size: 0.85rem;
 }
 
-.app-status {
-    display: flex;
-    gap: 10px;
-}
-
 .status-badge {
-    padding: 6px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
 }
 
-.status-success {
-    background: #d1e7dd;
-    color: #0f5132;
-}
-
-.status-danger {
-    background: #f8d7da;
-    color: #842029;
-}
-
-.status-warning {
-    background: #fff3cd;
-    color: #664d03;
-}
+.status-success { background: #D1FAE5; color: #065F46; }
+.status-danger { background: #FEE2E2; color: #991B1B; }
+.status-warning { background: #FEF3C7; color: #92400E; }
 
 .app-body {
-    padding: 20px;
+    padding: 1.5rem;
 }
 
 .app-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 16px;
-    margin-bottom: 16px;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .info-column {
@@ -215,142 +436,62 @@
 .info-column .label {
     font-size: 0.75rem;
     text-transform: uppercase;
-    font-weight: 700;
-    color: #6c757d;
+    font-weight: 600;
+    color: #64748B;
     letter-spacing: 0.5px;
 }
 
 .info-column .value {
     font-size: 0.95rem;
-    color: #212529;
+    color: #0F172A;
     font-weight: 500;
 }
 
 .app-description {
-    background: #f8f9fa;
-    padding: 12px 15px;
+    background: #F8FAFC;
+    padding: 1rem;
     border-radius: 8px;
-    margin-top: 12px;
+    border: 1px solid #E2E8F0;
+    margin-top: 1rem;
 }
 
 .app-description strong {
-    color: #495057;
+    color: #334155;
     font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
 }
 
 .app-description small {
-    color: #6c757d;
-    line-height: 1.5;
+    color: #475569;
+    line-height: 1.6;
     display: block;
-    margin-top: 6px;
+    margin-top: 8px;
+    font-size: 0.9rem;
 }
 
-/* Back Link */
 .back-link {
-    color: #0d6efd;
+    color: #1E3A8A;
     text-decoration: none;
     font-size: 0.9rem;
+    font-weight: 500;
     transition: color 0.2s ease;
 }
 
 .back-link:hover {
-    color: #0b5ed7;
+    color: #1E40AF;
     text-decoration: underline;
 }
 
-/* Student Selection List */
-.student-selection-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.student-selection-item {
-    padding: 15px;
-    border: 1px solid #e9ecef;
-    border-radius: 10px;
-    background: #f8f9fa;
-    transition: all 0.2s ease;
-}
-
-.student-selection-item:hover {
-    background: #ffffff;
-    border-color: #dee2e6;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-}
-
-.student-selection-item .form-check-input {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    margin-top: 2px;
-}
-
-.student-selection-item .form-check-label {
-    cursor: pointer;
-    margin-left: 8px;
-    margin-top: 2px;
-    color: #212529;
-}
-
-.student-selection-item .form-check-label strong {
-    font-size: 0.95rem;
-    color: #212529;
-}
-
-.student-selection-item .form-check-label .text-muted {
-    font-size: 0.85rem;
-    color: #6c757d;
-    margin-top: 4px;
-}
-
-.student-selection-item .badge {
-    margin-top: 8px;
-    font-size: 0.75rem;
-    padding: 4px 8px;
-}
-
-.student-selection-item:has(.form-check-input:disabled) {
-    opacity: 0.65;
-    background: #f1f3f5;
-}
-
-.student-selection-item:has(.form-check-input:disabled) .form-check-label {
-    color: #6c757d;
-}
-
-.student-selection-item:has(.form-check-input:disabled) strong {
-    color: #6c757d;
-}
-
-/* Responsive Adjustments */
+/* Responsive */
 @media (max-width: 768px) {
     .app-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 1rem;
     }
-
     .app-info {
         grid-template-columns: 1fr;
-    }
-
-    .dpa-table {
-        font-size: 0.9rem;
-    }
-
-    .dpa-table thead th,
-    .dpa-table tbody td {
-        padding: 10px 8px;
-    }
-
-    .stats-number {
-        font-size: 2rem;
-    }
-
-    .student-info-card {
-        margin-bottom: 15px;
+        gap: 1rem;
     }
 }
