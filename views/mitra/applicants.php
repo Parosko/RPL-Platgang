@@ -65,6 +65,25 @@ mysqli_stmt_bind_param($unpublished_stmt, 'i', $peluang_id);
 mysqli_stmt_execute($unpublished_stmt);
 $unpublished_result = mysqli_stmt_get_result($unpublished_stmt);
 $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
+
+// Get applicant status counters
+$count_query = "SELECT 
+    SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
+    SUM(CASE WHEN status = 'accepted' THEN 1 ELSE 0 END) as accepted_count,
+    SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_count,
+    COUNT(*) as total_count
+    FROM lamaran WHERE peluang_id = ?";
+$count_stmt = mysqli_prepare($conn, $count_query);
+mysqli_stmt_bind_param($count_stmt, 'i', $peluang_id);
+mysqli_stmt_execute($count_stmt);
+$count_result = mysqli_stmt_get_result($count_stmt);
+$counts = mysqli_fetch_assoc($count_result);
+
+// Calculate quota status
+$quota_used = $counts['accepted_count'];
+$quota_available = $post_data['kuota'] - $quota_used;
+$quota_reached = $quota_available <= 0;
+
 ?>
 
 <!DOCTYPE html>
@@ -144,9 +163,48 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
         <?php if (isset($_SESSION['error'])): ?>
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> <?php echo htmlspecialchars($_SESSION['error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <button type="type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <?php if ($unpublished_count > 0): ?>
+            <div class="custom-notice notice-warning mb-4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-exclamation-triangle-fill notice-icon fs-5"></i>
+                    <h6 class="notice-title mb-0 fw-bold">Perhatian! Ada <?php echo $unpublished_count; ?> evaluasi belum dipublikasi.</h6>
+                </div>
+                <p class="notice-desc mb-0" style="font-size: 0.9rem;">
+                    Klik tombol "Publikasi Hasil" di atas untuk mengirim notifikasi ke pelamar. Harap lengkapi pesan di bawah ini terlebih dahulu.
+                </p>
+            </div>
+
+            <div class="mitra-edit-card mb-4">
+                <div class="mitra-edit-header">
+                    <h5 class="mb-0"><i class="bi bi-chat-left-text me-2"></i>Pesan Khusus untuk Pelamar</h5>
+                    <p class="form-text mb-0 mt-1">Pesan ini akan dikirimkan sebagai notifikasi kepada kandidat yang diterima dan ditolak.</p>
+                </div>
+                <div class="mitra-edit-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label for="pesan_accepted" class="custom-label">
+                                Pesan untuk Kandidat Diterima <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control custom-input" id="pesan_accepted" rows="3" required
+                                      placeholder="Contoh: Selamat! Kami senang menyambut Anda..."></textarea>
+                            <div class="form-text">Minimal 10 karakter</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pesan_rejected" class="custom-label">
+                                Pesan untuk Kandidat Ditolak <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control custom-input" id="pesan_rejected" rows="3" required
+                                      placeholder="Contoh: Terima kasih telah melamar. Setelah pertimbangan..."></textarea>
+                            <div class="form-text">Minimal 10 karakter</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <?php endif; ?>
 
         <div class="row mb-4">
@@ -177,86 +235,85 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
                 </div>
             </div>
 
-            <?php if ($unpublished_count > 0): ?>
+            <!-- Status Counters Card -->
             <div class="col-lg-12 mb-3">
-                <div class="custom-notice notice-warning mb-3">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <i class="bi bi-exclamation-triangle-fill notice-icon fs-5"></i>
-                        <h6 class="notice-title mb-0 fw-bold">Perhatian! Ada <?php echo $unpublished_count; ?> evaluasi belum dipublikasi.</h6>
-                    </div>
-                    <p class="notice-desc mb-0" style="font-size: 0.9rem;">
-                        Klik tombol "Publikasi Hasil" di atas untuk mengirim notifikasi ke pelamar. Harap lengkapi pesan di bawah ini terlebih dahulu.
-                    </p>
-                </div>
-
-                <div class="mitra-edit-card mb-0">
-                    <div class="mitra-edit-header">
-                        <h5 class="mb-0"><i class="bi bi-chat-left-text me-2"></i>Pesan Khusus untuk Pelamar</h5>
-                        <p class="form-text mb-0 mt-1">Pesan ini akan dikirimkan sebagai notifikasi kepada kandidat yang diterima dan ditolak.</p>
-                    </div>
-                    <div class="mitra-edit-body">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <label for="pesan_accepted" class="custom-label">
-                                    Pesan untuk Kandidat Diterima <span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control custom-input" id="pesan_accepted" rows="3" required
-                                          placeholder="Contoh: Selamat! Kami senang menyambut Anda..."></textarea>
-                                <div class="form-text">Minimal 10 karakter</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="pesan_rejected" class="custom-label">
-                                    Pesan untuk Kandidat Ditolak <span class="text-danger">*</span>
-                                </label>
-                                <textarea class="form-control custom-input" id="pesan_rejected" rows="3" required
-                                          placeholder="Contoh: Terima kasih telah melamar. Setelah pertimbangan..."></textarea>
-                                <div class="form-text">Minimal 10 karakter</div>
-                            </div>
+                <div class="mitra-edit-card mb-0 p-3">
+                    <div class="d-flex flex-wrap gap-4 align-items-center">
+                        <div class="text-muted" style="font-size: 0.85rem; font-weight: 500; color: var(--text-subtle);">
+                            <i class="bi bi-people me-1"></i> STATISTICS:
                         </div>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-        </div>
-
-        <div class="mitra-edit-card mb-4">
-            <div class="mitra-edit-body p-3">
-                <div class="row g-3">
-                    <div class="col-md-3">
-                        <label class="custom-label">Status</label>
-                        <select class="form-select custom-input" id="filterStatus" onchange="filterApplications()">
-                            <option value="">Semua Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="accepted">Diterima</option>
-                            <option value="rejected">Ditolak</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="custom-label">Persyaratan</label>
-                        <select class="form-select custom-input" id="filterRequirement" onchange="filterApplications()">
-                            <option value="">Semua</option>
-                            <option value="meets">Memenuhi Syarat</option>
-                            <option value="lacks">Kurang Syarat</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="custom-label">Filter IPK Min</label>
-                        <input type="number" step="0.01" class="form-control custom-input" id="filterIPK" placeholder="Contoh: 3.5" onchange="filterApplications()">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="custom-label">Cari Pelamar</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0" style="border-color: #CBD5E1; color: #64748B;">
-                                <i class="bi bi-search"></i>
+                        <div class="d-flex flex-wrap gap-2">
+                            <span class="mitra-badge border bg-warning text-dark">
+                                <i class="bi bi-clock me-1"></i>Pending: <?php echo $counts['pending_count']; ?>
                             </span>
-                            <input type="text" class="form-control custom-input border-start-0 ps-0" id="filterName" placeholder="Nama pelamar..." onkeyup="filterApplications()">
+                            <span class="mitra-badge border bg-success text-white">
+                                <i class="bi bi-check-circle me-1"></i>Accepted: <?php echo $counts['accepted_count']; ?>
+                            </span>
+                            <span class="mitra-badge border bg-danger text-white">
+                                <i class="bi bi-x-circle me-1"></i>Rejected: <?php echo $counts['rejected_count']; ?>
+                            </span>
+                            <span class="mitra-badge border" style="background-color: var(--navy-color, #1e3a8a); color: white;">
+                                <i class="bi bi-speedometer2 me-1"></i>Quota: <?php echo $quota_used; ?>/<?php echo $post_data['kuota']; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12">
+                <div class="mitra-edit-card mb-2">
+                    <div class="mitra-edit-body p-3">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label class="custom-label">Urutkan</label>
+                                <select class="form-select custom-input" id="sortBy" onchange="sortApplications()">
+                                    <option value="tanggal_apply_desc">Terbaru</option>
+                                    <option value="tanggal_apply_asc">Terlama</option>
+                                    <option value="nama_asc">Nama A-Z</option>
+                                    <option value="nama_desc">Nama Z-A</option>
+                                    <option value="ipk_desc">IPK Tertinggi</option>
+                                    <option value="ipk_asc">IPK Terendah</option>
+                                    <option value="semester_desc">Semester Tertinggi</option>
+                                    <option value="semester_asc">Semester Terendah</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="custom-label">Status</label>
+                                <select class="form-select custom-input" id="filterStatus" onchange="filterApplications()">
+                                    <option value="">Semua Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="accepted">Diterima</option>
+                                    <option value="rejected">Ditolak</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="custom-label">Persyaratan</label>
+                                <select class="form-select custom-input" id="filterRequirement" onchange="filterApplications()">
+                                    <option value="">Semua</option>
+                                    <option value="meets">Memenuhi Syarat</option>
+                                    <option value="lacks">Kurang Syarat</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="custom-label">Filter IPK Min</label>
+                                <input type="number" step="0.01" max="4.00" class="form-control custom-input" id="filterIPK" placeholder="3.5" onchange="filterApplications()">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="custom-label">Cari Pelamar</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0" style="border-color: #CBD5E1; color: #64748B;">
+                                        <i class="bi bi-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control custom-input border-start-0 ps-0" id="filterName" placeholder="Nama pelamar..." onkeyup="filterApplications()">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="row g-4">
+        <div class="row g-2">
             <?php if (mysqli_num_rows($applications) > 0):
                 mysqli_data_seek($applications, 0);
                 while ($app = mysqli_fetch_assoc($applications)): 
@@ -278,6 +335,7 @@ $unpublished_count = mysqli_fetch_assoc($unpublished_result)['count'];
                          data-status="<?php echo $app['status']; ?>" 
                          data-name="<?php echo strtolower($app['nama']); ?>"
                          data-ipk="<?php echo $app['ipk']; ?>"
+                         data-apply-date="<?php echo $app['tanggal_apply']; ?>"
                          data-meets="<?php echo $meets_all ? 'meets' : 'lacks'; ?>">
                          
                         <div class="mitra-profile-card h-100 d-flex flex-column mb-0 <?php echo $lacks_any ? 'border-warning' : ''; ?>" style="<?php echo $lacks_any ? 'border-width: 2px;' : ''; ?>">
@@ -426,6 +484,48 @@ function filterApplications() {
         
         card.style.display = (statusMatch && requirementMatch && ipkMatch && nameMatch) ? '' : 'none';
     });
+}
+
+function sortApplications() {
+    const sortBy = document.getElementById('sortBy').value;
+    const container = document.querySelector('.row.g-4');
+    const cards = Array.from(document.querySelectorAll('.applicant-card'));
+    
+    cards.sort((a, b) => {
+        const aStatus = a.dataset.status;
+        const bStatus = b.dataset.status;
+        const aName = a.dataset.name;
+        const bName = b.dataset.name;
+        const aIPK = parseFloat(a.dataset.ipk);
+        const bIPK = parseFloat(b.dataset.ipk);
+        const aSemester = parseInt(a.querySelector('.info-value:nth-child(3)').textContent);
+        const bSemester = parseInt(b.querySelector('.info-value:nth-child(3)').textContent);
+        
+        switch(sortBy) {
+            case 'tanggal_apply_desc':
+                return new Date(b.querySelector('.mitra-profile-body').dataset.applyDate || '9999') - 
+                       new Date(a.querySelector('.mitra-profile-body').dataset.applyDate || '9999');
+            case 'tanggal_apply_asc':
+                return new Date(a.querySelector('.mitra-profile-body').dataset.applyDate || '9999') - 
+                       new Date(b.querySelector('.mitra-profile-body').dataset.applyDate || '9999');
+            case 'nama_asc':
+                return aName.localeCompare(bName);
+            case 'nama_desc':
+                return bName.localeCompare(aName);
+            case 'ipk_desc':
+                return bIPK - aIPK;
+            case 'ipk_asc':
+                return aIPK - bIPK;
+            case 'semester_desc':
+                return bSemester - aSemester;
+            case 'semester_asc':
+                return aSemester - bSemester;
+            default:
+                return 0;
+        }
+    });
+    
+    cards.forEach(card => container.appendChild(card));
 }
 
 function closePost(postId, postTitle) {
