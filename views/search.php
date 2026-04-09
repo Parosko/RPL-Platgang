@@ -114,11 +114,14 @@ unset($_SESSION['search_results']);
                 </div>
                 
                 <div class="col-12 mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-navy">
+                        <i class="bi bi-search me-1"></i> Cari
+                    </button>
                     <button type="submit" class="btn btn-action-primary">
-                        <i class="bi bi-funnel"></i> Terapkan Filter
+                        <i class="bi bi-funnel me-1"></i> Terapkan Filter
                     </button>
                     <a href="<?= BASE_URL ?>/views/search.php" class="btn btn-action-secondary">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                     </a>
                 </div>
             </form>

@@ -38,6 +38,7 @@
     color: #475569; 
     font-size: 0.95rem;
     line-height: 1.6;
+    text-align: justify;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     line-clamp: 3;
