@@ -139,7 +139,7 @@ $profile = mysqli_fetch_assoc($result);
                     
                     <div class="d-flex flex-column flex-md-row gap-3 mt-5">
                         <button type="submit" class="btn btn-navy px-4">
-                            <i class="bi bi-box-arrow-in-down me-2" style="font-size: 1.1rem;"></i>Simpan Perubahan
+                            <i class="bi bi-save me-2"></i>Simpan Perubahan
                         </button>
                         <a href="profile.php" class="btn btn-soft-outline px-4">
                             <i class="bi bi-x-circle me-2"></i>Batal

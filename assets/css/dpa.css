@@ -1,4 +1,8 @@
 /* DPA Profile Card Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
 .dpa-profile-card {
     background: white;
     border-radius: 12px;
@@ -39,7 +43,6 @@
     border-radius: 6px;
     font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.5px;
     border: 1px solid #CBD5E1;
 }
@@ -70,8 +73,6 @@
     font-weight: 600;
     color: var(--text-headline);
     margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border-base);
 }
 
 /* --- PERBAIKAN GRID & INFO ITEM --- */
@@ -279,6 +280,31 @@
         width: 100%;
         margin-bottom: 0.5rem;
     }
+}
+
+/* =========================================
+   DPA Empty State Styles 
+   ========================================= */
+.dpa-empty-state {
+    background-color: #F8FAFC;
+    border: 2px dashed #CBD5E1;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.dpa-empty-state:hover {
+    border-color: #94A3B8;
+    background-color: #F1F5F9;
+}
+
+.dpa-empty-state .empty-icon {
+    font-size: 3.5rem;
+    color: #94A3B8;
+    line-height: 1;
+}
+
+.dpa-empty-state h5 {
+    color: #0F172A;
 }
 
 /* =========================================
