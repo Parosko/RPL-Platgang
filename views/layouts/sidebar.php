@@ -10,6 +10,31 @@ $unread_count = getUnreadNotificationCount($conn, $_SESSION['user_id']);
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
+<!-- Mobile Navbar -->
+<nav class="mobile-navbar">
+    <div class="mobile-navbar-content">
+        <div class="mobile-navbar-brand">
+            <h5>Simpadu</h5>
+        </div>
+        <div class="mobile-navbar-actions">
+            <a href="<?= BASE_URL ?>/views/notifications.php" class="notification-bell position-relative" title="Notifikasi">
+                <i class="bi bi-bell fs-5"></i>
+                <?php if ($unread_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary notification-badge">
+                        <?php echo $unread_count; ?>
+                    </span>
+                <?php endif; ?>
+            </a>
+            <button class="hamburger-toggle" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <div class="sidebar d-flex flex-column p-4">
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom sidebar-header">
         <h5 class="m-0 fw-bold brand-text" style="font-weight: 700 !important;">Simpadu</h5>
@@ -104,3 +129,64 @@ $current_page = basename($_SERVER['PHP_SELF']);
         </a>
     </div>
 </div>
+
+<script>
+// Hamburger Menu Toggle
+const sidebarToggle = document.getElementById('sidebarToggle');
+const sidebar = document.querySelector('.sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+if (sidebarToggle && sidebar && sidebarOverlay) {
+    sidebarToggle.addEventListener('click', function() {
+        sidebar.classList.toggle('show');
+        sidebarOverlay.classList.toggle('show');
+        
+        // Change hamburger icon
+        const icon = sidebarToggle.querySelector('i');
+        if (sidebar.classList.contains('show')) {
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x');
+        } else {
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+        }
+    });
+
+    // Close sidebar when clicking overlay
+    sidebarOverlay.addEventListener('click', function() {
+        sidebar.classList.remove('show');
+        sidebarOverlay.classList.remove('show');
+        
+        // Reset hamburger icon
+        const icon = sidebarToggle.querySelector('i');
+        icon.classList.remove('bi-x');
+        icon.classList.add('bi-list');
+    });
+
+    // Close sidebar when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+            
+            // Reset hamburger icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+        }
+    });
+
+    // Close sidebar when window is resized above mobile breakpoint
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && sidebar.classList.contains('show')) {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+            
+            // Reset hamburger icon
+            const icon = sidebarToggle.querySelector('i');
+            icon.classList.remove('bi-x');
+            icon.classList.add('bi-list');
+        }
+    });
+}
+</script>
