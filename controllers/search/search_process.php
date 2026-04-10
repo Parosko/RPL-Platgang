@@ -26,11 +26,12 @@ $params = [];
 $types = "";
 
 if (!empty($search_query)) {
-    $base_query .= " AND (p.judul LIKE ? OR p.deskripsi LIKE ?)";
+    $base_query .= " AND (p.judul LIKE ? OR p.deskripsi LIKE ? OR m.nama_organisasi LIKE ?)";
     $search_param = "%" . $search_query . "%";
     $params[] = $search_param;
     $params[] = $search_param;
-    $types .= "ss";
+    $params[] = $search_param;
+    $types .= "sss";
 }
 
 if (!empty($status_filter)) {

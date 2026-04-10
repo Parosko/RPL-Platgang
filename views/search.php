@@ -80,7 +80,7 @@ unset($_SESSION['search_results']);
                             class="form-control" 
                             id="search_query" 
                             name="q" 
-                            placeholder="Cari posisi, institusi, atau keahlian..."
+                            placeholder="Cari posisi, institusi, nama mitra, atau keahlian..."
                             value="<?= htmlspecialchars($search_query) ?>">
                     </div>
                 </div>
